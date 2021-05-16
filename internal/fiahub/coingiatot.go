@@ -1,0 +1,4 @@
+package fiahub
+
+func RenewParam() {
+}
