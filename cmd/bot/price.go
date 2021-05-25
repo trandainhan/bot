@@ -22,5 +22,5 @@ func calculateAskFFromAskB(askB, perFeeBinance, perProfit, minPrice, maxPrice fl
 	if askF > minPrice && askF < maxPrice {
 		return askF, false
 	}
-	return 0, false
+	return 0, true
 }

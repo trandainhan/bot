@@ -1,5 +1,0 @@
-package fiahub
-
-func CalculatePerProfit() {
-
-}

@@ -101,21 +101,10 @@ func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origC
 	var orderDetails binance.OrderDetailsResp
 	var err error
 	for j := 0; j <= 2; j++ {
-		for i := 0; i <= 2; i++ {
-			orderDetails, err = binance.GetOrder(coin+"USDT", *binanceOrderID, *origClientOrderID)
-			if err != nil {
-				// Log error here
-			}
-			status := orderDetails.Status
-			if len(status) > 0 {
-				break
-			}
-			time.Sleep(2000 * time.Millisecond)
-
-			if i == 2 {
-				text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
-				teleClient.SendMessage(text, chatID)
-			}
+		orderDetails, err = binance.GetOrder(coin+"USDT", *binanceOrderID, *origClientOrderID)
+		if err != nil {
+			text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
+			teleClient.SendMessage(text, chatID)
 		}
 
 		status := orderDetails.Status

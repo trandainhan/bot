@@ -17,12 +17,12 @@ type LoginResponse struct {
 }
 
 func Login(email, password string) string {
-	url := os.Getenv("fiahubURL")
+	url := os.Getenv("fiahub_url")
 	data := LoginRequest{
 		Email:    email,
 		Password: password,
 	}
-	body, _, _ := u.HttpPost(url, data)
+	body, _, _ := u.HttpPost(url, data, nil)
 
 	var result LoginResponse
 	if err := json.Unmarshal([]byte(body), &result); err != nil {

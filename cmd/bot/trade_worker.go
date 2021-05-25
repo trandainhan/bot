@@ -14,20 +14,20 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func worker(id string, coin string, askF float64, askB float64, fiahubToken string) {
+func worker(id string, coin string, askF float64, askB float64, perProfitStep float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("base_vnt_quantity")) // 18000000
 	perCancel := redisClient.Get("per_cancel").(float64)
-	perProfit := redisClient.Get("per_profit").(float64)
-	perProfitStep := 1.0
+	perProfit := redisClient.Get("per_profit_ask").(float64) // this is ask worker
+	fiahubToken := redisClient.Get("fiahub_token").(string)
+	chatID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
+	chatErrorID, _ := strconv.ParseInt(os.Getenv("chat_error_id"), 10, 64)
+
 	perProfit = perProfit + perProfitStep*0.6/100
 	randNumber := rand.Intn(4000000)
 
 	vntQuantity := float64(baseVntQuantity + randNumber)
 
-	chatID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
-	chatErrorID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
-	// marketParam := coin
-	originalCoinAmount := utils.RoundTo(vntQuantity/askF, decimalsToRound) // decimal missing
+	originalCoinAmount := utils.RoundTo(vntQuantity/askF, decimalsToRound)
 	coinAmount := originalCoinAmount
 	priceSell := askF
 	pricesellRandom := askF
@@ -67,7 +67,6 @@ func worker(id string, coin string, askF float64, askB float64, fiahubToken stri
 		matching = orderDetails.Matching
 		if coinAmount > 0 {
 			executedQty = originalCoinAmount - coinAmount
-
 		}
 		if state == fiahub.ORDER_CANCELLED || state == fiahub.ORDER_FINISHED {
 			break
@@ -75,7 +74,7 @@ func worker(id string, coin string, askF float64, askB float64, fiahubToken stri
 
 		// Trigger cancel process
 		bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
-		log.Println(bidPriceByQuantity)
+		log.Println(bidPriceByQuantity) // only use askPriceByQuantity, bidPriceByQuantity will be used in BidOrder worker
 		perchange := math.Abs((askPriceByQuantity - askB) / askB)
 		if perchange > perCancel || executedQty > 0 {
 			lastestCancelAllTime := redisClient.Get("lastest_cancel_all_time").(time.Time)
@@ -97,8 +96,8 @@ func worker(id string, coin string, askF float64, askB float64, fiahubToken stri
 		time.Sleep(5000 * time.Millisecond)
 	}
 
-	// ;If newSellVNTQuantity < 50.000 ignore
-	// ;If newSellVNTQuantity > 250.000 mới tạo lệnh mua bù trên binance không thì tạo lệnh bán lại luôn giá + rand từ 1->3000
+	// If newSellVNTQuantity < 50.000 ignore
+	// If newSellVNTQuantity > 250.000 mới tạo lệnh mua bù trên binance không thì tạo lệnh bán lại luôn giá + rand từ 1->3000
 	newSellQuantity := executedQty - totalSell
 	newSellVNTQuantity := newSellQuantity * priceSell
 	if newSellVNTQuantity <= 50000 {
@@ -131,7 +130,7 @@ func worker(id string, coin string, askF float64, askB float64, fiahubToken stri
 		time.Sleep(5000 * time.Millisecond)
 	}
 	if binanceOrderID != nil {
-		text := fmt.Sprintf("%s %s Chốt lời Binance BuyLimit Quant: %v Price: %v ID: %s", coin, id, newSellQuantity, askB, *binanceOrderID)
+		text := fmt.Sprintf("%s %s Chot loi Binance BuyLimit Quant: %v Price: %v ID: %s", coin, id, newSellQuantity, askB, *binanceOrderID)
 		isLiquidBaseBinanceTradeBid := 0.0
 		calculateProfit(coin, newSellQuantity, askF, askB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
 

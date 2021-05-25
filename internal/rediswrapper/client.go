@@ -23,7 +23,7 @@ func NewRedisClient(ctx context.Context, redisURL string) *MyRedis {
 }
 
 func (myRedis *MyRedis) Set(key, value interface{}) bool {
-	err := myRedis.Client.Set(myRedis.Ctx, "key", "value", 0).Err()
+	err := myRedis.Client.Set(myRedis.Ctx, "key", value, 0).Err()
 	if err != nil {
 		panic(err)
 	}

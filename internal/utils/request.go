@@ -7,10 +7,18 @@ import (
 	"time"
 )
 
-func HttpPost(url string, data interface{}) (string, int, error) {
-	resp, result, errs := gorequest.New().
+func HttpPost(url string, data interface{}, headers *map[string]string) (string, int, error) {
+	request := gorequest.New()
+	if headers != nil {
+		for k, v := range *headers {
+			request.Set(k, v)
+		}
+	}
+	if data != nil {
+		request.Send(data)
+	}
+	resp, result, errs := request.
 		Post(url).
-		Send(data).
 		Retry(
 			5,
 			time.Second*5,
@@ -41,8 +49,10 @@ func BuildUrlWithParams(baseURL string, params map[string]string) (string, error
 }
 
 func HttpGet(url string) (string, int, error) {
-	request := gorequest.New()
-	resp, body, errs := request.Get(url).End()
+	resp, body, errs := gorequest.New().
+		Get(url).
+		Retry(3, 5*time.Second, http.StatusBadRequest, http.StatusInternalServerError).
+		End()
 	if len(errs) > 0 {
 		return "", resp.StatusCode, errs[0]
 	}

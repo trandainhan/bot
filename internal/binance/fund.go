@@ -35,7 +35,8 @@ type Fund struct {
 	Balances []Balance `json:"balances"`
 }
 
-func CheckFund() {
+func CheckFund(name string) float64 {
+	return 0.0
 	// URL := "https://api.binance.com/api/v3/account?"
 	//
 	// TimeUNIX = %A_NowUTC%
