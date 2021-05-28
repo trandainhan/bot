@@ -10,7 +10,7 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID, origClientOrderID *string, isLiquidBaseBinanceTradeBid float64) {
+func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID, origClientOrderID *string, isLiquidBaseBinanceTradeBid bool) {
 	// perFeeBinance := redisClient.Get("per_fee_binance").(float64) // 0.075 / 100
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
 
@@ -21,7 +21,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 	// executedQty := orderDetails.ExecutedQty
 	status := orderDetails.Status
 	side := orderDetails.Side
-	if isLiquidBaseBinanceTradeBid == 0 {
+	if isLiquidBaseBinanceTradeBid == false {
 		totalVNTRecieve := askF * newSellQuantity
 		feeUSDT := askB * newSellQuantity * 0.075 / 100
 		totalUSDTGive := askB*newSellQuantity + feeUSDT
@@ -47,7 +47,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		notifyWhenAssetIsLow(netAsset, text)
 	}
 
-	if isLiquidBaseBinanceTradeBid == 1 {
+	if isLiquidBaseBinanceTradeBid == true {
 		bidF := askF
 		totalVNTGive := bidF * newSellQuantity
 		feeUSDT := bidB * newSellQuantity * 0.075 / 100

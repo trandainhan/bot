@@ -14,7 +14,7 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func worker(id string, coin string, askF float64, askB float64, perProfitStep float64) {
+func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("base_vnt_quantity")) // 18000000
 	perCancel := redisClient.Get("per_cancel").(float64)
 	perProfit := redisClient.Get("per_profit_ask").(float64) // this is ask worker
@@ -39,7 +39,8 @@ func worker(id string, coin string, askF float64, askB float64, perProfitStep fl
 		Currency:           "VNT",
 		Type:               orderType,
 	}
-	fiahubOrderID, statusCode, err := fiahub.CreateAskOrder(fiahubToken, askOrder)
+	fiahubOrder, statusCode, err := fiahub.CreateAskOrder(fiahubToken, askOrder)
+	fiahubOrderID := fiahubOrder.ID
 	if err != nil {
 		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, StatusCode: %d %s", coin, id, orderType, coinAmount, pricesellRandom, statusCode, err)
 		time.Sleep(60000 * time.Millisecond)
@@ -131,7 +132,7 @@ func worker(id string, coin string, askF float64, askB float64, perProfitStep fl
 	}
 	if binanceOrderID != nil {
 		text := fmt.Sprintf("%s %s Chot loi Binance BuyLimit Quant: %v Price: %v ID: %s", coin, id, newSellQuantity, askB, *binanceOrderID)
-		isLiquidBaseBinanceTradeBid := 0.0
+		isLiquidBaseBinanceTradeBid := false
 		calculateProfit(coin, newSellQuantity, askF, askB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
 
 		text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)

@@ -5,14 +5,14 @@ import (
 	"math"
 )
 
-func calculateBidFFromBidB(bidB, feePerBinance, perProfit, minPrice, maxPrice float64) bool {
+func calculateBidFFromBidB(bidB, feePerBinance, perProfit, minPrice, maxPrice float64) (float64, bool) {
 	rate := redisClient.Get("usdtvnd_rate").(float64)
 	bidF := (bidB * rate * (1 - feePerBinance)) / (1 + perProfit)
 	bidF = math.Round(bidF)
 	if bidF < maxPrice && bidF > minPrice {
-		return true
+		return bidF, false
 	}
-	return false
+	return 0, true
 }
 
 func calculateAskFFromAskB(askB, perFeeBinance, perProfit, minPrice, maxPrice float64) (float64, bool) {

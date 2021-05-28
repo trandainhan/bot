@@ -32,6 +32,14 @@ type OrderDetails struct {
 	Matching   bool    `json:"matching"`
 }
 
+type CreateAskOrderResp struct {
+	AskOrder OrderDetails `json:"ask_order"`
+}
+
+type CreateBidOrderResp struct {
+	BidOrder OrderDetails `json:"bid_order"`
+}
+
 func CancelAllOrder(token string) (string, int, error) {
 	headers := &map[string]string{
 		"access-token": token,
@@ -64,8 +72,32 @@ func CancelOrder(token string, orderID string) (*OrderDetails, int, error) {
 	return order, code, nil
 }
 
-func CreateAskOrder(token string, askOrder Order) (string, int, error) {
-	return "", 200, nil
+func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
+	headers := &map[string]string{
+		"access-token": token,
+	}
+	url := fmt.Sprintf("%s/ask_orders", BASE_URL)
+	body, code, err := u.HttpPost(url, askOrder, headers)
+	var resp *CreateAskOrderResp
+	err = json.Unmarshal([]byte(body), resp)
+	if err != nil {
+		return nil, 500, err
+	}
+	return &resp.AskOrder, code, nil
+}
+
+func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
+	headers := &map[string]string{
+		"access-token": token,
+	}
+	url := fmt.Sprintf("%s/bid_orders", BASE_URL)
+	body, code, err := u.HttpPost(url, bidOrder, headers)
+	var resp *CreateBidOrderResp
+	err = json.Unmarshal([]byte(body), resp)
+	if err != nil {
+		return nil, 500, err
+	}
+	return &resp.BidOrder, code, nil
 }
 
 func GetOrderDetails(token string, orderID string) (*OrderDetails, int, error) {
