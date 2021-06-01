@@ -1,63 +1,60 @@
 package binance
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
-)
 
-var binanceURL = os.Getenv("binance_url")
+	"gitlab.com/fiahub/bot/internal/utils"
+)
 
 type OrderDetails struct {
 	ID            *string
 	ClientOrderID *string
 }
 
-func GetPriceByQuantity(marketParam string, quantity int) (float64, float64) {
-	return 0.0, 0.0
+func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64) {
+	orderBook := getOrderBook(marketParam, 100)
+	totalQuantity := 0.0
+	bidPriceByQuantity := 0.0
+	for _, v := range orderBook.Bids {
+		price := v[0]
+		innerQuantity := v[1]
+		totalQuantity = totalQuantity + innerQuantity
+		if totalQuantity > quantity {
+			bidPriceByQuantity = price
+			break
+		}
+	}
+	totalQuantity = 0.0
+	askPriceByQuantity := 999999999999.0
 
-	// content := BinanceAPI_GetOrderBook(Marketpara,limit := 100)
-	// parsed := JSON.Load(content)
-	//
-	//
-	// Maxindex := parsed.bids.Maxindex()
-	// TotalQuant := 0
-	// BidPriceByQuantity := 0
-	// Loop, %Maxindex%
-	// {
-	// 	price := parsed.bids[a_index][1]
-	// 	quant := parsed.bids[a_index][2]
-	// 	TotalQuant += quant
-	//
-	// 	If(TotalQuant >= Quantity)
-	// 	{
-	// 		BidPriceByQuantity := price
-	// 		break
-	// 	}
-	// }
-	//
-	//
-	// Maxindex := parsed.asks.Maxindex()
-	// TotalQuant := 0
-	// AskPriceByQuantity := 999999999999
-	// Loop, %Maxindex%
-	// {
-	// 	price := parsed.asks[a_index][1]
-	// 	quant := parsed.asks[a_index][2]
-	// 	TotalQuant += quant
-	//
-	// 	If(TotalQuant >= Quantity)
-	// 	{
-	// 		AskPriceByQuantity := price
-	// 		break
-	// 	}
-	// }
-	//
-	// return 1
+	for _, v := range orderBook.Asks {
+		price := v[0]
+		innerQuantity := v[1]
+		totalQuantity = totalQuantity + innerQuantity
+		if totalQuantity > quantity {
+			askPriceByQuantity = price
+			break
+		}
+	}
+	return bidPriceByQuantity, askPriceByQuantity
 }
 
-func getOrderBook(marketParam string, limit int) {
-	// link := "https://api.binance.com/api/v1/depth?symbol=" . Marketpara . "&limit=" . limit
-	// content := GetContent(link)
-	// return content
+type OrderBook struct {
+	Bids [][]float64 `json:"bids"`
+	Asks [][]float64 `json:"asks"`
+}
+
+func getOrderBook(marketParam string, limit int) *OrderBook {
+	var BASE_URL = os.Getenv("binance_url") // https://api.binance.com
+	url := fmt.Sprintf("%s/api/v3/depth?symbol=%s&limit=%d", BASE_URL, marketParam, limit)
+	body, _, err := utils.HttpGet(url, nil)
+	if err != nil {
+	}
+	var orderBook *OrderBook
+	_ = json.Unmarshal([]byte(body), orderBook)
+	return orderBook
 }
 
 type OrderDetailsResp struct {
@@ -68,6 +65,17 @@ type OrderDetailsResp struct {
 	Price       float64 `json:"price"`
 }
 
-func GetOrder(marketParam string, ID string, originClientID string) (OrderDetailsResp, error) {
-	return OrderDetailsResp{}, nil
+func (binance Binance) GetOrder(marketParam string, orderId string, originClientOrderID string) (*OrderDetailsResp, error) {
+	params := map[string]string{
+		"symbol":            marketParam,
+		"orderId":           orderId,
+		"origClientOrderId": originClientOrderID,
+	}
+	body, _, err := binance.makeRequest("GET", params, "/api/v3/order")
+	if err != nil {
+		return nil, err
+	}
+	var orderDetails *OrderDetailsResp
+	_ = json.Unmarshal([]byte(body), orderDetails)
+	return orderDetails, nil
 }

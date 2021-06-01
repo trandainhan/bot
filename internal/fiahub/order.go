@@ -103,7 +103,7 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 func GetOrderDetails(token string, orderID string) (*OrderDetails, int, error) {
 	url := fmt.Sprintf("%s/orders/details/?token=%s&id=%s", BASE_URL, token, orderID)
 	var order *OrderDetails
-	body, code, err := u.HttpGet(url)
+	body, code, err := u.HttpGet(url, nil)
 	if err != nil {
 		return nil, code, err
 	}

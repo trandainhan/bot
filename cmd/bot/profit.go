@@ -10,8 +10,13 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
+var bn = binance.Binance{
+	RedisClient: redisClient,
+}
+
 func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID, origClientOrderID *string, isLiquidBaseBinanceTradeBid bool) {
 	// perFeeBinance := redisClient.Get("per_fee_binance").(float64) // 0.075 / 100
+
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
 
 	bidB := orderDetails.Price
@@ -32,12 +37,12 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 			origQty, coin, totalUSDTGive, totalVNTRecieve, status, askB, profit, perProfit)
 
 		// AllFundMes := Binance_CheckFundAllGetMessage()
-		allFundMessage := binance.GetFundsMessages()
+		allFundMessage := bn.GetFundsMessages()
 		text = fmt.Sprintf("%s %s", text, allFundMessage)
 
 		// ;Tinh USDT Margin
 		name := "USDT"
-		marginDetails := binance.GetMarginDetails()
+		marginDetails, _ := bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
@@ -58,12 +63,12 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		text := fmt.Sprintf("%s %s \n %s: %v %s - %v USDT(+) - %v VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
 			origQty, coin, totalUSDTRecieve, totalVNTGive, status, askB, profit, perProfit)
 
-		allFundMessage := binance.GetFundsMessages()
+		allFundMessage := bn.GetFundsMessages()
 		text = fmt.Sprintf("%s %s", text, allFundMessage)
 
 		// ;Tinh USDT Margin
 		name := "USDT"
-		marginDetails := binance.GetMarginDetails()
+		marginDetails, _ := bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
@@ -74,7 +79,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 	}
 }
 
-func calculateUSDTMargin(marginDetails binance.MarginDetailsResposne, name string) float64 {
+func calculateUSDTMargin(marginDetails *binance.MarginDetails, name string) float64 {
 	netAsset := 0.0
 	userAssets := marginDetails.UserAssets
 	for _, userAsset := range userAssets {
@@ -96,12 +101,12 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 	teleClient.SendMessage(text, -357553425)
 }
 
-func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID *string) binance.OrderDetailsResp {
+func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID *string) *binance.OrderDetailsResp {
 	chatID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
-	var orderDetails binance.OrderDetailsResp
+	var orderDetails *binance.OrderDetailsResp
 	var err error
 	for j := 0; j <= 2; j++ {
-		orderDetails, err = binance.GetOrder(coin+"USDT", *binanceOrderID, *origClientOrderID)
+		orderDetails, err = bn.GetOrder(coin+"USDT", *binanceOrderID, *origClientOrderID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
 			teleClient.SendMessage(text, chatID)

@@ -1,29 +1,9 @@
 package binance
 
-// Binance_CheckFundAllGetMessage()
-// {
-// 	content := BinanceAPI_CheckFund()
-// 	parsed := JSON.Load(content)
-// 	Maxindex := parsed.balances.Maxindex()
-// 	Message1 := "Binance Funds:  "
-// 	Message2 := "%0A Inorder:  "
-//
-//
-// 	Loop, %Maxindex%
-// 	{
-// 		asset := parsed.balances[a_index].asset
-// 		freefund := parsed.balances[a_index].free
-// 		lockedfund := parsed.balances[a_index].locked
-//
-// 		if((freefund > 0) or (lockedfund >0))
-// 		{
-// 			Message1 := Message1 . freefund . " " . asset . "  -  "
-// 			Message2 := Message2 . lockedfund . " " . asset . "  -  "
-// 		}
-// 	}
-// 	Message := Message1 . Message2
-// 	return Message
-// }
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Balance struct {
 	Asset      string  `json:"asset"`
@@ -35,25 +15,42 @@ type Fund struct {
 	Balances []Balance `json:"balances"`
 }
 
-func CheckFund(name string) float64 {
-	return 0.0
-	// URL := "https://api.binance.com/api/v3/account?"
-	//
-	// TimeUNIX = %A_NowUTC%
-	// TimeUNIX -= 19700101000000,seconds
-	// FileReadLine, offset, %A_ScriptDir%\file\Offsetime.txt, 1
-	// TimeUNIX := (TimeUNIX-5)*1000 + offset
-	//
-	// queryString := "&recvWindow=59000&timestamp=" . TimeUNIX
-	//
-	// content := GetContentWithAPI("GET",link,queryString)
-	//
-	// return content
-
+func (binance Binance) CheckFund(name string) float64 {
+	fund := binance.checkFund()
+	var result float64
+	for _, balance := range fund.Balances {
+		if balance.Asset == name {
+			result = balance.Free
+		}
+	}
+	return result
 }
 
-func GetFundsMessages() string {
-	return ""
+func (binance Binance) checkFund() *Fund {
+	params := make(map[string]string)
+	body, _, err := binance.makeRequest("GET", params, "/api/v3/account")
+	var fund *Fund
+	err = json.Unmarshal([]byte(body), fund)
+	if err != nil {
+		return nil
+	}
+	return fund
+}
+
+func (binance Binance) GetFundsMessages() string {
+	fund := binance.checkFund()
+	text1 := "Binance Funds:  "
+	text2 := "\n Inorder: "
+	for _, balance := range fund.Balances {
+		asset := balance.Asset
+		freeFund := balance.Free
+		lockedFund := balance.LockedFund
+		if freeFund > 0 || lockedFund > 0 {
+			text1 = fmt.Sprintf("%s %v %v - ", text1, freeFund, asset)
+			text2 = fmt.Sprintf("%s %v %v - ", text1, lockedFund, asset)
+		}
+	}
+	return text1 + text2
 }
 
 type UserAsset struct {
@@ -61,11 +58,20 @@ type UserAsset struct {
 	NetAsset float64
 }
 
-type MarginDetailsResposne struct {
+type MarginDetails struct {
 	UserAssets []UserAsset `json:"userAssets"`
 }
 
-func GetMarginDetails() MarginDetailsResposne {
-	userAssets := []UserAsset{}
-	return MarginDetailsResposne{UserAssets: userAssets}
+func (binance Binance) GetMarginDetails() (*MarginDetails, error) {
+	params := make(map[string]string)
+	body, _, err := binance.makeRequest("GET", params, "/sapi/v1/margin/account")
+	if err != nil {
+
+	}
+	var marginDetails *MarginDetails
+	err = json.Unmarshal([]byte(body), marginDetails)
+	if err != nil {
+		return nil, err
+	}
+	return marginDetails, nil
 }

@@ -48,8 +48,14 @@ func BuildUrlWithParams(baseURL string, params map[string]string) (string, error
 	return u.String(), nil
 }
 
-func HttpGet(url string) (string, int, error) {
-	resp, body, errs := gorequest.New().
+func HttpGet(url string, headers *map[string]string) (string, int, error) {
+	request := gorequest.New()
+	if headers != nil {
+		for k, v := range *headers {
+			request.Set(k, v)
+		}
+	}
+	resp, body, errs := request.
 		Get(url).
 		Retry(3, 5*time.Second, http.StatusBadRequest, http.StatusInternalServerError).
 		End()

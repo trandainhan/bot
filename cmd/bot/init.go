@@ -18,7 +18,7 @@ func init() {
 	flag.Float64Var(&maxPrice, "maxPrice", 1000000, "Min Price")
 	flag.Int64Var(&defaultSleepSeconds, "defaultSleepSeconds", 18, "Sleep in second then restart")
 	flag.IntVar(&decimalsToRound, "decimalsToRound", 3, "Decimal to round")
-	flag.IntVar(&quantityToGetPrice, "quantityToGetPrice", 8, "Quantity To Get Price")
+	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 8.0, "Quantity To Get Price")
 	flag.Parse()
 
 	// setup client

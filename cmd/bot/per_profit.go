@@ -16,7 +16,11 @@ func calculatePerProfit() bool {
 	var params *fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), params)
 
-	usdtFund := binance.CheckFund("USDT")
+	bn := binance.Binance{
+		RedisClient: redisClient,
+	}
+
+	usdtFund := bn.CheckFund("USDT")
 	perProfitBid := params.Spread/2 + (usdtFund-params.USDTOffset2-params.USDTMidPoint)/1000*params.ProfitPerThousand
 	perProfitAsk := params.Spread - perProfitBid
 

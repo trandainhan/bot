@@ -117,7 +117,10 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 	}
 
 	newSellQuantity = utils.RoundTo(newSellQuantity, decimalsToRound)
-	orderDetails, err := binance.SellLimit(coin+"USDT", bidB, newSellQuantity)
+	bn := binance.Binance{
+		RedisClient: redisClient,
+	}
+	orderDetails, err := bn.SellLimit(coin+"USDT", bidB, newSellQuantity)
 	binanceOrderID := orderDetails.ID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {

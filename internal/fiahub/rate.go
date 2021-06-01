@@ -22,7 +22,7 @@ func GetUSDVNDRate() (float64, error) {
 	var BASE_URL = os.Getenv("fiahub_url")
 	url := fmt.Sprintf("%s/vars/currency_rates", BASE_URL)
 
-	body, _, err := u.HttpGet(url)
+	body, _, err := u.HttpGet(url, nil)
 	if err != nil {
 		return 0.0, err
 	}

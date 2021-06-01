@@ -16,7 +16,7 @@ var (
 	teleClient          *telegram.TeleBot
 	decimalsToRound     int
 	defaultSleepSeconds int64
-	quantityToGetPrice  int
+	quantityToGetPrice  float64
 	fiahubToken         string
 )
 
