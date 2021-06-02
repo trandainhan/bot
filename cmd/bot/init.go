@@ -28,21 +28,13 @@ func init() {
 	teleClient = telegram.NewTeleBot(os.Getenv("tele_bot_token"))
 
 	// get environment for login
-	email := os.Getenv("email")
-	password := os.Getenv("password")
-	fiahubToken = fiahub.Login(email, password)
-	redisClient.Set("fiahub_token", fiahubToken)
+	login()
 
 	// Cancel all order before starting
 	fiahub.CancelAllOrder(fiahubToken)
 	time.Sleep(2 * time.Second)
 
-	// Coin gia tot params()
-	params := fiahub.GetCoinGiaTotParams()
-	validated := validateCoinGiaTotParams(params)
-	if validated {
-		renewCoinGiaTotParams(params)
-	}
+	setCoinGiatotParams()
 
 	// Init value in redis
 	initValuesInRedis()
@@ -61,4 +53,20 @@ func initValuesInRedis() {
 	redisClient.Set("per_fee_binance", 0.075/100)
 	redisClient.Set("per_profit_ask", 0.0)
 	redisClient.Set("per_profit_bid", 0.0)
+}
+
+func setCoinGiatotParams() {
+	// Coin gia tot params()
+	params := fiahub.GetCoinGiaTotParams()
+	validated := validateCoinGiaTotParams(params)
+	if validated {
+		renewCoinGiaTotParams(params)
+	}
+}
+
+func login() {
+	email := os.Getenv("email")
+	password := os.Getenv("password")
+	fiahubToken = fiahub.Login(email, password)
+	redisClient.Set("fiahub_token", fiahubToken)
 }

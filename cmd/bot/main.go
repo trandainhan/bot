@@ -1,9 +1,10 @@
 package main
 
 import (
-	"log"
+	"time"
 
 	"gitlab.com/fiahub/bot/internal/binance"
+	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 	"gitlab.com/fiahub/bot/internal/telegram"
 )
@@ -21,17 +22,8 @@ var (
 )
 
 func main() {
-	// perFeeBinance := redisClient.Get("per_fee_binance").(float64) // 0.075 / 100
-	// perProfitAsk := redisClient.Get("per_profit_ask").(float64)
-	// perProfitBid := redisClient.Get("per_profit_bid").(float64)
-
 	marketParam := coin + "USDT"
 	bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
-
-	log.Println(bidPriceByQuantity)
-	// log.Println(perProfitBid)
-
-	// go renew params
 
 	// Ask trading
 	var perProfitStep float64
@@ -61,4 +53,33 @@ func main() {
 
 	perProfitStep = 4.0
 	go bid_worker("rikiatb4", coin, bidPriceByQuantity, perProfitStep)
+
+	// go renew params, env, token
+	go func() {
+		for {
+			time.Sleep(30 * time.Second)
+			setCoinGiatotParams()
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(5 * time.Second)
+			calculatePerProfit()
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(176 * time.Second)
+			fiahub.CancelAllOrder(fiahubToken)
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(3600 * time.Second)
+			login()
+		}
+	}()
 }
