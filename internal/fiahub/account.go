@@ -17,7 +17,7 @@ type LoginResponse struct {
 }
 
 func Login(email, password string) string {
-	url := os.Getenv("fiahub_url")
+	url := os.Getenv("FIAHUB_URL")
 	data := LoginRequest{
 		Email:    email,
 		Password: password,

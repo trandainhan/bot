@@ -52,7 +52,7 @@ type OrderBook struct {
 }
 
 func getOrderBook(marketParam string, limit int) *OrderBook {
-	var BASE_URL = os.Getenv("binance_url") // https://api.binance.com
+	var BASE_URL = os.Getenv("BINANCE_URL")
 	url := fmt.Sprintf("%s/api/v3/depth?symbol=%s&limit=%d", BASE_URL, marketParam, limit)
 	body, _, err := utils.HttpGet(url, nil)
 	if err != nil {

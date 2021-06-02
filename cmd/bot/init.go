@@ -23,9 +23,9 @@ func init() {
 
 	// setup client
 	ctx := context.Background()
-	redisURL := os.Getenv("redis_url")
+	redisURL := os.Getenv("REDIS_URL")
 	redisClient = rediswrapper.NewRedisClient(ctx, redisURL)
-	teleClient = telegram.NewTeleBot(os.Getenv("tele_bot_token"))
+	teleClient = telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 
 	// get environment for login
 	login()
@@ -50,6 +50,7 @@ func init() {
 }
 
 func initValuesInRedis() {
+	redisClient.Set("runable", true)
 	redisClient.Set("per_fee_binance", 0.075/100)
 	redisClient.Set("per_profit_ask", 0.0)
 	redisClient.Set("per_profit_bid", 0.0)
@@ -65,8 +66,8 @@ func setCoinGiatotParams() {
 }
 
 func login() {
-	email := os.Getenv("email")
-	password := os.Getenv("password")
+	email := os.Getenv("FIAHUB_EMAIL")
+	password := os.Getenv("FIAHUB_PASSWORD")
 	fiahubToken = fiahub.Login(email, password)
 	redisClient.Set("fiahub_token", fiahubToken)
 }

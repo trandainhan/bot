@@ -35,7 +35,7 @@ func main() {
 	go ask_worker("riki2", coin, askPriceByQuantity, perProfitStep)
 
 	perProfitStep = 3.0
-	go ask_worker("riki13", coin, askPriceByQuantity, perProfitStep)
+	go ask_worker("riki3", coin, askPriceByQuantity, perProfitStep)
 
 	perProfitStep = 4.0
 	go ask_worker("riki4", coin, askPriceByQuantity, perProfitStep)

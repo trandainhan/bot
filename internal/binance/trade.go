@@ -47,7 +47,7 @@ func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetails
 }
 
 func (binance Binance) makeRequest(httpType string, params map[string]string, postURL string) (string, int, error) {
-	var BASE_URL = os.Getenv("binance_url") // https://api.binance.com
+	var BASE_URL = os.Getenv("BINANCE_URL")
 	now := time.Now()
 	sec := now.UnixNano()
 	timeDifferences := binance.RedisClient.Get("local_binance_time_difference").(int64)
@@ -57,8 +57,8 @@ func (binance Binance) makeRequest(httpType string, params map[string]string, po
 
 	queryString := utils.BuildQueryStringFromMap(params)
 
-	binanceAPIKey := os.Getenv("binance_api_key")
-	binanceAPISecret := os.Getenv("binance_api_secret")
+	binanceAPIKey := os.Getenv("BINANCE_API_KEY")
+	binanceAPISecret := os.Getenv("BINANCE_API_SECRET")
 
 	hmac := utils.GenerateHmac(queryString, binanceAPISecret)
 	params["signature"] = hmac

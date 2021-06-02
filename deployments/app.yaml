@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot_doge
+  namespace: bot
+spec:
+  selector:
+    matchLabels:
+      app: bot_doge
+      tier: bot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bot_doge
+        tier: bot
+    spec:
+      containers:
+        - name: bot
+          image: registry.gitlab.com/fiahub/bot:VERSION
+          imagePullPolicy: IfNotPresent
+          command:
+            - "bot"
+            - "-coin"
+            - "doge"
+            - "-minPrice"
+            - "3450"
+            - "-maxPrice"
+            - "46000"
+          envFrom:
+            - secretRef: { name: secrets.bot }
+            - configMapRef: { name: configmap.bot }
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+            requests:
+              memory: "512Mi"
+              cpu: "400m"
+      nodeSelector:
+        lifecycle: Ec2Mixed
+        name: phoenix
+      imagePullSecrets:
+        - name: gitlab-regcred

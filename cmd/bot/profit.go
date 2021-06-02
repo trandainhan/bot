@@ -102,7 +102,7 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 }
 
 func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID string) *binance.OrderDetailsResp {
-	chatID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
+	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	var orderDetails *binance.OrderDetailsResp
 	var err error
 	for j := 0; j <= 2; j++ {

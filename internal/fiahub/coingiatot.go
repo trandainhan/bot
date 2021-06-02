@@ -20,8 +20,8 @@ type CoinGiaTotParams struct {
 }
 
 func GetCoinGiaTotParams() *CoinGiaTotParams {
-	BASE_URL := os.Getenv("coingiatot_url")
-	BOT_NAME := os.Getenv("bot_name")
+	BASE_URL := os.Getenv("COINGIATOT_URL")
+	BOT_NAME := os.Getenv("BOT_NAME")
 	url := fmt.Sprintf("%s/bot_vars?bot_name=%s", BASE_URL, BOT_NAME)
 	body, _, err := u.HttpGet(url, nil)
 	if err != nil {

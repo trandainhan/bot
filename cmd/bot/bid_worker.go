@@ -8,7 +8,7 @@ import (
 )
 
 func bid_worker(id string, coin string, bidB float64, perProfitStep float64) {
-	chatID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
+	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	for {
 		runable := redisClient.Get("runable").(bool)
 		riki1_runable := redisClient.Get("riki1_runable").(bool)

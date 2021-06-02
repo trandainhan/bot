@@ -19,7 +19,7 @@ type Rates struct {
 }
 
 func GetUSDVNDRate() (float64, error) {
-	var BASE_URL = os.Getenv("fiahub_url")
+	var BASE_URL = os.Getenv("FIAHUB_URL")
 	url := fmt.Sprintf("%s/vars/currency_rates", BASE_URL)
 
 	body, _, err := u.HttpGet(url, nil)
@@ -32,7 +32,7 @@ func GetUSDVNDRate() (float64, error) {
 		return 0.0, err
 	}
 
-	teleClient := telegram.NewTeleBot(os.Getenv("tele_bot_token"))
+	teleClient := telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 	vndRate := rates.USD.Rates["vnd"]
 	var text string
 	if vndRate > 22000 && vndRate < 25000 {
