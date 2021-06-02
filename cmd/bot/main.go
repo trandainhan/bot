@@ -35,28 +35,30 @@ func main() {
 
 	// Ask trading
 	var perProfitStep float64
+
 	perProfitStep = 1.0
 	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep)
 
 	perProfitStep = 2.0
-	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep)
+	go ask_worker("riki2", coin, askPriceByQuantity, perProfitStep)
 
 	perProfitStep = 3.0
-	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep)
+	go ask_worker("riki13", coin, askPriceByQuantity, perProfitStep)
 
 	perProfitStep = 4.0
-	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep)
+	go ask_worker("riki4", coin, askPriceByQuantity, perProfitStep)
 
 	// go bid_worker
+
 	perProfitStep = 1.0
-	go bid_worker("riki1", coin, bidPriceByQuantity, perProfitStep)
+	go bid_worker("rikiatb1", coin, bidPriceByQuantity, perProfitStep)
 
 	perProfitStep = 2.0
-	go bid_worker("riki1", coin, bidPriceByQuantity, perProfitStep)
+	go bid_worker("rikiatb2", coin, bidPriceByQuantity, perProfitStep)
 
 	perProfitStep = 3.0
-	go bid_worker("riki1", coin, bidPriceByQuantity, perProfitStep)
+	go bid_worker("rikiatb3", coin, bidPriceByQuantity, perProfitStep)
 
 	perProfitStep = 4.0
-	go bid_worker("riki1", coin, bidPriceByQuantity, perProfitStep)
+	go bid_worker("rikiatb4", coin, bidPriceByQuantity, perProfitStep)
 }
