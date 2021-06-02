@@ -14,7 +14,7 @@ var bn = binance.Binance{
 	RedisClient: redisClient,
 }
 
-func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID, origClientOrderID *string, isLiquidBaseBinanceTradeBid bool) {
+func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID *string, origClientOrderID string, isLiquidBaseBinanceTradeBid bool) {
 	// perFeeBinance := redisClient.Get("per_fee_binance").(float64) // 0.075 / 100
 
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
@@ -101,12 +101,12 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 	teleClient.SendMessage(text, -357553425)
 }
 
-func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID *string) *binance.OrderDetailsResp {
+func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID string) *binance.OrderDetailsResp {
 	chatID, _ := strconv.ParseInt(os.Getenv("chat_id"), 10, 64)
 	var orderDetails *binance.OrderDetailsResp
 	var err error
 	for j := 0; j <= 2; j++ {
-		orderDetails, err = bn.GetOrder(coin+"USDT", *binanceOrderID, *origClientOrderID)
+		orderDetails, err = bn.GetOrder(coin+"USDT", *binanceOrderID, origClientOrderID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
 			teleClient.SendMessage(text, chatID)

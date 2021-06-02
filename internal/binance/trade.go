@@ -9,7 +9,7 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func (binance Binance) SellLimit(marketParam string, price, quantity float64) (*OrderDetails, error) {
+func (binance Binance) SellLimit(marketParam string, price, quantity float64) (*OrderDetailsResp, error) {
 	params := map[string]string{
 		"symbol":      marketParam,
 		"side":        "SELL",
@@ -21,7 +21,7 @@ func (binance Binance) SellLimit(marketParam string, price, quantity float64) (*
 	return binance.makeTradeRequest(params)
 }
 
-func (binance Binance) BuyLimit(marketParam string, price float64, quantity float64) (*OrderDetails, error) {
+func (binance Binance) BuyLimit(marketParam string, price float64, quantity float64) (*OrderDetailsResp, error) {
 	params := map[string]string{
 		"symbol":      marketParam,
 		"side":        "BUY",
@@ -33,12 +33,12 @@ func (binance Binance) BuyLimit(marketParam string, price float64, quantity floa
 	return binance.makeTradeRequest(params)
 }
 
-func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetails, error) {
+func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetailsResp, error) {
 	body, _, err := binance.makeRequest("POST", params, "/api/v3/order")
 	if err != nil {
 
 	}
-	var order *OrderDetails
+	var order *OrderDetailsResp
 	err = json.Unmarshal([]byte(body), order)
 	if err != nil {
 		return nil, err
@@ -55,12 +55,12 @@ func (binance Binance) makeRequest(httpType string, params map[string]string, po
 	params["recvWindow"] = "59000"
 	params["timestamp"] = fmt.Sprintf("%v", mili)
 
-	url_with_para, _ := utils.BuildUrlWithParams(fmt.Sprintf("%s%s", BASE_URL, postURL), params)
+	queryString := utils.BuildQueryStringFromMap(params)
 
 	binanceAPIKey := os.Getenv("binance_api_key")
 	binanceAPISecret := os.Getenv("binance_api_secret")
 
-	hmac := utils.GenerateHmac(url_with_para, binanceAPISecret)
+	hmac := utils.GenerateHmac(queryString, binanceAPISecret)
 	params["signature"] = hmac
 
 	final_url, _ := utils.BuildUrlWithParams(fmt.Sprintf("%s/order", BASE_URL), params)

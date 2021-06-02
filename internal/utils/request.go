@@ -64,3 +64,11 @@ func HttpGet(url string, headers *map[string]string) (string, int, error) {
 	}
 	return body, resp.StatusCode, nil
 }
+
+func BuildQueryStringFromMap(params map[string]string) string {
+	values := url.Values{}
+	for k, v := range params {
+		values.Add(k, v)
+	}
+	return values.Encode()
+}

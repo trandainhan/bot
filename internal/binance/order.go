@@ -8,9 +8,14 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-type OrderDetails struct {
-	ID            *string
-	ClientOrderID *string
+type OrderDetailsResp struct {
+	OrderID       *string `json:"orderId"`
+	ClientOrderID string  `json:"clientOrderId"`
+	OriginQty     float64 `json:"origQty"`
+	ExecutedQty   float64 `json:"executedQty"`
+	Status        string  `json:"status"`
+	Side          string  `json:"side"`
+	Price         float64 `json:"price"`
 }
 
 func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64) {
@@ -57,14 +62,6 @@ func getOrderBook(marketParam string, limit int) *OrderBook {
 	return orderBook
 }
 
-type OrderDetailsResp struct {
-	OriginQty   float64 `json:"origQty"`
-	ExecutedQty float64 `json:"executedQty"`
-	Status      string  `json:"status"`
-	Side        string  `json:"side"`
-	Price       float64 `json:"price"`
-}
-
 func (binance Binance) GetOrder(marketParam string, orderId string, originClientOrderID string) (*OrderDetailsResp, error) {
 	params := map[string]string{
 		"symbol":            marketParam,
@@ -75,7 +72,7 @@ func (binance Binance) GetOrder(marketParam string, orderId string, originClient
 	if err != nil {
 		return nil, err
 	}
-	var orderDetails *OrderDetailsResp
-	_ = json.Unmarshal([]byte(body), orderDetails)
-	return orderDetails, nil
+	var orderDetailsResp *OrderDetailsResp
+	_ = json.Unmarshal([]byte(body), orderDetailsResp)
+	return orderDetailsResp, nil
 }

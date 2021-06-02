@@ -124,7 +124,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 		RedisClient: redisClient,
 	}
 	orderDetails, err := bn.BuyLimit(coin+"USDT", askB, newSellQuantity)
-	binanceOrderID := orderDetails.ID
+	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
 		text := fmt.Sprintf("Error! @ndtan %s %s %s Không Thực hiện được lệnh", coin, id, orderType)
