@@ -20,7 +20,7 @@ func HttpPost(url string, data interface{}, headers *map[string]string) (string,
 	resp, result, errs := request.
 		Post(url).
 		Retry(
-			5,
+			3,
 			time.Second*5,
 			http.StatusBadGateway,
 			http.StatusServiceUnavailable,
@@ -57,7 +57,14 @@ func HttpGet(url string, headers *map[string]string) (string, int, error) {
 	}
 	resp, body, errs := request.
 		Get(url).
-		Retry(3, 5*time.Second, http.StatusBadRequest, http.StatusInternalServerError).
+		Retry(
+			3,
+			time.Second*5,
+			http.StatusBadGateway,
+			http.StatusServiceUnavailable,
+			http.StatusGatewayTimeout,
+			http.StatusForbidden,
+		).
 		End()
 	if len(errs) > 0 {
 		return "", resp.StatusCode, errs[0]
