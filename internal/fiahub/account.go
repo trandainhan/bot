@@ -3,6 +3,7 @@ package fiahub
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	u "gitlab.com/fiahub/bot/internal/utils"
@@ -24,7 +25,11 @@ func Login(email, password string) string {
 		Email:    email,
 		Password: password,
 	}
-	body, _, _ := u.HttpPost(fmt.Sprintf("%s/sessions", url), data, nil)
+	body, _, err := u.HttpPost(fmt.Sprintf("%s/sessions", url), data, nil)
+	if err != nil {
+		log.Println(body)
+		panic(err)
+	}
 	var result LoginResponse
 	if err := json.Unmarshal([]byte(body), &result); err != nil {
 		panic(err)
