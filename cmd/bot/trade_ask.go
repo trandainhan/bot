@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -16,9 +15,9 @@ import (
 
 func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY")) // 18000000
-	perCancel := redisClient.Get("per_cancel").(float64)
-	perProfit := redisClient.Get("per_profit_ask").(float64) // this is ask worker
-	fiahubToken := redisClient.Get("fiahub_token").(string)
+	perCancel := redisClient.GetFloat64("per_cancel")
+	perProfit := redisClient.GetFloat64("per_profit_ask")
+	fiahubToken := redisClient.Get("fiahub_token")
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	chatErrorID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 
@@ -35,7 +34,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	askOrder := fiahub.Order{
 		Coin:               coin,
 		OriginalCoinAmount: originalCoinAmount,
-		PriceSellRandom:    pricesellRandom,
+		PricePerUnitCents:  pricesellRandom,
 		Currency:           "VNT",
 		Type:               orderType,
 	}
@@ -74,11 +73,10 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 		}
 
 		// Trigger cancel process
-		bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
-		log.Println(bidPriceByQuantity) // only use askPriceByQuantity, bidPriceByQuantity will be used in BidOrder worker
+		_, askPriceByQuantity := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
 		perchange := math.Abs((askPriceByQuantity - askB) / askB)
 		if perchange > perCancel || executedQty > 0 {
-			lastestCancelAllTime := redisClient.Get("lastest_cancel_all_time").(time.Time)
+			lastestCancelAllTime := redisClient.GetTime("lastest_cancel_all_time")
 			tnow := time.Now()
 			elapsedTime := tnow.Sub(lastestCancelAllTime)
 			if elapsedTime < 10000*time.Millisecond {

@@ -1,12 +1,11 @@
 package main
 
 import (
-	// "gitlab.com/fiahub/bot/internal/rediswrapper"
 	"math"
 )
 
 func calculateBidFFromBidB(bidB, feePerBinance, perProfit, minPrice, maxPrice float64) (float64, bool) {
-	rate := redisClient.Get("usdtvnd_rate").(float64)
+	rate := redisClient.GetFloat64("usdtvnd_rate")
 	bidF := (bidB * rate * (1 - feePerBinance)) / (1 + perProfit)
 	bidF = math.Round(bidF)
 	if bidF < maxPrice && bidF > minPrice {
@@ -16,7 +15,7 @@ func calculateBidFFromBidB(bidB, feePerBinance, perProfit, minPrice, maxPrice fl
 }
 
 func calculateAskFFromAskB(askB, perFeeBinance, perProfit, minPrice, maxPrice float64) (float64, bool) {
-	rate := redisClient.Get("usdtvnd_rate").(float64)
+	rate := redisClient.GetFloat64("usdtvnd_rate")
 	askF := askB * (1 + perFeeBinance) / (1 - perProfit) * rate
 	askF = math.Round(askF)
 	if askF > minPrice && askF < maxPrice {

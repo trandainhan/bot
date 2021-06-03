@@ -12,7 +12,7 @@ import (
 
 func calculatePerProfit() bool {
 
-	redisValue := redisClient.Get("coingiatot_params").(string)
+	redisValue := redisClient.Get("coingiatot_params")
 	var params *fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), params)
 
@@ -27,8 +27,8 @@ func calculatePerProfit() bool {
 	perProfitAsk = utils.RoundTo(perProfitAsk, 6)
 	perProfitBid = utils.RoundTo(perProfitBid, 6)
 
-	oldPerProfitAsk := redisClient.Get("per_profit_ask").(float64)
-	oldPerProfitBid := redisClient.Get("per_profit_bid").(float64)
+	oldPerProfitAsk := redisClient.GetFloat64("per_profit_ask")
+	oldPerProfitBid := redisClient.GetFloat64("per_profit_bid")
 
 	var text string
 	if usdtFund < 2600 || usdtFund > 90000 {
@@ -65,7 +65,7 @@ func calculatePerProfit() bool {
 		if perProfitchange < 0.001 {
 			text = fmt.Sprintf("perProfitchange: %v < 0.1%%", perProfitchange)
 		} else {
-			fiahubToken := redisClient.Get("fiahub_token").(string)
+			fiahubToken := redisClient.Get("fiahub_token")
 			fiahub.CancelAllOrder(fiahubToken)
 			text = fmt.Sprintf("CancelAllOrder perProfitchange: %v > 0.1%%", perProfitchange)
 		}

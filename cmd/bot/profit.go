@@ -21,7 +21,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 
 	bidB := orderDetails.Price
 	askB = orderDetails.Price
-	rate := redisClient.Get("usdtvnd_rate").(float64)
+	rate := redisClient.GetFloat64("usdtvnd_rate")
 	origQty := orderDetails.OriginQty
 	// executedQty := orderDetails.ExecutedQty
 	status := orderDetails.Status

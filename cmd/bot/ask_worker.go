@@ -10,11 +10,10 @@ import (
 func ask_worker(id string, coin string, askB float64, perProfitStep float64) {
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	for {
-		runable := redisClient.Get("runable").(bool)
-		riki1_runable := redisClient.Get("riki1_runable").(bool)
-		perFeeBinance := redisClient.Get("per_fee_binance").(float64) // 0.075 / 100
-		perProfitAsk := redisClient.Get("per_profit_ask").(float64)
-		if !(runable && riki1_runable) {
+		runable := redisClient.GetBool("runable")
+		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
+		perProfitAsk := redisClient.GetFloat64("per_profit_ask")
+		if !(runable) {
 			time.Sleep(30 * time.Second)
 			continue
 		}

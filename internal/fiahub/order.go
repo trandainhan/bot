@@ -9,7 +9,7 @@ import (
 	u "gitlab.com/fiahub/bot/internal/utils"
 )
 
-var BASE_URL = os.Getenv("fiahub_url")
+var BASE_URL = os.Getenv("FIAHUB_URL")
 
 const (
 	ORDER_CANCELLED = "cancelled"
@@ -17,12 +17,12 @@ const (
 )
 
 type Order struct {
-	Coin               string
-	OriginalCoinAmount float64
-	CoinAmount         float64
-	PriceSellRandom    float64
-	Currency           string
-	Type               string
+	Coin               string  `json:"coin"`
+	OriginalCoinAmount float64 `json:"original_coin_amount"`
+	CoinAmount         float64 `json:"coin_amount"`
+	PricePerUnitCents  float64 `json:"price_per_unit_cents"`
+	Currency           string  `json:"currency"`
+	Type               string  `json:"type"`
 }
 
 type OrderDetails struct {
@@ -48,7 +48,7 @@ func CancelAllOrder(token string) (string, int, error) {
 
 	resp, code, err := u.HttpPost(url, nil, headers)
 	if err != nil {
-		teleClient := telegram.NewTeleBot(os.Getenv("tele_fia_bot_token")) // 549902830:AAFcC-rqU5ErzwvDPfMcIKSJ6f6HzezWeUY
+		teleClient := telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 		text := fmt.Sprintf("%s \n resp: %s code: %d", url, resp, code)
 		go teleClient.SendMessage(text, -307500490)
 	}
@@ -77,7 +77,12 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 		"access-token": token,
 	}
 	url := fmt.Sprintf("%s/ask_orders", BASE_URL)
-	body, code, err := u.HttpPost(url, askOrder, headers)
+
+	data := map[string]Order{
+		"ask_order": askOrder,
+	}
+
+	body, code, err := u.HttpPost(url, data, headers)
 	var resp *CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), resp)
 	if err != nil {
@@ -91,7 +96,10 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 		"access-token": token,
 	}
 	url := fmt.Sprintf("%s/bid_orders", BASE_URL)
-	body, code, err := u.HttpPost(url, bidOrder, headers)
+	data := map[string]Order{
+		"bid_order": bidOrder,
+	}
+	body, code, err := u.HttpPost(url, data, headers)
 	var resp *CreateBidOrderResp
 	err = json.Unmarshal([]byte(body), resp)
 	if err != nil {

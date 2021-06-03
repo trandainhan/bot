@@ -2,6 +2,8 @@ package rediswrapper
 
 import (
 	"context"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 )
 
@@ -30,11 +32,41 @@ func (myRedis *MyRedis) Set(key, value interface{}) bool {
 	return true
 }
 
-func (myRedis *MyRedis) Get(key string) interface{} {
+func (myRedis *MyRedis) Get(key string) string {
 	val, err := myRedis.Client.Get(myRedis.Ctx, key).Result()
-	if err == redis.Nil {
-		return nil
-	} else if err != nil {
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+func (myRedis *MyRedis) GetBool(key string) bool {
+	val, err := myRedis.Client.Get(myRedis.Ctx, key).Bool()
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+func (myRedis *MyRedis) GetFloat64(key string) float64 {
+	val, err := myRedis.Client.Get(myRedis.Ctx, key).Float64()
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+func (myRedis *MyRedis) GetInt64(key string) int64 {
+	val, err := myRedis.Client.Get(myRedis.Ctx, key).Int64()
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+func (myRedis *MyRedis) GetTime(key string) time.Time {
+	val, err := myRedis.Client.Get(myRedis.Ctx, key).Time()
+	if err != nil {
 		panic(err)
 	}
 	return val
