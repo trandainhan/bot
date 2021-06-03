@@ -14,7 +14,7 @@ import (
 )
 
 func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep float64) {
-	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY")) // 18000000
+	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
 	perCancel := redisClient.GetFloat64("per_cancel")
 	perProfit := redisClient.GetFloat64("per_profit_ask")
 	fiahubToken := redisClient.Get("fiahub_token")
