@@ -1,0 +1,29 @@
+image: docker:19.03.12
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE
+  IMAGE_VERSION: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+  IMAGE_TAG_AUTO_DEPLOY: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+  POSTGRES_HOST_AUTH_METHOD: trust
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
+
+default:
+  services:
+    - docker:19.03.12-dind
+
+stages:
+  - build
+
+build:
+  stage: build
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:cache || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:cache --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG --tag $CI_REGISTRY_IMAGE:cache --build-arg RAILS_ENV=production --build-arg CDN_HOST=$CDN_HOST --build-arg S3_ACCESS_KEY=$S3_ACCESS_KEY --build-arg S3_SECRET_KEY=$S3_SECRET_KEY --build-arg S3_DIRECTORY=$S3_DIRECTORY .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+    - docker push $CI_REGISTRY_IMAGE:cache
+  only:
+    - tags

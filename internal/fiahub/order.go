@@ -3,6 +3,7 @@ package fiahub
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -88,6 +89,9 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	}
 
 	body, code, err := u.HttpPost(url, data, headers)
+	if err != nil { // TODO: Improve it
+		log.Printf("Err Fiahub Create Ask Order: %s", err.Error())
+	}
 	var resp *CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), resp)
 	if err != nil {
@@ -105,6 +109,9 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 		"bid_order": bidOrder,
 	}
 	body, code, err := u.HttpPost(url, data, headers)
+	if err != nil { // TODO: Improve it
+		log.Printf("Err Fiahub Create Bid Order: %s", err.Error())
+	}
 	var resp *CreateBidOrderResp
 	err = json.Unmarshal([]byte(body), resp)
 	if err != nil {
