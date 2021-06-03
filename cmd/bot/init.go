@@ -31,7 +31,10 @@ func init() {
 	login()
 
 	// Cancel all order before starting
-	fiahub.CancelAllOrder(fiahubToken)
+	fia = fiahub.Fiahub{
+		RedisClient: redisClient,
+	}
+	fia.CancelAllOrder(fiahubToken)
 	time.Sleep(2 * time.Second)
 
 	setCoinGiatotParams()
@@ -57,7 +60,6 @@ func initValuesInRedis() {
 }
 
 func setCoinGiatotParams() {
-	// Coin gia tot params()
 	params := fiahub.GetCoinGiaTotParams()
 	validated := validateCoinGiaTotParams(params)
 	if validated {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	"gitlab.com/fiahub/bot/internal/telegram"
 	u "gitlab.com/fiahub/bot/internal/utils"
@@ -40,18 +41,22 @@ type CreateBidOrderResp struct {
 	BidOrder OrderDetails `json:"bid_order"`
 }
 
-func CancelAllOrder(token string) (string, int, error) {
+func (fiahub Fiahub) CancelAllOrder(token string) (string, int, error) {
 	headers := &map[string]string{
 		"access-token": token,
 	}
 	url := fmt.Sprintf("%s/orders/cancel_all", BASE_URL)
 
+	now := time.Now()
+	miliTime := now.UnixNano() / int64(time.Millisecond)
+	fiahub.RedisClient.Set("lastest_cancel_all_time", miliTime)
 	resp, code, err := u.HttpPost(url, nil, headers)
 	if err != nil {
 		teleClient := telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 		text := fmt.Sprintf("%s \n resp: %s code: %d", url, resp, code)
 		go teleClient.SendMessage(text, -307500490)
 	}
+
 	return resp, code, err
 }
 

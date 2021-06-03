@@ -66,7 +66,7 @@ func calculatePerProfit() bool {
 			text = fmt.Sprintf("perProfitchange: %v < 0.1%%", perProfitchange)
 		} else {
 			fiahubToken := redisClient.Get("fiahub_token")
-			fiahub.CancelAllOrder(fiahubToken)
+			fia.CancelAllOrder(fiahubToken)
 			text = fmt.Sprintf("CancelAllOrder perProfitchange: %v > 0.1%%", perProfitchange)
 		}
 	}

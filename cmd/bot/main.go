@@ -19,6 +19,7 @@ var (
 	defaultSleepSeconds int64
 	quantityToGetPrice  float64
 	fiahubToken         string
+	fia                 fiahub.Fiahub
 )
 
 func main() {
@@ -72,7 +73,7 @@ func main() {
 	go func() {
 		for {
 			time.Sleep(176 * time.Second)
-			fiahub.CancelAllOrder(fiahubToken)
+			fia.CancelAllOrder(fiahubToken)
 		}
 	}()
 

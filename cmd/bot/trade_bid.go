@@ -43,7 +43,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, StatusCode: %d %s", coin, id, orderType, coinAmount, priceBuy, statusCode, err)
 		time.Sleep(60000 * time.Millisecond)
 		go teleClient.SendMessage(text, chatErrorID)
-		fiahub.CancelAllOrder(fiahubToken)
+		fia.CancelAllOrder(fiahubToken)
 		time.Sleep(5000 * time.Millisecond)
 		return
 	}
