@@ -15,15 +15,12 @@ var bn = binance.Binance{
 }
 
 func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID *string, origClientOrderID string, isLiquidBaseBinanceTradeBid bool) {
-	// perFeeBinance := redisClient.Get("per_fee_binance").(float64) // 0.075 / 100
-
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
 
 	bidB := orderDetails.Price
 	askB = orderDetails.Price
 	rate := redisClient.GetFloat64("usdtvnd_rate")
 	origQty := orderDetails.OriginQty
-	// executedQty := orderDetails.ExecutedQty
 	status := orderDetails.Status
 	side := orderDetails.Side
 	if isLiquidBaseBinanceTradeBid == false {
@@ -36,7 +33,6 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		text := fmt.Sprintf("%s %s \n %s: %v %s - %v USDT(-) - %v VNT(+) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
 			origQty, coin, totalUSDTGive, totalVNTRecieve, status, askB, profit, perProfit)
 
-		// AllFundMes := Binance_CheckFundAllGetMessage()
 		allFundMessage := bn.GetFundsMessages()
 		text = fmt.Sprintf("%s %s", text, allFundMessage)
 
