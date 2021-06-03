@@ -32,7 +32,7 @@ func (binance Binance) checkFund() *Fund {
 	var fund *Fund
 	err = json.Unmarshal([]byte(body), fund)
 	if err != nil {
-		return nil
+		panic(err)
 	}
 	return fund
 }
@@ -71,7 +71,7 @@ func (binance Binance) GetMarginDetails() (*MarginDetails, error) {
 	var marginDetails *MarginDetails
 	err = json.Unmarshal([]byte(body), marginDetails)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 	return marginDetails, nil
 }

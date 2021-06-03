@@ -58,7 +58,10 @@ func getOrderBook(marketParam string, limit int) *OrderBook {
 	if err != nil {
 	}
 	var orderBook *OrderBook
-	_ = json.Unmarshal([]byte(body), orderBook)
+	err = json.Unmarshal([]byte(body), orderBook)
+	if err != nil {
+		panic(err)
+	}
 	return orderBook
 }
 
@@ -73,6 +76,9 @@ func (binance Binance) GetOrder(marketParam string, orderId string, originClient
 		return nil, err
 	}
 	var orderDetailsResp *OrderDetailsResp
-	_ = json.Unmarshal([]byte(body), orderDetailsResp)
+	err = json.Unmarshal([]byte(body), orderDetailsResp)
+	if err != nil {
+		panic(err)
+	}
 	return orderDetailsResp, nil
 }

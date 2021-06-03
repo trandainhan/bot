@@ -3,6 +3,7 @@ package fiahub
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"gitlab.com/fiahub/bot/internal/telegram"
@@ -24,6 +25,7 @@ func GetUSDVNDRate() (float64, error) {
 
 	body, _, err := u.HttpGet(url, nil)
 	if err != nil {
+		log.Printf("Err GetUSDVNDRate: %s", err.Error())
 		return 0.0, err
 	}
 	var rates *Rates
