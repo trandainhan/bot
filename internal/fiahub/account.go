@@ -6,12 +6,13 @@ import (
 	"log"
 	"os"
 
-	u "gitlab.com/fiahub/bot/internal/utils"
+	"gitlab.com/fiahub/bot/internal/utils"
 )
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	CSRFToken string `json:"csrf_token"`
 }
 
 type LoginResponse struct {
@@ -22,10 +23,11 @@ type LoginResponse struct {
 func Login(email, password string) string {
 	url := os.Getenv("FIAHUB_URL")
 	data := LoginRequest{
-		Email:    email,
-		Password: password,
+		Email:     email,
+		Password:  password,
+		CSRFToken: utils.GenerateFiahubCSRFToken(email),
 	}
-	body, _, err := u.HttpPost(fmt.Sprintf("%s/sessions", url), data, nil)
+	body, _, err := utils.HttpPost(fmt.Sprintf("%s/sessions", url), data, nil)
 	if err != nil {
 		log.Println(body)
 		panic(err)
