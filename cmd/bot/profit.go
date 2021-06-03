@@ -88,7 +88,8 @@ func calculateUSDTMargin(marginDetails *binance.MarginDetails, name string) floa
 }
 
 func notifyWhenAssetIsLow(netAsset float64, baseText string) {
-	if netAsset < 10000 {
+	baseNetAsset, _ := strconv.ParseFloat(os.Getenv("BASE_NET_ASSET"), 64)
+	if netAsset < baseNetAsset {
 		text := fmt.Sprintf("%s @ndtan", baseText)
 		teleClient.SendMessage(text, -357553425)
 		time.Sleep(1000 * time.Millisecond)
