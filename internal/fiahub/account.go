@@ -2,8 +2,10 @@ package fiahub
 
 import (
 	"encoding/json"
-	u "gitlab.com/fiahub/bot/internal/utils"
+	"fmt"
 	"os"
+
+	u "gitlab.com/fiahub/bot/internal/utils"
 )
 
 type LoginRequest struct {
@@ -22,8 +24,7 @@ func Login(email, password string) string {
 		Email:    email,
 		Password: password,
 	}
-	body, _, _ := u.HttpPost(url, data, nil)
-
+	body, _, _ := u.HttpPost(fmt.Sprintf("%s/sessions", url), data, nil)
 	var result LoginResponse
 	if err := json.Unmarshal([]byte(body), &result); err != nil {
 		panic(err)
