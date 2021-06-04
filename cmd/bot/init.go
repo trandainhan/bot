@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"log"
 	"os"
 	"time"
 
@@ -55,6 +56,7 @@ func init() {
 }
 
 func initValuesInRedis() {
+	log.Println("Init values in redis")
 	redisClient.Set("runable", true)
 	redisClient.Set("per_cancel", 0.1)
 	redisClient.Set("per_fee_binance", 0.075/100)
@@ -67,6 +69,7 @@ func setCoinGiatotParams() {
 	validated := validateCoinGiaTotParams(params)
 	if validated {
 		renewCoinGiaTotParams(params)
+		log.Println("Renew coingiatot params")
 	}
 }
 
@@ -75,4 +78,5 @@ func login() {
 	password := os.Getenv("FIAHUB_PASSWORD")
 	fiahubToken = fiahub.Login(email, password)
 	redisClient.Set("fiahub_token", fiahubToken)
+	log.Println("Successfully login in fiahub")
 }

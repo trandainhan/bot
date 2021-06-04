@@ -84,9 +84,9 @@ type MarginDetails struct {
 
 func (binance Binance) GetMarginDetails() (*MarginDetails, error) {
 	params := make(map[string]string)
-	body, _, err := binance.makeRequest("GET", params, "/sapi/v1/margin/account")
+	body, code, err := binance.makeRequest("GET", params, "/sapi/v1/margin/account")
 	if err != nil {
-
+		log.Printf("Err GetMarginDetails, statusCode: %d err: %s", code, err.Error())
 	}
 	var marginDetails MarginDetails
 	err = json.Unmarshal([]byte(body), &marginDetails)

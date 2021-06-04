@@ -57,7 +57,7 @@ func (fiahub Fiahub) CancelAllOrder(token string) (string, int, error) {
 		text := fmt.Sprintf("%s \n resp: %s code: %d", url, resp, code)
 		go teleClient.SendMessage(text, -307500490)
 	}
-
+	log.Println("Successfully cancel all fiahub order")
 	return resp, code, err
 }
 
@@ -97,6 +97,7 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	if err != nil {
 		return nil, 500, err
 	}
+	log.Printf("Successfully create fiahub ask order: %v", resp.AskOrder)
 	return &resp.AskOrder, code, nil
 }
 
@@ -117,6 +118,7 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 	if err != nil {
 		return nil, 500, err
 	}
+	log.Printf("Successfully create fiahub bid order: %v", resp.BidOrder)
 	return &resp.BidOrder, code, nil
 }
 

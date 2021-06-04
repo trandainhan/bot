@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -43,6 +44,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	if err != nil {
 		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, StatusCode: %d %s", coin, id, orderType, coinAmount, pricesellRandom, statusCode, err)
 		time.Sleep(60000 * time.Millisecond)
+		log.Println(text)
 		go teleClient.SendMessage(text, chatErrorID)
 		fia.CancelAllOrder(fiahubToken)
 		time.Sleep(5000 * time.Millisecond)
@@ -58,6 +60,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 		orderDetails, code, err := fiahub.GetOrderDetails(fiahubToken, fiahubOrderID)
 		if err != nil {
 			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s ERROR!!! Queryorder %s StatusCode: %d fiahubOrderID: %s", coin, id, orderType, err, code, fiahubOrderID)
+			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(1000 * time.Millisecond)
 			continue
@@ -89,6 +92,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 		orderDetails, code, err = fiahub.CancelOrder(fiahubToken, fiahubOrderID)
 		if err != nil {
 			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %s with error: %s", coin, id, orderType, fiahubOrderID, err)
+			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(3000 * time.Millisecond)
 		}

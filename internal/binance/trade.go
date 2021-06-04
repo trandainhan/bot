@@ -44,6 +44,7 @@ func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetails
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Successfully make an order in binance: %v", order)
 	return &order, nil
 }
 

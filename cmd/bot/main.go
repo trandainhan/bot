@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/binance"
@@ -26,11 +27,15 @@ func main() {
 	marketParam := coin + "USDT"
 	bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 
+	const numWorker = 2
+	results := make(chan bool, numWorker)
+
 	// Ask trading
 	var perProfitStep float64
 
 	perProfitStep = 1.0
-	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep)
+	log.Println("Start ask worker riki1")
+	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep, results)
 
 	// perProfitStep = 2.0
 	// go ask_worker("riki2", coin, askPriceByQuantity, perProfitStep)
@@ -44,7 +49,8 @@ func main() {
 	// go bid_worker
 
 	perProfitStep = 1.0
-	go bid_worker("rikiatb1", coin, bidPriceByQuantity, perProfitStep)
+	log.Println("Start bid worker rikiatb1")
+	go bid_worker("rikiatb1", coin, bidPriceByQuantity, perProfitStep, results)
 
 	// perProfitStep = 2.0
 	// go bid_worker("rikiatb2", coin, bidPriceByQuantity, perProfitStep)
@@ -67,6 +73,7 @@ func main() {
 		for {
 			time.Sleep(5 * time.Second)
 			calculatePerProfit()
+			log.Println("Calculate profit")
 		}
 	}()
 
@@ -83,4 +90,9 @@ func main() {
 			login()
 		}
 	}()
+
+	for i := 0; i < numWorker; i++ {
+		<-results
+	}
+	log.Println("Finish trading bot")
 }
