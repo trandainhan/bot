@@ -21,11 +21,11 @@ func NewRedisClient(ctx context.Context, redisURL string) *MyRedis {
 		DB:       0,  // use default DB
 	})
 
-	return &MyRedis{client, ctx}
+	return &MyRedis{Client: client, Ctx: ctx}
 }
 
-func (myRedis *MyRedis) Set(key, value interface{}) bool {
-	err := myRedis.Client.Set(myRedis.Ctx, "key", value, 0).Err()
+func (myRedis *MyRedis) Set(key string, value interface{}) bool {
+	err := myRedis.Client.Set(myRedis.Ctx, key, value, 0).Err()
 	if err != nil {
 		panic(err)
 	}
