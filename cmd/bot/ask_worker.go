@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -20,7 +21,8 @@ func ask_worker(id string, coin string, askB float64, perProfitStep float64, res
 
 		askF, isOutRange := calculateAskFFromAskB(askB, perFeeBinance, perProfitAsk, minPrice, maxPrice)
 		if isOutRange {
-			text := fmt.Sprintf("%s @ndtan Error! Price out of range. PriceF: %v PriceB: %v Range: %v - %v", coin, askF, askB, minPrice, maxPrice)
+			text := fmt.Sprintf("%s @ndtan Error! Price out of range. PriceF: %v PriceAskB: %v Range: %v - %v", coin, askF, askB, minPrice, maxPrice)
+			log.Println(text)
 			go teleClient.SendMessage(text, chatID)
 			time.Sleep(2 * time.Second)
 		} else {

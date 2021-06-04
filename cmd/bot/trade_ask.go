@@ -130,6 +130,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
 		text := fmt.Sprintf("Error! @ndtan %s %s %s Không Thực hiện được lệnh", coin, id, orderType)
+		log.Println(text)
 		btcQuantity := newSellQuantity * askB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)
 		go teleClient.SendMessage(text, chatErrorID)
@@ -137,6 +138,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	}
 	if binanceOrderID != nil {
 		text := fmt.Sprintf("%s %s Chot loi Binance BuyLimit Quant: %v Price: %v ID: %s", coin, id, newSellQuantity, askB, *binanceOrderID)
+		log.Println(text)
 		isLiquidBaseBinanceTradeBid := false
 		calculateProfit(coin, newSellQuantity, askF, askB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
 

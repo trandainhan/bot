@@ -45,6 +45,7 @@ func init() {
 
 	// Set usdtvnd rate
 	rate, _ := fiahub.GetUSDVNDRate()
+	log.Printf("Fiahub usdtvnd rate %v", rate)
 	redisClient.Set("usdtvnd_rate", rate)
 
 	// Set offet time
@@ -69,7 +70,7 @@ func setCoinGiatotParams() {
 	validated := validateCoinGiaTotParams(params)
 	if validated {
 		renewCoinGiaTotParams(params)
-		log.Println("Renew coingiatot params")
+		log.Printf("Renew coingiatot params %v", params)
 	}
 }
 
