@@ -25,7 +25,7 @@ func NewRedisClient(ctx context.Context, redisURL string) *MyRedis {
 }
 
 func (myRedis *MyRedis) Set(key string, value interface{}) bool {
-	err := myRedis.Client.Set(myRedis.Ctx, key, value, 0).Err()
+	err := myRedis.Client.Set(myRedis.Ctx, key, value, 12*time.Hour).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -34,8 +34,8 @@ func (myRedis *MyRedis) Set(key string, value interface{}) bool {
 
 func (myRedis *MyRedis) Get(key string) string {
 	val, err := myRedis.Client.Get(myRedis.Ctx, key).Result()
-	if err != nil {
-		panic(err)
+	if err == redis.Nil {
+		return ""
 	}
 	return val
 }
