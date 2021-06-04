@@ -12,12 +12,11 @@ import (
 type LoginRequest struct {
 	Email     string `json:"email"`
 	Password  string `json:"password"`
-	CSRFToken string `json:"csrf_token"`
+	CSRFToken string `json:"crfs_token"`
 }
 
 type LoginResponse struct {
-	User  interface{} `json:"user"`
-	Token string      `json:"token"`
+	Token string `json:"token"`
 }
 
 func Login(email, password string) string {
@@ -29,7 +28,7 @@ func Login(email, password string) string {
 	}
 	body, _, err := utils.HttpPost(fmt.Sprintf("%s/sessions", url), data, nil)
 	if err != nil {
-		log.Println(body)
+		log.Printf("Err Login Body: %s", body)
 		panic(err)
 	}
 	var result LoginResponse
