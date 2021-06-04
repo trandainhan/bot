@@ -30,6 +30,9 @@ func init() {
 	// get environment for login
 	login()
 
+	// Init value in redis
+	initValuesInRedis()
+
 	// Cancel all order before starting
 	fia = fiahub.Fiahub{
 		RedisClient: redisClient,
@@ -39,17 +42,16 @@ func init() {
 
 	setCoinGiatotParams()
 
-	// Init value in redis
-	initValuesInRedis()
-
-	// Calculate Per profit
-	calculatePerProfit()
-
+	// Set usdtvnd rate
 	rate, _ := fiahub.GetUSDVNDRate()
 	redisClient.Set("usdtvnd_rate", rate)
 
+	// Set offet time
 	offset := binance.GetOffsetTimeUnix()
 	redisClient.Set("local_binance_time_difference", offset)
+
+	// Calculate Per profit
+	calculatePerProfit()
 }
 
 func initValuesInRedis() {
