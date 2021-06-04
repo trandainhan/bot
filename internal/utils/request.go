@@ -51,13 +51,13 @@ func BuildUrlWithParams(baseURL string, params map[string]string) (string, error
 
 func HttpGet(url string, headers *map[string]string) (string, int, error) {
 	request := gorequest.New()
+	request = request.Get(url)
 	if headers != nil {
 		for k, v := range *headers {
 			request.Set(k, v)
 		}
 	}
 	resp, body, errs := request.
-		Get(url).
 		Retry(
 			3,
 			time.Second*5,

@@ -79,8 +79,8 @@ func calculateUSDTMargin(marginDetails *binance.MarginDetails, name string) floa
 	netAsset := 0.0
 	userAssets := marginDetails.UserAssets
 	for _, userAsset := range userAssets {
-		if userAsset.Name == name {
-			netAsset = userAsset.NetAsset
+		if userAsset.Asset == name {
+			netAsset = userAsset.GetNetAsset()
 			break
 		}
 	}

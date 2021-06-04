@@ -64,7 +64,7 @@ func (binance Binance) makeRequest(httpType string, params map[string]string, po
 	hmac := utils.GenerateHmac(queryString, binanceAPISecret)
 	params["signature"] = hmac
 
-	final_url, _ := utils.BuildUrlWithParams(fmt.Sprintf("%s/order", BASE_URL), params)
+	final_url, _ := utils.BuildUrlWithParams(fmt.Sprintf("%s%s", BASE_URL, postURL), params)
 
 	headers := map[string]string{
 		"X-MBX-APIKEY": binanceAPIKey,
