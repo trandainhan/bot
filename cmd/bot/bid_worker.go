@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func bid_worker(id string, coin string, bidB float64, perProfitStep float64) {
+func bid_worker(id string, coin string, bidB float64, perProfitStep float64, results chan<- bool) {
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	for {
 		runable := redisClient.GetBool("runable")
@@ -29,4 +29,5 @@ func bid_worker(id string, coin string, bidB float64, perProfitStep float64) {
 
 		time.Sleep(3 * time.Second)
 	}
+	results <- true
 }
