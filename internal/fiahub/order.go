@@ -70,12 +70,12 @@ func CancelOrder(token string, orderID string) (*OrderDetails, int, error) {
 	if err != nil {
 		return nil, code, err
 	}
-	var order *OrderDetails
-	err = json.Unmarshal([]byte(body), order)
+	var order OrderDetails
+	err = json.Unmarshal([]byte(body), &order)
 	if err != nil {
 		return nil, 500, err
 	}
-	return order, code, nil
+	return &order, code, nil
 }
 
 func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
@@ -92,8 +92,8 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	if err != nil { // TODO: Improve it
 		log.Printf("Err Fiahub Create Ask Order: %s", err.Error())
 	}
-	var resp *CreateAskOrderResp
-	err = json.Unmarshal([]byte(body), resp)
+	var resp CreateAskOrderResp
+	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
 		return nil, 500, err
 	}
@@ -112,8 +112,8 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 	if err != nil { // TODO: Improve it
 		log.Printf("Err Fiahub Create Bid Order: %s", err.Error())
 	}
-	var resp *CreateBidOrderResp
-	err = json.Unmarshal([]byte(body), resp)
+	var resp CreateBidOrderResp
+	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
 		return nil, 500, err
 	}
@@ -122,14 +122,14 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 
 func GetOrderDetails(token string, orderID string) (*OrderDetails, int, error) {
 	url := fmt.Sprintf("%s/orders/details/?token=%s&id=%s", BASE_URL, token, orderID)
-	var order *OrderDetails
 	body, code, err := u.HttpGet(url, nil)
 	if err != nil {
 		return nil, code, err
 	}
-	err = json.Unmarshal([]byte(body), order)
+	var order OrderDetails
+	err = json.Unmarshal([]byte(body), &order)
 	if err != nil {
 		return nil, 500, err
 	}
-	return order, 200, nil
+	return &order, 200, nil
 }

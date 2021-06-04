@@ -57,12 +57,12 @@ func getOrderBook(marketParam string, limit int) *OrderBook {
 	body, _, err := utils.HttpGet(url, nil)
 	if err != nil {
 	}
-	var orderBook *OrderBook
-	err = json.Unmarshal([]byte(body), orderBook)
+	var orderBook OrderBook
+	err = json.Unmarshal([]byte(body), &orderBook)
 	if err != nil {
 		panic(err)
 	}
-	return orderBook
+	return &orderBook
 }
 
 func (binance Binance) GetOrder(marketParam string, orderId string, originClientOrderID string) (*OrderDetailsResp, error) {
@@ -75,10 +75,10 @@ func (binance Binance) GetOrder(marketParam string, orderId string, originClient
 	if err != nil {
 		return nil, err
 	}
-	var orderDetailsResp *OrderDetailsResp
-	err = json.Unmarshal([]byte(body), orderDetailsResp)
+	var orderDetailsResp OrderDetailsResp
+	err = json.Unmarshal([]byte(body), &orderDetailsResp)
 	if err != nil {
 		panic(err)
 	}
-	return orderDetailsResp, nil
+	return &orderDetailsResp, nil
 }

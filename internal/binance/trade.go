@@ -39,12 +39,12 @@ func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetails
 	if err != nil {
 		log.Printf("Err makeTradeRequest: %s", err.Error())
 	}
-	var order *OrderDetailsResp
-	err = json.Unmarshal([]byte(body), order)
+	var order OrderDetailsResp
+	err = json.Unmarshal([]byte(body), &order)
 	if err != nil {
 		return nil, err
 	}
-	return order, nil
+	return &order, nil
 }
 
 func (binance Binance) makeRequest(httpType string, params map[string]string, postURL string) (string, int, error) {

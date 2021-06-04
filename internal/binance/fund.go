@@ -29,12 +29,12 @@ func (binance Binance) CheckFund(name string) float64 {
 func (binance Binance) checkFund() *Fund {
 	params := make(map[string]string)
 	body, _, err := binance.makeRequest("GET", params, "/api/v3/account")
-	var fund *Fund
-	err = json.Unmarshal([]byte(body), fund)
+	var fund Fund
+	err = json.Unmarshal([]byte(body), &fund)
 	if err != nil {
 		panic(err)
 	}
-	return fund
+	return &fund
 }
 
 func (binance Binance) GetFundsMessages() string {
@@ -68,10 +68,10 @@ func (binance Binance) GetMarginDetails() (*MarginDetails, error) {
 	if err != nil {
 
 	}
-	var marginDetails *MarginDetails
-	err = json.Unmarshal([]byte(body), marginDetails)
+	var marginDetails MarginDetails
+	err = json.Unmarshal([]byte(body), &marginDetails)
 	if err != nil {
 		panic(err)
 	}
-	return marginDetails, nil
+	return &marginDetails, nil
 }

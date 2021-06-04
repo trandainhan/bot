@@ -29,9 +29,9 @@ func GetCoinGiaTotParams() *CoinGiaTotParams {
 		return nil
 	}
 
-	var params *CoinGiaTotParams
-	if err := json.Unmarshal([]byte(body), params); err != nil {
+	var params CoinGiaTotParams
+	if err := json.Unmarshal([]byte(body), &params); err != nil {
 		panic(err)
 	}
-	return params
+	return &params
 }

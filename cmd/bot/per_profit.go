@@ -13,8 +13,8 @@ import (
 func calculatePerProfit() bool {
 
 	redisValue := redisClient.Get("coingiatot_params")
-	var params *fiahub.CoinGiaTotParams
-	_ = json.Unmarshal([]byte(redisValue), params)
+	var params fiahub.CoinGiaTotParams
+	_ = json.Unmarshal([]byte(redisValue), &params)
 
 	bn := binance.Binance{
 		RedisClient: redisClient,

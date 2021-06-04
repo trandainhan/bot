@@ -28,8 +28,8 @@ func GetUSDVNDRate() (float64, error) {
 		log.Printf("Err GetUSDVNDRate: %s", err.Error())
 		return 0.0, err
 	}
-	var rates *Rates
-	err = json.Unmarshal([]byte(body), rates)
+	var rates Rates
+	err = json.Unmarshal([]byte(body), &rates)
 	if err != nil {
 		return 0.0, err
 	}
