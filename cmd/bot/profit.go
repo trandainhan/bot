@@ -42,7 +42,8 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
-		teleClient.SendMessage(text, -465055332)
+		chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
+		go teleClient.SendMessage(text, chatID)
 		time.Sleep(2000 * time.Millisecond)
 
 		notifyWhenAssetIsLow(netAsset, text)
@@ -68,7 +69,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
-		teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, -465055332)
 		time.Sleep(2000 * time.Millisecond)
 
 		notifyWhenAssetIsLow(netAsset, text)
@@ -91,11 +92,11 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 	baseNetAsset, _ := strconv.ParseFloat(os.Getenv("BASE_NET_ASSET"), 64)
 	if netAsset < baseNetAsset {
 		text := fmt.Sprintf("%s %s", os.Getenv("TELEGRAM_HANDLER"), baseText)
-		teleClient.SendMessage(text, -357553425)
+		go teleClient.SendMessage(text, -357553425)
 		time.Sleep(1000 * time.Millisecond)
 	}
 	text := fmt.Sprintf("USDT(Margin) %v", netAsset)
-	teleClient.SendMessage(text, -357553425)
+	go teleClient.SendMessage(text, -357553425)
 }
 
 func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID string) *binance.OrderDetailsResp {
@@ -106,7 +107,7 @@ func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origC
 		orderDetails, err = bn.GetOrder(coin+"USDT", *binanceOrderID, origClientOrderID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
-			teleClient.SendMessage(text, chatID)
+			go teleClient.SendMessage(text, chatID)
 		}
 
 		status := orderDetails.Status

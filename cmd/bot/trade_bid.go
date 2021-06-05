@@ -80,7 +80,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 			elapsedTime := tnow.Sub(lastestCancelAllTime)
 			if elapsedTime < 10000*time.Millisecond {
 				text := fmt.Sprintf("%s IDTrade: %s, CancelTime < 10s continue ElapsedTime: %v Starttime: %v", coin, id, elapsedTime, lastestCancelAllTime)
-				go teleClient.SendMessage(text, chatErrorID)
+				go teleClient.SendMessage(text, chatID)
 				time.Sleep(3000 * time.Millisecond)
 				continue
 			}
@@ -104,7 +104,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 
 	if newSellVNTQuantity < 250000 {
 		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %s", coin, id, orderType, newSellQuantity, priceBuy, fiahubOrderID)
-		go teleClient.SendMessage(text, chatErrorID)
+		go teleClient.SendMessage(text, chatID)
 		time.Sleep(0.3 * 60 * 1000 * time.Millisecond)
 		return
 	}

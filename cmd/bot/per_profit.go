@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 
 	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
@@ -33,21 +34,22 @@ func calculatePerProfit() bool {
 
 	var text string
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
+	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if usdtFund < 2600 || usdtFund > 90000 {
 		text = fmt.Sprintf("%s USDTFund: Out of range %v", teleHanlder, usdtFund)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		return false
 	}
 
 	if perProfitBid < -0.16 || perProfitBid > 0.16 {
 		text = fmt.Sprintf("%s PerProfitBid: Out of range %v", teleHanlder, perProfitBid)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		return false
 	}
 
 	if perProfitAsk < -0.16 || perProfitAsk > 0.16 {
 		text = fmt.Sprintf("%s PerProfitAsk: Out of range %v", teleHanlder, perProfitBid)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		return false
 	}
 

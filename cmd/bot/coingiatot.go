@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 
 	"gitlab.com/fiahub/bot/internal/fiahub"
 )
@@ -11,6 +12,7 @@ import (
 func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	result := true
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
+	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if params.AutoMode != 0 && params.AutoMode != 1 {
 		text := fmt.Sprintf("%s AutoMode: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
@@ -18,32 +20,32 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	}
 	if params.ProfitMax < 0 || params.ProfitMax > 1 {
 		text := fmt.Sprintf("%s ProfitMax: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	if params.ProfitPerThousand < 0 || params.ProfitPerThousand > 0.004 {
 		text := fmt.Sprintf("%s ProfitPerThousand: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	if params.Spread <= 0 || params.Spread > 0.1 {
 		text := fmt.Sprintf("%s Spead: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	if params.USDTMax < 0 || params.USDTMax > 60000 {
 		text := fmt.Sprintf("%s USDTMax: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	if params.USDTMidPoint < 0 || params.USDTMidPoint > 60000 {
 		text := fmt.Sprintf("%s USDTMidPoint: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	if params.USDTOffset2 < -30000 || params.USDTOffset2 > 240000 {
 		text := fmt.Sprintf("%s USDTOffset2: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	return result
@@ -66,6 +68,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	}
 	jsonParams, _ := json.Marshal(params)
 	redisClient.Set("coingiatot_params", string(jsonParams))
+	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if isChange {
 		autoMode := fmt.Sprintf("AutoMode: %d -> %d", oldParams.AutoMode, params.AutoMode)
 		profitMax := fmt.Sprintf("ProfitMax: %v -> %v", oldParams.ProfitMax, params.ProfitMax)
@@ -77,7 +80,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 
 		text := fmt.Sprintf("%s AutoMode Params: \n %s\n %s\n %s\n %s\n %s\n %s\n %s", os.Getenv("TELEGRAM_HANDLER"),
 			autoMode, profitMax, profitPerThousand, spread, usdtMax, usdtMidPoint, offset)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 	}
 	return isChange
 }

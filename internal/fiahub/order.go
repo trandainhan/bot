@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/telegram"
@@ -52,12 +53,13 @@ func (fiahub Fiahub) CancelAllOrder(token string) (string, int, error) {
 	miliTime := now.UnixNano() / int64(time.Millisecond)
 	fiahub.RedisClient.Set("lastest_cancel_all_time", miliTime)
 	resp, code, err := u.HttpPost(url, nil, headers)
+	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 	if err != nil {
 		teleClient := telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 		text := fmt.Sprintf("%s \n resp: %s code: %d", url, resp, code)
-		go teleClient.SendMessage(text, -307500490)
+		go teleClient.SendMessage(text, chatID)
 	}
-	log.Println("Successfully cancel all fiahub order")
+	log.Println("Successfully cancel all fiahub orders")
 	return resp, code, err
 }
 
