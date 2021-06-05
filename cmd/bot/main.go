@@ -26,6 +26,8 @@ var (
 func main() {
 	marketParam := coin + "USDT"
 	bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
+	log.Printf("bidPriceByQuantity: %v", bidPriceByQuantity)
+	log.Printf("askPriceByQuantity: %v", askPriceByQuantity)
 
 	const numWorker = 2
 	results := make(chan bool, numWorker)
