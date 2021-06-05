@@ -45,7 +45,7 @@ func init() {
 
 	// Set usdtvnd rate
 	rate, _ := fiahub.GetUSDVNDRate()
-	log.Printf("Fiahub usdtvnd rate %v", rate)
+	log.Printf("Set fiahub usdtvnd rate %v", rate)
 	redisClient.Set("usdtvnd_rate", rate)
 
 	// Set offet time
