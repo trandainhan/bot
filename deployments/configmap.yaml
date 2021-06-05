@@ -15,3 +15,5 @@ data:
   FIAHUB_EMAIL: trdainhan@gmail.com
   BASE_NET_ASSET: "100"
   TELEGRAM_HANDLER: "@tdnhan"
+  MIN_USDT_FUND: "10"
+  MAX_USDT_FUND: "90000"
