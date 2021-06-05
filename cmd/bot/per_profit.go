@@ -23,8 +23,8 @@ func calculatePerProfit() bool {
 	}
 
 	usdtFund := bn.CheckFund("USDT")
-	perProfitBid := params.Spread/2 + (usdtFund-params.USDTOffset2-params.USDTMidPoint)/1000*params.ProfitPerThousand
-	perProfitAsk := params.Spread - perProfitBid
+	perProfitBid := params.GetSpread()/2 + (usdtFund-params.GetUSDTOffset2()-params.GetUSDTMidPoint())/1000*params.GetProfitPerThousand()
+	perProfitAsk := params.GetSpread() - perProfitBid
 
 	perProfitAsk = utils.RoundTo(perProfitAsk, 6)
 	perProfitBid = utils.RoundTo(perProfitBid, 6)
