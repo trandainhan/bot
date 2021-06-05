@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"os"
 
 	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
@@ -31,20 +32,21 @@ func calculatePerProfit() bool {
 	oldPerProfitBid := redisClient.GetFloat64("per_profit_bid")
 
 	var text string
+	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	if usdtFund < 2600 || usdtFund > 90000 {
-		text = fmt.Sprintf("@ndtan USDTFund: Out of range %v", usdtFund)
+		text = fmt.Sprintf("%s USDTFund: Out of range %v", teleHanlder, usdtFund)
 		go teleClient.SendMessage(text, -465055332)
 		return false
 	}
 
 	if perProfitBid < -0.16 || perProfitBid > 0.16 {
-		text = fmt.Sprintf("@ndtan PerProfitBid: Out of range %v", perProfitBid)
+		text = fmt.Sprintf("%s PerProfitBid: Out of range %v", teleHanlder, perProfitBid)
 		go teleClient.SendMessage(text, -465055332)
 		return false
 	}
 
 	if perProfitAsk < -0.16 || perProfitAsk > 0.16 {
-		text = fmt.Sprintf("@ndtan PerProfitAsk: Out of range %v", perProfitBid)
+		text = fmt.Sprintf("%s PerProfitAsk: Out of range %v", teleHanlder, perProfitBid)
 		go teleClient.SendMessage(text, -465055332)
 		return false
 	}

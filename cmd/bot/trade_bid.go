@@ -124,7 +124,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error! @ndtan %s %s %s Không Thực hiện được lệnh", coin, id, orderType)
+		text := fmt.Sprintf("Error! %s %s %s %s Không Thực hiện được lệnh", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
 		btcQuantity := newSellQuantity * bidB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)
 		go teleClient.SendMessage(text, chatErrorID)

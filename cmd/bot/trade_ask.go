@@ -129,7 +129,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error! @ndtan %s %s %s Không Thực hiện được lệnh", coin, id, orderType)
+		text := fmt.Sprintf("Error! %s %s %s %s Không Thực hiện được lệnh", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
 		log.Println(text)
 		btcQuantity := newSellQuantity * askB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)

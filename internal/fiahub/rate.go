@@ -41,7 +41,7 @@ func GetUSDVNDRate() (float64, error) {
 		text = fmt.Sprintf("USD->VND: %v", vndRate)
 		go teleClient.SendMessage(text, -357553425)
 	} else {
-		text = fmt.Sprintf("BAO DONG USD_VNDRATE khong nam trong range 22000-25000 @ndtan")
+		text = fmt.Sprintf("BAO DONG USD_VNDRATE khong nam trong range 22000-25000 %s", os.Getenv("TELEGRAM_HANDLER"))
 		go teleClient.SendMessage(text, -357553425)
 	}
 	return vndRate, nil

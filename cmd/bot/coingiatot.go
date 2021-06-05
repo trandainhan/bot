@@ -3,44 +3,46 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"gitlab.com/fiahub/bot/internal/fiahub"
 )
 
 func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	result := true
+	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	if params.AutoMode != 0 && params.AutoMode != 1 {
-		text := "@ndtan AutoMode: Out of range"
+		text := fmt.Sprintf("%s AutoMode: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
 	if params.ProfitMax < 0 || params.ProfitMax > 1 {
-		text := "@ndtan ProfitMax: Out of range"
+		text := fmt.Sprintf("%s ProfitMax: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
 	if params.ProfitPerThousand < 0 || params.ProfitPerThousand > 0.004 {
-		text := "@ndtan ProfitPerThousand: Out of range"
+		text := fmt.Sprintf("%s ProfitPerThousand: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
 	if params.Spread <= 0 || params.Spread > 0.1 {
-		text := "@ndtan Spead: Out of range"
+		text := fmt.Sprintf("%s Spead: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
 	if params.USDTMax < 0 || params.USDTMax > 60000 {
-		text := "@ndtan USDTMax: Out of range"
+		text := fmt.Sprintf("%s USDTMax: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
 	if params.USDTMidPoint < 0 || params.USDTMidPoint > 60000 {
-		text := "@ndtan USDTMidPoint: Out of range"
+		text := fmt.Sprintf("%s USDTMidPoint: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
 	if params.USDTOffset2 < -30000 || params.USDTOffset2 > 240000 {
-		text := "@ndtan USDTOffset2: Out of range"
+		text := fmt.Sprintf("%s USDTOffset2: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
@@ -73,7 +75,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 		usdtMidPoint := fmt.Sprintf("USDTMidPoint: %v -> %v", oldParams.USDTMidPoint, params.USDTMidPoint)
 		offset := fmt.Sprintf("USDTOffset2: %v -> %v", oldParams.USDTOffset2, params.USDTOffset2)
 
-		text := fmt.Sprintf("@ndtan AutoMode Params: \n %s\n %s\n %s\n %s\n %s\n %s\n %s",
+		text := fmt.Sprintf("%s AutoMode Params: \n %s\n %s\n %s\n %s\n %s\n %s\n %s", os.Getenv("TELEGRAM_HANDLER"),
 			autoMode, profitMax, profitPerThousand, spread, usdtMax, usdtMidPoint, offset)
 		go teleClient.SendMessage(text, -465055332)
 	}
