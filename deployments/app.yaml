@@ -22,7 +22,7 @@ spec:
           command:
             - "bot"
             - "-coin"
-            - "doge"
+            - "DOGE"
             - "-minPrice"
             - "3450"
             - "-maxPrice"
