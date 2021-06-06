@@ -16,7 +16,6 @@ func HttpPost(url string, data interface{}, headers *map[string]string) (string,
 			request.Set(k, v)
 		}
 	}
-	request = request.Post(url)
 	if data != nil {
 		request.Send(data)
 	}

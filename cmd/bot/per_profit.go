@@ -23,8 +23,8 @@ func calculatePerProfit() bool {
 	}
 
 	usdtFund := bn.CheckFund("USDT")
-	perProfitBid := params.Spread/2 + (usdtFund-params.USDTOffset2-params.USDTMidPoint)/1000*params.ProfitPerThousand
-	perProfitAsk := params.Spread - perProfitBid
+	perProfitBid := params.GetSpread()/2 + (usdtFund-params.GetUSDTOffset2()-params.GetUSDTMidPoint())/1000*params.GetProfitPerThousand()
+	perProfitAsk := params.GetSpread() - perProfitBid
 
 	perProfitAsk = utils.RoundTo(perProfitAsk, 6)
 	perProfitBid = utils.RoundTo(perProfitBid, 6)
@@ -35,7 +35,9 @@ func calculatePerProfit() bool {
 	var text string
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
-	if usdtFund < 2600 || usdtFund > 90000 {
+	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
+	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
+	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
 		text = fmt.Sprintf("%s USDTFund: Out of range %v", teleHanlder, usdtFund)
 		go teleClient.SendMessage(text, chatID)
 		return false

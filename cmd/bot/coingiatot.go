@@ -13,37 +13,37 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	result := true
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
-	if params.AutoMode != 0 && params.AutoMode != 1 {
+	if params.GetAutoMode() != 0 && params.GetAutoMode() != 1 {
 		text := fmt.Sprintf("%s AutoMode: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
 		result = false
 	}
-	if params.ProfitMax < 0 || params.ProfitMax > 1 {
+	if params.GetProfitMax() < 0 || params.GetProfitMax() > 1 {
 		text := fmt.Sprintf("%s ProfitMax: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
-	if params.ProfitPerThousand < 0 || params.ProfitPerThousand > 0.004 {
+	if params.GetProfitPerThousand() < 0 || params.GetProfitPerThousand() > 0.004 {
 		text := fmt.Sprintf("%s ProfitPerThousand: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
-	if params.Spread <= 0 || params.Spread > 0.1 {
+	if params.GetSpread() <= 0 || params.GetSpread() > 0.1 {
 		text := fmt.Sprintf("%s Spead: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
-	if params.USDTMax < 0 || params.USDTMax > 60000 {
+	if params.GetUSDTMax() < 0 || params.GetUSDTMax() > 60000 {
 		text := fmt.Sprintf("%s USDTMax: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
-	if params.USDTMidPoint < 0 || params.USDTMidPoint > 60000 {
+	if params.GetUSDTMidPoint() < 0 || params.GetUSDTMidPoint() > 60000 {
 		text := fmt.Sprintf("%s USDTMidPoint: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
-	if params.USDTOffset2 < -30000 || params.USDTOffset2 > 240000 {
+	if params.GetUSDTOffset2() < -30000 || params.GetUSDTOffset2() > 240000 {
 		text := fmt.Sprintf("%s USDTOffset2: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatID)
 		result = false
@@ -70,7 +70,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	redisClient.Set("coingiatot_params", string(jsonParams))
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if isChange {
-		autoMode := fmt.Sprintf("AutoMode: %d -> %d", oldParams.AutoMode, params.AutoMode)
+		autoMode := fmt.Sprintf("AutoMode: %s -> %s", oldParams.AutoMode, params.AutoMode)
 		profitMax := fmt.Sprintf("ProfitMax: %v -> %v", oldParams.ProfitMax, params.ProfitMax)
 		profitPerThousand := fmt.Sprintf("ProfitPerThousand: %v -> %v", oldParams.ProfitPerThousand, params.ProfitPerThousand)
 		spread := fmt.Sprintf("Spread: %v -> %v", oldParams.Spread, params.Spread)

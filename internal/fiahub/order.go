@@ -29,10 +29,15 @@ type Order struct {
 }
 
 type OrderDetails struct {
-	ID         string  `json:"id"`
-	State      string  `json:"state"`
-	CoinAmount float64 `json:"coin_amount"`
-	Matching   bool    `json:"matching"`
+	ID         int    `json:"id"`
+	State      string `json:"state"`
+	CoinAmount string `json:"coin_amount"`
+	Matching   bool   `json:"matching"`
+}
+
+func (od OrderDetails) GetCoinAmount() float64 {
+	res, _ := strconv.ParseFloat(od.CoinAmount, 64)
+	return res
 }
 
 type CreateAskOrderResp struct {
@@ -63,11 +68,11 @@ func (fiahub Fiahub) CancelAllOrder(token string) (string, int, error) {
 	return resp, code, err
 }
 
-func CancelOrder(token string, orderID string) (*OrderDetails, int, error) {
+func CancelOrder(token string, orderID int) (*OrderDetails, int, error) {
 	headers := &map[string]string{
 		"access-token": token,
 	}
-	url := fmt.Sprintf("%s/orders/%s/cancel", BASE_URL, orderID)
+	url := fmt.Sprintf("%s/orders/%d/cancel", BASE_URL, orderID)
 	body, code, err := u.HttpPost(url, nil, headers)
 	if err != nil {
 		return nil, code, err
@@ -112,6 +117,7 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 		"bid_order": bidOrder,
 	}
 	body, code, err := u.HttpPost(url, data, headers)
+	log.Println(body)
 	if err != nil { // TODO: Improve it
 		log.Printf("Err Fiahub Create Bid Order: %s", err.Error())
 	}
@@ -124,8 +130,8 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 	return &resp.BidOrder, code, nil
 }
 
-func GetOrderDetails(token string, orderID string) (*OrderDetails, int, error) {
-	url := fmt.Sprintf("%s/orders/details/?token=%s&id=%s", BASE_URL, token, orderID)
+func GetOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
+	url := fmt.Sprintf("%s/orders/details/?token=%s&id=%d", BASE_URL, token, orderID)
 	body, code, err := u.HttpGet(url, nil)
 	if err != nil {
 		return nil, code, err
