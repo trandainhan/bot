@@ -59,14 +59,14 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	for {
 		orderDetails, code, err := fiahub.GetOrderDetails(fiahubToken, fiahubOrderID)
 		if err != nil {
-			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s ERROR!!! Queryorder %s StatusCode: %d fiahubOrderID: %s", coin, id, orderType, err, code, fiahubOrderID)
+			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s ERROR!!! Queryorder %s StatusCode: %d fiahubOrderID: %d", coin, id, orderType, err, code, fiahubOrderID)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(1000 * time.Millisecond)
 			continue
 		}
 		state := orderDetails.State
-		coinAmount := orderDetails.CoinAmount
+		coinAmount := orderDetails.GetCoinAmount()
 		matching = orderDetails.Matching
 		if coinAmount > 0 {
 			executedQty = originalCoinAmount - coinAmount
@@ -91,7 +91,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 		}
 		orderDetails, code, err = fiahub.CancelOrder(fiahubToken, fiahubOrderID)
 		if err != nil {
-			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %s with error: %s", coin, id, orderType, fiahubOrderID, err)
+			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %d with error: %s", coin, id, orderType, fiahubOrderID, err)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(3000 * time.Millisecond)
@@ -108,7 +108,7 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	}
 
 	if newSellVNTQuantity < 250000 {
-		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %s", coin, id, orderType, newSellQuantity, pricesellRandom, fiahubOrderID)
+		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %d", coin, id, orderType, newSellQuantity, pricesellRandom, fiahubOrderID)
 		go teleClient.SendMessage(text, chatErrorID)
 		time.Sleep(0.3 * 60 * 1000 * time.Millisecond)
 		return
