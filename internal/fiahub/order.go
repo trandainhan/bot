@@ -96,8 +96,8 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	}
 
 	body, code, err := u.HttpPost(url, data, headers)
-	if err != nil { // TODO: Improve it
-		log.Printf("Err Fiahub Create Ask Order: %s", err.Error())
+	if err != nil {
+		log.Printf("Err Fiahub Create Ask Order: %s Body: %s", err.Error(), body)
 	}
 	var resp CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
@@ -117,7 +117,7 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 		"bid_order": bidOrder,
 	}
 	body, code, err := u.HttpPost(url, data, headers)
-	if err != nil || code != 200 { // TODO: Improve it
+	if err != nil {
 		log.Printf("Err Fiahub Create Bid Order: %s Body: %s", err.Error(), body)
 		return nil, code, err
 	}
