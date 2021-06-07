@@ -35,6 +35,10 @@ type OrderDetails struct {
 	Matching   bool   `json:"matching"`
 }
 
+type CancelOrderResp struct {
+	Order OrderDetails `json:"order"`
+}
+
 func (od OrderDetails) GetCoinAmount() float64 {
 	res, _ := strconv.ParseFloat(od.CoinAmount, 64)
 	return res
@@ -77,12 +81,12 @@ func CancelOrder(token string, orderID int) (*OrderDetails, int, error) {
 	if err != nil {
 		return nil, code, err
 	}
-	var order OrderDetails
-	err = json.Unmarshal([]byte(body), &order)
+	var resp CancelOrderResp
+	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
 		return nil, 500, err
 	}
-	return &order, code, nil
+	return &resp.Order, code, nil
 }
 
 func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
