@@ -39,7 +39,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 		OriginalCoinAmount: originalCoinAmount,
 	}
 	fiahubOrder, statusCode, err := fiahub.CreateBidOrder(fiahubToken, bidOrder)
-	if err != nil {
+	if err != nil || statusCode != 200 {
 		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, StatusCode: %d %s", coin, id, orderType, coinAmount, priceBuy, statusCode, err)
 		time.Sleep(60000 * time.Millisecond)
 		go teleClient.SendMessage(text, chatErrorID)

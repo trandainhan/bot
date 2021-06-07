@@ -24,6 +24,7 @@ var (
 )
 
 func main() {
+	log.Println("Start trading bot")
 	marketParam := coin + "USDT"
 	bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 	log.Printf("bidPriceByQuantity: %v", bidPriceByQuantity)

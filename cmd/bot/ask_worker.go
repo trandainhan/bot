@@ -27,6 +27,7 @@ func ask_worker(id string, coin string, askB float64, perProfitStep float64, res
 			go teleClient.SendMessage(text, chatID)
 			time.Sleep(2 * time.Second)
 		} else {
+			log.Printf("Trade ask order with coin: %s bidf: %v bidB: %v", coin, askF, askB)
 			trade_ask(id, coin, askF, askB, perProfitStep)
 		}
 
