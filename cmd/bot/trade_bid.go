@@ -14,7 +14,7 @@ import (
 )
 
 func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep float64) {
-	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY")) // 18000000
+	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
 	perCancel := redisClient.GetFloat64("per_cancel")
 	perProfit := redisClient.GetFloat64("per_profit_bid")
 	fiahubToken := redisClient.Get("fiahub_token")
@@ -22,7 +22,8 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 	chatErrorID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 
 	perProfit = perProfit + perProfitStep*0.6/100
-	randNumber := rand.Intn(4000000)
+	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
+	randNumber := rand.Intn(randdomVntQuantity)
 
 	vntQuantity := float64(baseVntQuantity + randNumber)
 

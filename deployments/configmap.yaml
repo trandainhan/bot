@@ -10,6 +10,7 @@ data:
   COINGIATOT_URL: https://www.coingiatot.com/api/v1
   FIAHUB_URL: https://fiahub.com/api/v1
   BASE_VNT_QUANTITY: "300000"
+  RANDOM_VNT_QUANTITY: "70000"
   CHAT_ID: "-575917470"
   CHAT_ERROR_ID: "-575917470"
   FIAHUB_EMAIL: trdainhan@gmail.com
