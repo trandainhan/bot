@@ -14,11 +14,11 @@ var bn = binance.Binance{
 	RedisClient: redisClient,
 }
 
-func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID *string, origClientOrderID string, isLiquidBaseBinanceTradeBid bool) {
+func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID int, origClientOrderID string, isLiquidBaseBinanceTradeBid bool) {
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
 
-	bidB := orderDetails.Price
-	askB = orderDetails.Price
+	bidB := orderDetails.GetPrice()
+	askB = orderDetails.GetPrice()
 	rate := redisClient.GetFloat64("usdtvnd_rate")
 	origQty := orderDetails.OriginQty
 	status := orderDetails.Status
@@ -30,7 +30,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 
 		profit := utils.RoundTo((totalVNTRecieve - totalUSDTGive*rate), 0)
 		perProfit := utils.RoundTo((profit/totalVNTRecieve)*100, 2)
-		text := fmt.Sprintf("%s %s \n %s: %v %s - %v USDT(-) - %v VNT(+) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
+		text := fmt.Sprintf("%s %s \n %s: %s %s - %v USDT(-) - %v VNT(+) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
 			origQty, coin, totalUSDTGive, totalVNTRecieve, status, askB, profit, perProfit)
 
 		allFundMessage := bn.GetFundsMessages()
@@ -57,7 +57,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 
 		profit := utils.RoundTo((totalUSDTRecieve*rate - totalVNTGive), 0)
 		perProfit := utils.RoundTo((profit/(totalUSDTRecieve*rate))*100, 2)
-		text := fmt.Sprintf("%s %s \n %s: %v %s - %v USDT(+) - %v VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
+		text := fmt.Sprintf("%s %s \n %s: %s %s - %v USDT(+) - %v VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
 			origQty, coin, totalUSDTRecieve, totalVNTGive, status, askB, profit, perProfit)
 
 		allFundMessage := bn.GetFundsMessages()
@@ -99,12 +99,12 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 	go teleClient.SendMessage(text, -357553425)
 }
 
-func getBinanceOrderDetail(id string, coin string, binanceOrderID *string, origClientOrderID string) *binance.OrderDetailsResp {
+func getBinanceOrderDetail(id string, coin string, binanceOrderID int, origClientOrderID string) *binance.OrderDetailsResp {
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	var orderDetails *binance.OrderDetailsResp
 	var err error
 	for j := 0; j <= 2; j++ {
-		orderDetails, err = bn.GetOrder(coin+"USDT", *binanceOrderID, origClientOrderID)
+		orderDetails, err = bn.GetOrder(coin+"USDT", binanceOrderID, origClientOrderID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
 			go teleClient.SendMessage(text, chatID)

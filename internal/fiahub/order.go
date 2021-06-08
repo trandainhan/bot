@@ -82,15 +82,18 @@ func CancelOrder(token string, orderID int) (*OrderDetails, int, error) {
 	if err != nil {
 		return nil, code, err
 	}
+	if code >= 400 {
+		return nil, code, errors.New("Status code >= 400" + body)
+	}
 	var resp CancelOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
-		return nil, 500, err
+		return nil, 0, err
 	}
 	return &resp.Order, code, nil
 }
 
-func CreateAskOrder(token string, askOrder Order) (*OrderDetails, error) {
+func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	headers := &map[string]string{
 		"access-token": token,
 	}
@@ -102,23 +105,21 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, error) {
 
 	body, code, err := u.HttpPost(url, data, headers)
 	if err != nil {
-		log.Printf("Err Fiahub Create Ask Order: %s Body: %s", err.Error(), body)
-		return nil, err
+		return nil, code, err
 	}
-	if code != 200 {
-		log.Printf("Err Fiahub Create Ask Order: StatusCode: %d Body: %s", code, body)
-		return nil, errors.New("Status code != 200" + body)
+	if code >= 400 {
+		return nil, code, errors.New("Status code >= 200" + body)
 	}
 	var resp CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	log.Printf("Successfully create fiahub ask order: %v", resp.AskOrder)
-	return &resp.AskOrder, nil
+	return &resp.AskOrder, code, nil
 }
 
-func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, error) {
+func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 	headers := &map[string]string{
 		"access-token": token,
 	}
@@ -128,32 +129,55 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, error) {
 	}
 	body, code, err := u.HttpPost(url, data, headers)
 	if err != nil {
-		log.Printf("Err Fiahub Create Bid Order: %s Body: %s", err.Error(), body)
-		return nil, err
+		return nil, code, err
 	}
-	if code != 200 {
-		log.Printf("Err Fiahub Create Ask Order: StatusCode: %d Body: %s", code, body)
-		return nil, errors.New("Status code != 200" + body)
+	if code >= 400 {
+		return nil, code, errors.New("Status code >= 200" + body)
 	}
 	var resp CreateBidOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	log.Printf("Successfully create fiahub bid order: %v", resp.BidOrder)
-	return &resp.BidOrder, nil
+	return &resp.BidOrder, code, nil
 }
 
-func GetOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
-	url := fmt.Sprintf("%s/orders/details/?token=%s&id=%d", BASE_URL, token, orderID)
-	body, code, err := u.HttpGet(url, nil)
+func GetAskOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
+	body, code, err := GetOrderDetails(token, orderID)
 	if err != nil {
 		return nil, code, err
 	}
-	var order OrderDetails
+	var order CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), &order)
 	if err != nil {
-		return nil, 500, err
+		return nil, 0, err
 	}
-	return &order, 200, nil
+	return &order.AskOrder, code, nil
+}
+
+func GetBidOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
+	body, code, err := GetOrderDetails(token, orderID)
+	if err != nil {
+		return nil, code, err
+	}
+	var order CreateBidOrderResp
+	err = json.Unmarshal([]byte(body), &order)
+	if err != nil {
+		return nil, 0, err
+	}
+	return &order.BidOrder, code, nil
+}
+
+func GetOrderDetails(token string, orderID int) (string, int, error) {
+	url := fmt.Sprintf("%s/orders/detail?token=%s&id=%d", BASE_URL, token, orderID)
+	log.Println(url)
+	body, code, err := u.HttpGet(url, nil)
+	if err != nil {
+		return "", code, err
+	}
+	if code >= 400 {
+		return "", code, errors.New(fmt.Sprintf("Error GetOrderDetails, body: %s, code: %d", body, code))
+	}
+	return body, code, err
 }
