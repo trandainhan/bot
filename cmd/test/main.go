@@ -15,9 +15,9 @@ func main() {
 	email := "trdainhan@gmail.com"
 	password := "Nahn@291992"
 	token := fiahub.Login(email, password)
-	log.Println(token)
-	rate, _ := fiahub.GetUSDVNDRate()
-	log.Println(rate)
+	// log.Println(token)
+	// rate, _ := fiahub.GetUSDVNDRate()
+	// log.Println(rate)
 
 	params := fiahub.GetCoinGiaTotParams()
 	log.Println(params)
@@ -33,13 +33,15 @@ func main() {
 	// coin: "USDT", currency: "VNT"}
 	order := fiahub.Order{
 		CoinAmount:        3,
-		PricePerUnitCents: 23768,
+		PricePerUnitCents: 7848,
 		Type:              "AskOrder",
-		Coin:              "USDT",
+		Coin:              "DOGE",
 		Currency:          "VNT",
 	}
-	resp, _, _ := fiahub.CreateAskOrder(token, order)
+	resp, _ := fiahub.CreateAskOrder(token, order)
 	log.Println(resp)
+	// resp, _, _ := fiahub.CancelOrder(token, 103184704)
+	// log.Println(resp)
 
 	// Test binance api
 	// offset := binance.GetOffsetTimeUnix()
