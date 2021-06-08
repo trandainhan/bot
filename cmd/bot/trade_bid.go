@@ -29,20 +29,19 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 	vntQuantity := float64(baseVntQuantity + randNumber)
 
 	originalCoinAmount := utils.RoundTo(vntQuantity/bidF, decimalsToRound)
-	coinAmount := originalCoinAmount
 	priceBuy := bidF
 	orderType := "BidOrder"
 	bidOrder := fiahub.Order{
-		Coin:               coin,
-		Type:               orderType,
-		Currency:           "VNT",
-		PricePerUnitCents:  priceBuy,
-		OriginalCoinAmount: originalCoinAmount,
+		Coin:              coin,
+		CoinAmount:        originalCoinAmount,
+		PricePerUnitCents: priceBuy,
+		Currency:          "VNT",
+		Type:              orderType,
 	}
 	log.Printf("make bid order: %v", bidOrder)
 	fiahubOrder, err := fiahub.CreateBidOrder(fiahubToken, bidOrder)
 	if err != nil {
-		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, %s", coin, id, orderType, coinAmount, priceBuy, err)
+		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, %s", coin, id, orderType, originalCoinAmount, priceBuy, err)
 		time.Sleep(60000 * time.Millisecond)
 		go teleClient.SendMessage(text, chatErrorID)
 		fia.CancelAllOrder(fiahubToken)
