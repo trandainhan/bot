@@ -23,7 +23,8 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 	chatErrorID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 
 	perProfit = perProfit + perProfitStep*0.6/100
-	randNumber := rand.Intn(4000000)
+	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
+	randNumber := rand.Intn(randdomVntQuantity)
 
 	vntQuantity := float64(baseVntQuantity + randNumber)
 
@@ -39,9 +40,10 @@ func trade_ask(id string, coin string, askF float64, askB float64, perProfitStep
 		Currency:           "VNT",
 		Type:               orderType,
 	}
-	fiahubOrder, statusCode, err := fiahub.CreateAskOrder(fiahubToken, askOrder)
+	log.Printf("make ask order: %v", askOrder)
+	fiahubOrder, err := fiahub.CreateAskOrder(fiahubToken, askOrder)
 	if err != nil {
-		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, StatusCode: %d %s", coin, id, orderType, coinAmount, pricesellRandom, statusCode, err)
+		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v Error: %s", coin, id, orderType, coinAmount, pricesellRandom, err)
 		time.Sleep(60000 * time.Millisecond)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatErrorID)

@@ -2,6 +2,7 @@ package fiahub
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -89,7 +90,7 @@ func CancelOrder(token string, orderID int) (*OrderDetails, int, error) {
 	return &resp.Order, code, nil
 }
 
-func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
+func CreateAskOrder(token string, askOrder Order) (*OrderDetails, error) {
 	headers := &map[string]string{
 		"access-token": token,
 	}
@@ -102,17 +103,22 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	body, code, err := u.HttpPost(url, data, headers)
 	if err != nil {
 		log.Printf("Err Fiahub Create Ask Order: %s Body: %s", err.Error(), body)
+		return nil, err
+	}
+	if code != 200 {
+		log.Printf("Err Fiahub Create Ask Order: StatusCode: %d Body: %s", code, body)
+		return nil, errors.New("Status code != 200" + body)
 	}
 	var resp CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
-		return nil, 500, err
+		return nil, err
 	}
 	log.Printf("Successfully create fiahub ask order: %v", resp.AskOrder)
-	return &resp.AskOrder, code, nil
+	return &resp.AskOrder, nil
 }
 
-func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
+func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, error) {
 	headers := &map[string]string{
 		"access-token": token,
 	}
@@ -123,15 +129,19 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 	body, code, err := u.HttpPost(url, data, headers)
 	if err != nil {
 		log.Printf("Err Fiahub Create Bid Order: %s Body: %s", err.Error(), body)
-		return nil, code, err
+		return nil, err
+	}
+	if code != 200 {
+		log.Printf("Err Fiahub Create Ask Order: StatusCode: %d Body: %s", code, body)
+		return nil, errors.New("Status code != 200" + body)
 	}
 	var resp CreateBidOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
-		return nil, 500, err
+		return nil, err
 	}
 	log.Printf("Successfully create fiahub bid order: %v", resp.BidOrder)
-	return &resp.BidOrder, code, nil
+	return &resp.BidOrder, nil
 }
 
 func GetOrderDetails(token string, orderID int) (*OrderDetails, int, error) {

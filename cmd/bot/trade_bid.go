@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -38,9 +39,10 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 		PricePerUnitCents:  priceBuy,
 		OriginalCoinAmount: originalCoinAmount,
 	}
-	fiahubOrder, statusCode, err := fiahub.CreateBidOrder(fiahubToken, bidOrder)
-	if err != nil || statusCode != 200 {
-		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, StatusCode: %d %s", coin, id, orderType, coinAmount, priceBuy, statusCode, err)
+	log.Printf("make bid order: %v", bidOrder)
+	fiahubOrder, err := fiahub.CreateBidOrder(fiahubToken, bidOrder)
+	if err != nil {
+		text := fmt.Sprintf("fiahubAPI_AskOrder Error! %s %s %s Coin Amount: %v Price: %v, %s", coin, id, orderType, coinAmount, priceBuy, err)
 		time.Sleep(60000 * time.Millisecond)
 		go teleClient.SendMessage(text, chatErrorID)
 		fia.CancelAllOrder(fiahubToken)
