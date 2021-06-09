@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	"gitlab.com/fiahub/bot/internal/fiahub"
+	// "gitlab.com/fiahub/bot/internal/fiahub"
 	"log"
 	"os"
+	"time"
 
 	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
@@ -19,8 +20,8 @@ func main() {
 	// rate, _ := fiahub.GetUSDVNDRate()
 	// log.Println(rate)
 
-	params := fiahub.GetCoinGiaTotParams()
-	log.Println(params)
+	// params := fiahub.GetCoinGiaTotParams()
+	// log.Println(params)
 
 	// Test redis
 	ctx := context.Background()
@@ -53,9 +54,9 @@ func main() {
 	offset := binance.GetOffsetTimeUnix()
 	redisClient.Set("local_binance_time_difference", offset)
 
-	bn := binance.Binance{
-		RedisClient: redisClient,
-	}
+	// bn := binance.Binance{
+	// 	RedisClient: redisClient,
+	// }
 	//
 	// usdtFund := bn.CheckFund("USDT")
 	// log.Println(usdtFund)
@@ -76,7 +77,16 @@ func main() {
 	// log.Println(resp.OrderID)
 	// log.Println(resp)
 
-	resp, _ := bn.GetOrder("DOGEUSDT", 1239188099, "SLYJI2yBT99GaIo4qc35iM")
-	log.Println(resp)
+	// resp, _ := bn.GetOrder("DOGEUSDT", 1239188099, "SLYJI2yBT99GaIo4qc35iM")
+	// log.Println(resp)
+
+	now := time.Now()
+	miliTime := now.UnixNano() / int64(time.Millisecond)
+	log.Println(now.UnixNano())
+	log.Println(miliTime)
+	time.Sleep(1 * time.Second)
+	now = time.Now()
+	miliTime2 := now.UnixNano() / int64(time.Millisecond)
+	log.Println(miliTime2 - miliTime)
 
 }
