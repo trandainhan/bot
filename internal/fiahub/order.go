@@ -171,7 +171,6 @@ func GetBidOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
 
 func GetOrderDetails(token string, orderID int) (string, int, error) {
 	url := fmt.Sprintf("%s/orders/detail?token=%s&id=%d", BASE_URL, token, orderID)
-	log.Println(url)
 	body, code, err := u.HttpGet(url, nil)
 	if err != nil {
 		return "", code, err

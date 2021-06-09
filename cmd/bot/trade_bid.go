@@ -77,10 +77,11 @@ func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep
 		bidPriceByQuantity, _ := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
 		perchange := math.Abs((bidPriceByQuantity - bidB) / bidB)
 		if perchange > perCancel || executedQty > 0 {
-			lastestCancelAllTime := redisClient.GetTime("lastest_cancel_all_time")
-			tnow := time.Now()
-			elapsedTime := tnow.Sub(lastestCancelAllTime)
-			if elapsedTime < 10000*time.Millisecond {
+			lastestCancelAllTime := redisClient.GetInt64("lastest_cancel_all_time")
+			now := time.Now()
+			miliTime := now.UnixNano() / int64(time.Millisecond)
+			elapsedTime := miliTime - lastestCancelAllTime
+			if elapsedTime < 10000 {
 				text := fmt.Sprintf("%s IDTrade: %s, CancelTime < 10s continue ElapsedTime: %v Starttime: %v", coin, id, elapsedTime, lastestCancelAllTime)
 				go teleClient.SendMessage(text, chatID)
 				time.Sleep(3000 * time.Millisecond)
