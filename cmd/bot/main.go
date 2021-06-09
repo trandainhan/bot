@@ -21,6 +21,7 @@ var (
 	quantityToGetPrice  float64
 	fiahubToken         string
 	fia                 fiahub.Fiahub
+	bn                  binance.Binance
 )
 
 func main() {
@@ -76,7 +77,6 @@ func main() {
 		for {
 			time.Sleep(5 * time.Second)
 			calculatePerProfit()
-			log.Println("Calculate profit")
 		}
 	}()
 

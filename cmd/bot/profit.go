@@ -10,10 +10,6 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-var bn = binance.Binance{
-	RedisClient: redisClient,
-}
-
 func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID int, origClientOrderID string, isLiquidBaseBinanceTradeBid bool) {
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
 
@@ -58,7 +54,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		profit := utils.RoundTo((totalUSDTRecieve*rate - totalVNTGive), 0)
 		perProfit := utils.RoundTo((profit/(totalUSDTRecieve*rate))*100, 2)
 		text := fmt.Sprintf("%s %s \n %s: %s %s - %v USDT(+) - %v VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
-			origQty, coin, totalUSDTRecieve, totalVNTGive, status, askB, profit, perProfit)
+			origQty, coin, totalUSDTRecieve, totalVNTGive, status, bidB, profit, perProfit)
 
 		allFundMessage := bn.GetFundsMessages()
 		text = fmt.Sprintf("%s %s", text, allFundMessage)
