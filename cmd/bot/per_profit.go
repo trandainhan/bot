@@ -75,6 +75,9 @@ func calculatePerProfit() bool {
 			fia.CancelAllOrder(fiahubToken)
 			text = fmt.Sprintf("CancelAllOrder perProfitchange: %v > 0.1%%", perProfitchange)
 		}
+		text = fmt.Sprintf("%s\n USDTFund: %v\n PerProfitAsk: %v -> %v\n PerProfitBid: %v -> %v",
+			text, usdtFund, oldPerProfitAsk, perProfitAsk, oldPerProfitBid, perProfitBid)
+		go teleClient.SendMessage(text, chatID)
 	}
 	return true
 }
