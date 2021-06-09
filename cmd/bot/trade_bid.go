@@ -14,15 +14,13 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func trade_bid(id string, coin string, bidF float64, bidB float64, perProfitStep float64) {
+func trade_bid(id string, coin string, bidF float64, bidB float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
 	perCancel := redisClient.GetFloat64("per_cancel")
-	perProfit := redisClient.GetFloat64("per_profit_bid")
 	fiahubToken := redisClient.Get("fiahub_token")
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	chatErrorID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 
-	perProfit = perProfit + perProfitStep*0.6/100
 	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
 	randNumber := rand.Intn(randdomVntQuantity)
 

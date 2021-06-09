@@ -19,6 +19,7 @@ func ask_worker(id string, coin string, askB float64, perProfitStep float64, res
 			continue
 		}
 
+		perProfitAsk = perProfitAsk + perProfitStep*0.6/100
 		askF, isOutRange := calculateAskFFromAskB(askB, perFeeBinance, perProfitAsk, minPrice, maxPrice)
 		if isOutRange {
 			text := fmt.Sprintf("%s %s Error! Price out of range. PriceF: %v PriceAskB: %v Range: %v - %v",
@@ -28,7 +29,7 @@ func ask_worker(id string, coin string, askB float64, perProfitStep float64, res
 			time.Sleep(2 * time.Second)
 		} else {
 			log.Printf("Trade ask order with coin: %s askf: %v askB: %v", coin, askF, askB)
-			trade_ask(id, coin, askF, askB, perProfitStep)
+			trade_ask(id, coin, askF, askB)
 		}
 
 		time.Sleep(3 * time.Second)
