@@ -62,14 +62,15 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 		params.ProfitPerThousand != oldParams.ProfitPerThousand ||
 		params.Spread != oldParams.Spread ||
 		params.USDTMax != oldParams.USDTMax ||
-		params.USDTMidPoint != oldParams.USDTMax ||
+		params.USDTMidPoint != oldParams.USDTMidPoint ||
 		params.USDTOffset2 != oldParams.USDTOffset2 {
 		isChange = true
 	}
-	jsonParams, _ := json.Marshal(params)
-	redisClient.Set("coingiatot_params", string(jsonParams))
-	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if isChange {
+		chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
+		jsonParams, _ := json.Marshal(params)
+		redisClient.Set("coingiatot_params", string(jsonParams))
+
 		autoMode := fmt.Sprintf("AutoMode: %s -> %s", oldParams.AutoMode, params.AutoMode)
 		profitMax := fmt.Sprintf("ProfitMax: %v -> %v", oldParams.ProfitMax, params.ProfitMax)
 		profitPerThousand := fmt.Sprintf("ProfitPerThousand: %v -> %v", oldParams.ProfitPerThousand, params.ProfitPerThousand)
