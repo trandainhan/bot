@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/fiahub/bot:v0.0.4-rc8
+          image: registry.gitlab.com/fiahub/bot:v0.0.7
           imagePullPolicy: IfNotPresent
           command:
             - "bot"
@@ -32,11 +32,11 @@ spec:
             - configMapRef: { name: configmap.bot }
           resources:
             limits:
-              memory: "1Gi"
-              cpu: "1000m"
-            requests:
               memory: "512Mi"
-              cpu: "400m"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
       nodeSelector:
         lifecycle: Ec2Mixed
         name: phoenix
