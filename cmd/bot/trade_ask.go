@@ -148,7 +148,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 		text := fmt.Sprintf("%s %s Chot loi Binance BuyLimit Quant: %v Price: %v ID: %d", coin, id, newSellQuantity, askB, binanceOrderID)
 		log.Println(text)
 		isLiquidBaseBinanceTradeBid := false
-		calculateProfit(coin, newSellQuantity, askF, askB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
+		go calculateProfit(coin, newSellQuantity, askF, askB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
 
 		text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)
 		go teleClient.SendMessage(text, chatID)

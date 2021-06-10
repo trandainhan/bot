@@ -27,6 +27,8 @@ spec:
             - "3450"
             - "-maxPrice"
             - "46000"
+            - "-quantityToGetPrice"
+            - "1400"
           envFrom:
             - secretRef: { name: secrets.bot }
             - configMapRef: { name: configmap.bot }
