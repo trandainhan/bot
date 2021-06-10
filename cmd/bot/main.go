@@ -26,10 +26,6 @@ var (
 
 func main() {
 	log.Println("Start trading bot")
-	marketParam := coin + "USDT"
-	bidPriceByQuantity, askPriceByQuantity := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
-	log.Printf("bidPriceByQuantity: %v", bidPriceByQuantity)
-	log.Printf("askPriceByQuantity: %v", askPriceByQuantity)
 
 	const numWorker = 2
 	results := make(chan bool, numWorker)
@@ -39,7 +35,7 @@ func main() {
 
 	perProfitStep = 1.0
 	log.Println("Start ask worker riki1")
-	go ask_worker("riki1", coin, askPriceByQuantity, perProfitStep, results)
+	go ask_worker("riki1", coin, perProfitStep, results)
 
 	// perProfitStep = 2.0
 	// go ask_worker("riki2", coin, askPriceByQuantity, perProfitStep)
@@ -54,7 +50,7 @@ func main() {
 
 	perProfitStep = 1.0
 	log.Println("Start bid worker rikiatb1")
-	go bid_worker("rikiatb1", coin, bidPriceByQuantity, perProfitStep, results)
+	go bid_worker("rikiatb1", coin, perProfitStep, results)
 
 	// perProfitStep = 2.0
 	// go bid_worker("rikiatb2", coin, bidPriceByQuantity, perProfitStep)
