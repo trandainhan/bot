@@ -65,7 +65,8 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
-		go teleClient.SendMessage(text, -465055332)
+		chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
+		go teleClient.SendMessage(text, chatID)
 		time.Sleep(2000 * time.Millisecond)
 
 		notifyWhenAssetIsLow(netAsset, text)
