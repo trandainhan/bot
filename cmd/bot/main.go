@@ -27,7 +27,7 @@ var (
 func main() {
 	log.Println("Start trading bot")
 
-	const numWorker = 2
+	const numWorker = 4
 	results := make(chan bool, numWorker)
 
 	// Ask trading
@@ -37,8 +37,8 @@ func main() {
 	log.Println("Start ask worker riki1")
 	go ask_worker("riki1", coin, perProfitStep, results)
 
-	// perProfitStep = 2.0
-	// go ask_worker("riki2", coin, askPriceByQuantity, perProfitStep)
+	perProfitStep = 2.0
+	go ask_worker("riki2", coin, perProfitStep, results)
 	//
 	// perProfitStep = 3.0
 	// go ask_worker("riki3", coin, askPriceByQuantity, perProfitStep)
@@ -52,8 +52,8 @@ func main() {
 	log.Println("Start bid worker rikiatb1")
 	go bid_worker("rikiatb1", coin, perProfitStep, results)
 
-	// perProfitStep = 2.0
-	// go bid_worker("rikiatb2", coin, bidPriceByQuantity, perProfitStep)
+	perProfitStep = 2.0
+	go bid_worker("rikiatb2", coin, perProfitStep, results)
 	//
 	// perProfitStep = 3.0
 	// go bid_worker("rikiatb3", coin, bidPriceByQuantity, perProfitStep)

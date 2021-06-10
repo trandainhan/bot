@@ -130,14 +130,14 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error! %s %s %s %s Không Thực hiện được lệnh", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
+		text := fmt.Sprintf("Error SellLimit! %s %s %s %s ", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
 		btcQuantity := newSellQuantity * bidB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)
 		go teleClient.SendMessage(text, chatErrorID)
 		time.Sleep(5000 * time.Millisecond)
 	}
 	if binanceOrderID != 0 {
-		text := fmt.Sprintf("%s %s Chot loi Binance BuyLimit Quant: %v Price: %v ID: %d", coin, id, newSellQuantity, bidB, binanceOrderID)
+		text := fmt.Sprintf("%s %s Take Profit Binance SellLimit Quant: %v Price: %v ID: %d", coin, id, newSellQuantity, bidB, binanceOrderID)
 		isLiquidBaseBinanceTradeBid := true
 		go calculateProfit(coin, newSellQuantity, bidF, bidB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
 

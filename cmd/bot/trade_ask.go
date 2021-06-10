@@ -137,7 +137,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error! %s %s %s %s Không Thực hiện được lệnh", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
+		text := fmt.Sprintf("Error BuyLimit: %s %s %s %s", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
 		log.Println(text)
 		btcQuantity := newSellQuantity * askB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)
@@ -145,7 +145,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 		time.Sleep(5000 * time.Millisecond)
 	}
 	if binanceOrderID != 0 {
-		text := fmt.Sprintf("%s %s Chot loi Binance BuyLimit Quant: %v Price: %v ID: %d", coin, id, newSellQuantity, askB, binanceOrderID)
+		text := fmt.Sprintf("%s %s Take profit Binance BuyLimit Quant: %v Price: %v ID: %d", coin, id, newSellQuantity, askB, binanceOrderID)
 		log.Println(text)
 		isLiquidBaseBinanceTradeBid := false
 		go calculateProfit(coin, newSellQuantity, askF, askB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
