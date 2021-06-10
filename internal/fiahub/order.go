@@ -93,9 +93,9 @@ func CancelOrder(token string, orderID int) (*OrderDetails, int, error) {
 	return &resp.Order, code, nil
 }
 
-func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
+func (fia Fiahub) CreateAskOrder(askOrder Order) (*OrderDetails, int, error) {
 	headers := &map[string]string{
-		"access-token": token,
+		"access-token": fia.Token,
 	}
 	url := fmt.Sprintf("%s/ask_orders", BASE_URL)
 
@@ -119,9 +119,9 @@ func CreateAskOrder(token string, askOrder Order) (*OrderDetails, int, error) {
 	return &resp.AskOrder, code, nil
 }
 
-func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
+func (fia Fiahub) CreateBidOrder(bidOrder Order) (*OrderDetails, int, error) {
 	headers := &map[string]string{
-		"access-token": token,
+		"access-token": fia.Token,
 	}
 	url := fmt.Sprintf("%s/bid_orders", BASE_URL)
 	data := map[string]Order{
@@ -143,8 +143,8 @@ func CreateBidOrder(token string, bidOrder Order) (*OrderDetails, int, error) {
 	return &resp.BidOrder, code, nil
 }
 
-func GetAskOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
-	body, code, err := GetOrderDetails(token, orderID)
+func (fia Fiahub) GetAskOrderDetails(orderID int) (*OrderDetails, int, error) {
+	body, code, err := getOrderDetails(fia.Token, orderID)
 	if err != nil {
 		return nil, code, err
 	}
@@ -156,8 +156,8 @@ func GetAskOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
 	return &order.AskOrder, code, nil
 }
 
-func GetBidOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
-	body, code, err := GetOrderDetails(token, orderID)
+func (fia Fiahub) GetBidOrderDetails(orderID int) (*OrderDetails, int, error) {
+	body, code, err := getOrderDetails(fia.Token, orderID)
 	if err != nil {
 		return nil, code, err
 	}
@@ -169,7 +169,7 @@ func GetBidOrderDetails(token string, orderID int) (*OrderDetails, int, error) {
 	return &order.BidOrder, code, nil
 }
 
-func GetOrderDetails(token string, orderID int) (string, int, error) {
+func getOrderDetails(token string, orderID int) (string, int, error) {
 	url := fmt.Sprintf("%s/orders/detail?token=%s&id=%d", BASE_URL, token, orderID)
 	body, code, err := u.HttpGet(url, nil)
 	if err != nil {

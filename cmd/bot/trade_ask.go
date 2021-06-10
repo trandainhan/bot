@@ -38,7 +38,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 		Type:              orderType,
 	}
 	log.Printf("make ask order: %v", askOrder)
-	fiahubOrder, code, err := fiahub.CreateAskOrder(fiahubToken, askOrder)
+	fiahubOrder, code, err := fia.CreateAskOrder(askOrder)
 	if err != nil {
 		text := fmt.Sprintf("AskOrder Error! %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s", coin, id, orderType, originalCoinAmount, pricesellRandom, code, err)
 		time.Sleep(60000 * time.Millisecond)
@@ -56,7 +56,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 	totalSell := 0.0
 	matching := false
 	for {
-		orderDetails, code, err := fiahub.GetAskOrderDetails(fiahubToken, fiahubOrderID)
+		orderDetails, code, err := fia.GetAskOrderDetails(fiahubOrderID)
 		if err != nil {
 			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s ERROR!!! Queryorder %s StatusCode: %d fiahubOrderID: %d", coin, id, orderType, err, code, fiahubOrderID)
 			log.Println(text)
