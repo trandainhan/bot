@@ -65,7 +65,7 @@ func init() {
 func initValuesInRedis() {
 	log.Println("Init values in redis")
 	redisClient.Set("runable", true)
-	redisClient.Set("per_cancel", 0.1)
+	redisClient.Set("per_cancel", 0.1/100)
 	redisClient.Set("per_fee_binance", 0.075/100)
 	redisClient.Set("per_profit_ask", 0.0)
 	redisClient.Set("per_profit_bid", 0.0)
