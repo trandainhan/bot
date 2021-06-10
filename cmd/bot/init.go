@@ -73,7 +73,6 @@ func initValuesInRedis() {
 
 func setCoinGiatotParams() {
 	params := fiahub.GetCoinGiaTotParams()
-	log.Printf("setCoinGiatotParams %v", params)
 	validated := validateCoinGiaTotParams(params)
 	if validated {
 		renewCoinGiaTotParams(params)
