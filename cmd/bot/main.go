@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"strconv"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/binance"
@@ -14,17 +16,18 @@ var (
 	coin                string
 	minPrice            float64
 	maxPrice            float64
-	redisClient         *rediswrapper.MyRedis
-	teleClient          *telegram.TeleBot
 	decimalsToRound     int
 	defaultSleepSeconds int64
 	quantityToGetPrice  float64
 	numWorker           int
+	redisClient         *rediswrapper.MyRedis
+	teleClient          *telegram.TeleBot
 	fia                 *fiahub.Fiahub
-	bn                  binance.Binance
+	bn                  *binance.Binance
 )
 
 func main() {
+	log.Println("=================")
 	log.Println("Start trading bot")
 
 	results := make(chan bool, numWorker)
@@ -63,28 +66,44 @@ func main() {
 	// go renew params, env, token
 	go func() {
 		for {
-			time.Sleep(30 * time.Second)
+			period, err := strconv.Atoi(os.Getenv("SET_COINGIATOT_PERIOD"))
+			if err != nil {
+				log.Panic(err)
+			}
+			time.Sleep(time.Duration(period) * time.Second)
 			setCoinGiatotParams()
 		}
 	}()
 
 	go func() {
 		for {
-			time.Sleep(5 * time.Second)
+			period, err := strconv.Atoi(os.Getenv("CALCULATE_PER_PROFIT_PERIOD"))
+			if err != nil {
+				log.Panic(err)
+			}
+			time.Sleep(time.Duration(period) * time.Second)
 			calculatePerProfit()
 		}
 	}()
 
 	go func() {
 		for {
-			time.Sleep(176 * time.Second)
+			period, err := strconv.Atoi(os.Getenv("RESET_ALL_ORDER_PERIOD"))
+			if err != nil {
+				log.Panic(err)
+			}
+			time.Sleep(time.Duration(period) * time.Second)
 			fia.CancelAllOrder()
 		}
 	}()
 
 	go func() {
 		for {
-			time.Sleep(3600 * time.Second)
+			period, err := strconv.Atoi(os.Getenv("RESET_FIAHUB_TOKEN_PERIOD"))
+			if err != nil {
+				log.Panic(err)
+			}
+			time.Sleep(time.Duration(period) * time.Second)
 			token := login()
 			fia.SetToken(token)
 		}

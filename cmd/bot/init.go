@@ -57,7 +57,7 @@ func init() {
 	// Calculate Per profit
 	calculatePerProfit()
 
-	bn = binance.Binance{
+	bn = &binance.Binance{
 		RedisClient: redisClient,
 	}
 }
