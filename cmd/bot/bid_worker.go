@@ -6,14 +6,18 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"gitlab.com/fiahub/bot/internal/binance"
 )
 
-func bid_worker(id string, coin string, bidB float64, perProfitStep float64, results chan<- bool) {
+func bid_worker(id string, coin string, perProfitStep float64, results chan<- bool) {
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
+	marketParam := coin + "USDT"
 	for {
 		runable := redisClient.GetBool("runable")
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
 		perProfitBid := redisClient.GetFloat64("per_profit_bid")
+		bidB, _ := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 		if !(runable) {
 			time.Sleep(30 * time.Second)
 			continue
