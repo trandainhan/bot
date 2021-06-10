@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -67,6 +68,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 		isChange = true
 	}
 	if isChange {
+		log.Printf("set CoinGiatot new params %v", params)
 		chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 		jsonParams, _ := json.Marshal(params)
 		redisClient.Set("coingiatot_params", string(jsonParams))

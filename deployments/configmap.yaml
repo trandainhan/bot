@@ -4,7 +4,7 @@ metadata:
   name: configmap.bot
   namespace: bot
 data:
-  BOT_NAME: liquid_binance@fiahub.com
+  BOT_COINGIATOT_NAME: liquid_binance@fiahub.com
   REDIS_URL: redis-coingiatot-prod-master.redis-prod:6379
   BINANCE_URL: https://api.binance.com
   COINGIATOT_URL: http://coingiatot.prod/api/v1
