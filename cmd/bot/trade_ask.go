@@ -117,7 +117,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 
 	if newSellVNTQuantity < 250000 {
 		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %d", coin, id, orderType, newSellQuantity, pricesellRandom, fiahubOrderID)
-		go teleClient.SendMessage(text, chatErrorID)
+		go teleClient.SendMessage(text, chatID)
 		time.Sleep(0.3 * 60 * 1000 * time.Millisecond)
 		return
 	}

@@ -96,6 +96,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 			if coinAmount > 0 {
 				executedQty = originalCoinAmount - coinAmount
 			}
+			break
 		}
 		time.Sleep(5000 * time.Millisecond)
 	}
