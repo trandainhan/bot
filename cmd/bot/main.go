@@ -19,15 +19,14 @@ var (
 	decimalsToRound     int
 	defaultSleepSeconds int64
 	quantityToGetPrice  float64
-	fiahubToken         string
-	fia                 fiahub.Fiahub
+	numWorker           int
+	fia                 *fiahub.Fiahub
 	bn                  binance.Binance
 )
 
 func main() {
 	log.Println("Start trading bot")
 
-	const numWorker = 4
 	results := make(chan bool, numWorker)
 
 	// Ask trading
@@ -79,14 +78,15 @@ func main() {
 	go func() {
 		for {
 			time.Sleep(176 * time.Second)
-			fia.CancelAllOrder(fiahubToken)
+			fia.CancelAllOrder()
 		}
 	}()
 
 	go func() {
 		for {
 			time.Sleep(3600 * time.Second)
-			login()
+			token := login()
+			fia.SetToken(token)
 		}
 	}()
 

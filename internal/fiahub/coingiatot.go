@@ -64,7 +64,6 @@ func GetCoinGiaTotParams() *CoinGiaTotParams {
 	BOT_NAME := os.Getenv("BOT_NAME")
 	url := fmt.Sprintf("%s/bot_vars?bot_name=%s", BASE_URL, BOT_NAME)
 	body, _, err := u.HttpGet(url, nil)
-	log.Println(body)
 	if err != nil {
 		log.Printf("Err in RenewParam with Body: %s, Err: %s", body, err.Error())
 		return nil

@@ -44,7 +44,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 		time.Sleep(60000 * time.Millisecond)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatErrorID)
-		fia.CancelAllOrder(fiahubToken)
+		fia.CancelAllOrder()
 		time.Sleep(5000 * time.Millisecond)
 		return
 	}

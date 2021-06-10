@@ -19,6 +19,7 @@ func init() {
 	flag.Float64Var(&maxPrice, "maxPrice", 1000000, "Min Price")
 	flag.Int64Var(&defaultSleepSeconds, "defaultSleepSeconds", 18, "Sleep in second then restart")
 	flag.IntVar(&decimalsToRound, "decimalsToRound", 3, "Decimal to round")
+	flag.IntVar(&numWorker, "numWorker", 8, "Numer of worker with each worker control one order")
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 8.0, "Quantity To Get Price")
 	flag.Parse()
 
@@ -29,16 +30,17 @@ func init() {
 	teleClient = telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 
 	// get environment for login
-	login()
+	fiahubToken := login()
+	fia = &fiahub.Fiahub{
+		RedisClient: redisClient,
+		Token:       fiahubToken,
+	}
 
 	// Init value in redis
 	initValuesInRedis()
 
 	// Cancel all order before starting
-	fia = fiahub.Fiahub{
-		RedisClient: redisClient,
-	}
-	fia.CancelAllOrder(fiahubToken)
+	fia.CancelAllOrder()
 	time.Sleep(2 * time.Second)
 
 	setCoinGiatotParams()
@@ -78,10 +80,10 @@ func setCoinGiatotParams() {
 	}
 }
 
-func login() {
+func login() string {
 	email := os.Getenv("FIAHUB_EMAIL")
 	password := os.Getenv("FIAHUB_PASSWORD")
-	fiahubToken = fiahub.Login(email, password)
-	redisClient.Set("fiahub_token", fiahubToken)
+	fiahubToken := fiahub.Login(email, password)
 	log.Println("Successfully login in fiahub")
+	return fiahubToken
 }

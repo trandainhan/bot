@@ -53,9 +53,9 @@ type CreateBidOrderResp struct {
 	BidOrder OrderDetails `json:"bid_order"`
 }
 
-func (fiahub Fiahub) CancelAllOrder(token string) (string, int, error) {
+func (fiahub Fiahub) CancelAllOrder() (string, int, error) {
 	headers := &map[string]string{
-		"access-token": token,
+		"access-token": fiahub.Token,
 	}
 	url := fmt.Sprintf("%s/orders/cancel_all", BASE_URL)
 
