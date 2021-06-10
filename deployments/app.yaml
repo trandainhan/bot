@@ -29,6 +29,8 @@ spec:
             - "46000"
             - "-quantityToGetPrice"
             - "1400"
+            - "-numWorker"
+            - "4"
           envFrom:
             - secretRef: { name: secrets.bot }
             - configMapRef: { name: configmap.bot }
