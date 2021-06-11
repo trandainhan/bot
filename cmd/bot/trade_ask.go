@@ -17,7 +17,6 @@ import (
 func trade_ask(id string, coin string, askF float64, askB float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
 	perCancel := redisClient.GetFloat64("per_cancel")
-	fiahubToken := redisClient.Get("fiahub_token")
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	chatErrorID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 
@@ -89,7 +88,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 				continue
 			}
 
-			orderDetails, code, err = fiahub.CancelOrder(fiahubToken, fiahubOrderID)
+			orderDetails, code, err = fia.CancelOrder(fiahubOrderID)
 			if err != nil {
 				text := fmt.Sprintf("Error %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %d with error: %s", coin, id, orderType, fiahubOrderID, err)
 				log.Println(text)

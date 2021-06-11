@@ -73,9 +73,9 @@ func (fiahub Fiahub) CancelAllOrder() (string, int, error) {
 	return resp, code, err
 }
 
-func CancelOrder(token string, orderID int) (*OrderDetails, int, error) {
+func (fia Fiahub) CancelOrder(orderID int) (*OrderDetails, int, error) {
 	headers := &map[string]string{
-		"access-token": token,
+		"access-token": fia.Token,
 	}
 	url := fmt.Sprintf("%s/orders/%d/cancel", BASE_URL, orderID)
 	body, code, err := u.HttpPost(url, nil, headers)
