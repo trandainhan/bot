@@ -14,7 +14,7 @@ import (
 func main() {
 	// Test login
 	// email := "trdainhan@gmail.com"
-	// password := "Nahn@291992"
+	// password := ""
 	// token := fiahub.Login(email, password)
 	// log.Println(token)
 	// rate, _ := fiahub.GetUSDVNDRate()
