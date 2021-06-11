@@ -39,7 +39,8 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 	log.Printf("make ask order: %v", askOrder)
 	fiahubOrder, code, err := fia.CreateAskOrder(askOrder)
 	if err != nil {
-		text := fmt.Sprintf("Error CreateAskOrder %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s", coin, id, orderType, originalCoinAmount, pricesellRandom, code, err)
+		text := fmt.Sprintf("Error CreateAskOrder %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s. Proceed cancel all order",
+			coin, id, orderType, originalCoinAmount, pricesellRandom, code, err)
 		time.Sleep(60000 * time.Millisecond)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatErrorID)
@@ -115,14 +116,14 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 	}
 
 	if newSellVNTQuantity < 250000 {
-		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %d", coin, id, orderType, newSellQuantity, pricesellRandom, fiahubOrderID)
+		text := fmt.Sprintf("%s %s  Take profit < 10$ %s Quant: %v Price: %v ID: %d", coin, id, orderType, newSellQuantity, pricesellRandom, fiahubOrderID)
 		go teleClient.SendMessage(text, chatID)
 		time.Sleep(0.3 * 60 * 1000 * time.Millisecond)
 		return
 	}
 
 	if matching {
-		text := fmt.Sprintf("%s %s self-matching  matching: %v", coin, id, matching)
+		text := fmt.Sprintf("%s %s Self Matching", coin, id)
 		go teleClient.SendMessage(text, chatErrorID)
 		time.Sleep(5000 * time.Millisecond)
 		return
@@ -136,7 +137,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error BuyLimit: %s %s %s %s", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
+		text := fmt.Sprintf("Error Binance BuyLimit: %s %s %s %s", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
 		log.Println(text)
 		btcQuantity := newSellQuantity * askB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)

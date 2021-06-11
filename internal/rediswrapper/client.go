@@ -25,7 +25,7 @@ func NewRedisClient(ctx context.Context, redisURL string) *MyRedis {
 }
 
 func (myRedis *MyRedis) Set(key string, value interface{}) bool {
-	err := myRedis.Client.Set(myRedis.Ctx, key, value, 12*time.Hour).Err()
+	err := myRedis.Client.Set(myRedis.Ctx, key, value, 0).Err()
 	if err != nil {
 		panic(err)
 	}
