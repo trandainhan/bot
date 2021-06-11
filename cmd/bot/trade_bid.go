@@ -14,7 +14,7 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func trade_bid(id string, coin string, bidF float64, bidB float64) {
+func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
 	perCancel := redisClient.GetFloat64("per_cancel")
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
@@ -39,7 +39,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 	fiahubOrder, code, err := fia.CreateBidOrder(bidOrder)
 	if err != nil {
 		text := fmt.Sprintf("Error CreateBidOrder %s %s %s Coin Amount: %v Price: %v, StatusCode: %d Err: %s. Proceed cancel all order",
-			coin, id, orderType, originalCoinAmount, priceBuy, code, err)
+			coin, botID, orderType, originalCoinAmount, priceBuy, code, err)
 		time.Sleep(60 * time.Second)
 		go teleClient.SendMessage(text, chatErrorID)
 		fia.CancelAllOrder()
@@ -56,7 +56,7 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 	for {
 		orderDetails, code, err := fia.GetBidOrderDetails(fiahubOrderID)
 		if err != nil {
-			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s ERROR!!! Queryorder %s StatusCode: %d fiahubOrderID: %d", coin, id, orderType, err, code, fiahubOrderID)
+			text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s ERROR!!! Queryorder %s StatusCode: %d fiahubOrderID: %d", coin, botID, orderType, err, code, fiahubOrderID)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(1000 * time.Millisecond)
 			continue
@@ -80,14 +80,14 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 			miliTime := now.UnixNano() / int64(time.Millisecond)
 			elapsedTime := miliTime - lastestCancelAllTime
 			if elapsedTime < 10000 {
-				text := fmt.Sprintf("%s IDTrade: %s, CancelTime < 10s continue ElapsedTime: %v Starttime: %v", coin, id, elapsedTime, lastestCancelAllTime)
+				text := fmt.Sprintf("%s IDTrade: %s, CancelTime < 10s continue ElapsedTime: %v Starttime: %v", coin, botID, elapsedTime, lastestCancelAllTime)
 				go teleClient.SendMessage(text, chatID)
 				time.Sleep(3000 * time.Millisecond)
 				continue
 			}
 			orderDetails, code, err = fia.CancelOrder(fiahubOrderID)
 			if err != nil {
-				text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %d with error: %s", coin, id, orderType, fiahubOrderID, err)
+				text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
 				go teleClient.SendMessage(text, chatErrorID)
 				time.Sleep(3000 * time.Millisecond)
 				continue
@@ -111,14 +111,14 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 	}
 
 	if newSellVNTQuantity < 250000 {
-		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %d", coin, id, orderType, newSellQuantity, priceBuy, fiahubOrderID)
+		text := fmt.Sprintf("%s %s  Chốt lời < 10$ %s Quant: %v Price: %v ID: %d", coin, botID, orderType, newSellQuantity, priceBuy, fiahubOrderID)
 		go teleClient.SendMessage(text, chatID)
 		time.Sleep(0.3 * 60 * 1000 * time.Millisecond)
 		return
 	}
 
 	if matching {
-		text := fmt.Sprintf("%s %s self-matching  matching: %v", coin, id, matching)
+		text := fmt.Sprintf("%s %s self-matching  matching: %v", coin, botID, matching)
 		go teleClient.SendMessage(text, chatErrorID)
 		time.Sleep(5000 * time.Millisecond)
 		return
@@ -132,16 +132,16 @@ func trade_bid(id string, coin string, bidF float64, bidB float64) {
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error SellLimit! %s %s %s %s ", os.Getenv("TELEGRAM_HANDLER"), coin, id, orderType)
+		text := fmt.Sprintf("Error SellLimit! %s %s %s %s ", os.Getenv("TELEGRAM_HANDLER"), coin, botID, orderType)
 		btcQuantity := newSellQuantity * bidB
 		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)
 		go teleClient.SendMessage(text, chatErrorID)
 		time.Sleep(5000 * time.Millisecond)
 	}
 	if binanceOrderID != 0 {
-		text := fmt.Sprintf("%s %s Take Profit Binance SellLimit Quant: %v Price: %v ID: %d", coin, id, newSellQuantity, bidB, binanceOrderID)
+		text := fmt.Sprintf("%s %s Take Profit Binance SellLimit Quant: %v Price: %v ID: %d", coin, botID, newSellQuantity, bidB, binanceOrderID)
 		isLiquidBaseBinanceTradeBid := true
-		go calculateProfit(coin, newSellQuantity, bidF, bidB, id, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
+		go calculateProfit(coin, newSellQuantity, bidF, bidB, botID, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
 
 		text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)
 		go teleClient.SendMessage(text, chatID)
