@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -29,8 +30,9 @@ func HttpPost(url string, data interface{}, headers *map[string]string) (string,
 			http.StatusForbidden,
 		).
 		End()
-	if len(errs) > 0 {
-		return body, resp.StatusCode, errs[0]
+	if errs != nil {
+		log.Printf("HttpPost Full errors: %v", errs)
+		return "", resp.StatusCode, errs[0]
 	}
 	return body, resp.StatusCode, nil
 }
@@ -64,10 +66,10 @@ func HttpGet(url string, headers *map[string]string) (string, int, error) {
 			http.StatusServiceUnavailable,
 			http.StatusGatewayTimeout,
 			http.StatusForbidden,
-		).
-		End()
-	if len(errs) > 0 {
-		return body, resp.StatusCode, errs[0]
+		).End()
+	if errs != nil {
+		log.Printf("HttpGet Full errors: %v", errs)
+		return "", resp.StatusCode, errs[0]
 	}
 	return body, resp.StatusCode, nil
 }
