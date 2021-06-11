@@ -48,6 +48,11 @@ func init() {
 		Token:       fiahubToken,
 	}
 
+	// init binance struct
+	bn = &binance.Binance{
+		RedisClient: redisClient,
+	}
+
 	// Init value in redis
 	initValuesInRedis()
 
@@ -69,10 +74,6 @@ func init() {
 
 	// Calculate Per profit
 	calculatePerProfit()
-
-	bn = &binance.Binance{
-		RedisClient: redisClient,
-	}
 }
 
 func initValuesInRedis() {
