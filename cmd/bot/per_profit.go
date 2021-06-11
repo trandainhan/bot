@@ -63,12 +63,12 @@ func calculatePerProfit() bool {
 	if isChange {
 		perProfitchange := math.Abs(oldPerProfitAsk - perProfitAsk)
 		if perProfitchange < 0.001 {
-			text = fmt.Sprintf("perProfitchange: %v < 0.1%%", perProfitchange)
+			text = fmt.Sprintf("perProfitchange: %.5f < 0.1%%", perProfitchange)
 		} else {
 			fia.CancelAllOrder()
 			text = fmt.Sprintf("CancelAllOrder perProfitchange: %v > 0.1%%", perProfitchange)
 		}
-		text = fmt.Sprintf("%s\n USDTFund: %v\n PerProfitAsk: %v -> %v\n PerProfitBid: %v -> %v",
+		text = fmt.Sprintf("%s\n USDTFund: %.5f\n PerProfitAsk: %.5f -> %.5f\n PerProfitBid: %.5f -> %.5f",
 			text, usdtFund, oldPerProfitAsk, perProfitAsk, oldPerProfitBid, perProfitBid)
 		go teleClient.SendMessage(text, chatID)
 	}
