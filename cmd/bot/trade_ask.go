@@ -73,8 +73,8 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 
 		// Trigger cancel process
 		_, askPriceByQuantity := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
-		perchange := math.Abs((askPriceByQuantity - askB) / askB)
-		if perchange > perCancel || executedQty > 0 {
+		perChange := math.Abs((askPriceByQuantity - askB) / askB)
+		if perChange > perCancel || executedQty > 0 {
 			lastestCancelAllTime := redisClient.GetInt64("lastest_cancel_all_time")
 			now := time.Now()
 			miliTime := now.UnixNano() / int64(time.Millisecond)
@@ -86,6 +86,7 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 				continue
 			}
 
+			log.Printf("Bot: %s cancel fiahub ask order %d due to: perChange: %v, executedQty: %v", botID, fiahubOrderID, perChange, executedQty)
 			orderDetails, code, err = fia.CancelOrder(fiahubOrderID)
 			if err != nil {
 				text := fmt.Sprintf("Error %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
