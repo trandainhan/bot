@@ -39,7 +39,7 @@ func trade_ask(id string, coin string, askF float64, askB float64) {
 	log.Printf("make ask order: %v", askOrder)
 	fiahubOrder, code, err := fia.CreateAskOrder(askOrder)
 	if err != nil {
-		text := fmt.Sprintf("AskOrder Error! %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s", coin, id, orderType, originalCoinAmount, pricesellRandom, code, err)
+		text := fmt.Sprintf("Error CreateAskOrder %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s", coin, id, orderType, originalCoinAmount, pricesellRandom, code, err)
 		time.Sleep(60000 * time.Millisecond)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatErrorID)

@@ -93,6 +93,7 @@ func main() {
 				log.Panic(err)
 			}
 			time.Sleep(time.Duration(period) * time.Second)
+			log.Printf("Cancal all order after %d Second", period)
 			fia.CancelAllOrder()
 		}
 	}()
@@ -104,6 +105,7 @@ func main() {
 				log.Panic(err)
 			}
 			time.Sleep(time.Duration(period) * time.Second)
+			log.Printf("Reset token after %d seconds", period)
 			token := login()
 			fia.SetToken(token)
 		}
@@ -112,5 +114,6 @@ func main() {
 	for i := 0; i < numWorker; i++ {
 		<-results
 	}
+	log.Println("==================")
 	log.Println("Finish trading bot")
 }

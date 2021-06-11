@@ -83,7 +83,7 @@ func (fia Fiahub) CancelOrder(orderID int) (*OrderDetails, int, error) {
 		return nil, code, err
 	}
 	if code >= 400 {
-		return nil, code, errors.New("Status code >= 400" + body)
+		return nil, code, errors.New(fmt.Sprintf("Status code %d %s", code, body))
 	}
 	var resp CancelOrderResp
 	err = json.Unmarshal([]byte(body), &resp)
@@ -108,7 +108,7 @@ func (fia Fiahub) CreateAskOrder(askOrder Order) (*OrderDetails, int, error) {
 		return nil, code, err
 	}
 	if code >= 400 {
-		return nil, code, errors.New("Status code >= 200" + body)
+		return nil, code, errors.New(fmt.Sprintf("Status code %d %s", code, body))
 	}
 	var resp CreateAskOrderResp
 	err = json.Unmarshal([]byte(body), &resp)

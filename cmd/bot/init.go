@@ -40,6 +40,7 @@ func init() {
 	initValuesInRedis()
 
 	// Cancel all order before starting
+	log.Println("Cancel all fiahub orders before starting")
 	fia.CancelAllOrder()
 	time.Sleep(2 * time.Second)
 
