@@ -20,6 +20,8 @@ var (
 	defaultSleepSeconds int64
 	quantityToGetPrice  float64
 	numWorker           int
+	chatID              int64
+	chatErrorID         int64
 	redisClient         *rediswrapper.MyRedis
 	teleClient          *telegram.TeleBot
 	fia                 *fiahub.Fiahub

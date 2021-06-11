@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	"gitlab.com/fiahub/bot/internal/fiahub"
 )
@@ -13,7 +12,6 @@ import (
 func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	result := true
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
-	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if params.GetAutoMode() != 0 && params.GetAutoMode() != 1 {
 		text := fmt.Sprintf("%s AutoMode: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, -465055332)
@@ -69,7 +67,6 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	}
 	if isChange {
 		log.Printf("set CoinGiatot new params %v", params)
-		chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 		jsonParams, _ := json.Marshal(params)
 		redisClient.Set("coingiatot_params", string(jsonParams))
 

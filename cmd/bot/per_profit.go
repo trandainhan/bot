@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 
-	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/utils"
 )
@@ -17,10 +16,6 @@ func calculatePerProfit() bool {
 	redisValue := redisClient.Get("coingiatot_params")
 	var params fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &params)
-
-	bn := binance.Binance{
-		RedisClient: redisClient,
-	}
 
 	usdtFund := bn.CheckFund("USDT")
 	perProfitBid := params.GetSpread()/2 + (usdtFund-params.GetUSDTOffset2()-params.GetUSDTMidPoint())/1000*params.GetProfitPerThousand()
@@ -34,7 +29,6 @@ func calculatePerProfit() bool {
 
 	var text string
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
-	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
 	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {

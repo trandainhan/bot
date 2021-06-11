@@ -17,9 +17,6 @@ import (
 func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
 	perCancel := redisClient.GetFloat64("per_cancel")
-	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
-	chatErrorID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
-
 	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
 	randNumber := rand.Intn(randdomVntQuantity)
 
@@ -132,11 +129,8 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 	binanceOrderID := orderDetails.OrderID
 	origClientOrderID := orderDetails.ClientOrderID
 	if err != nil {
-		text := fmt.Sprintf("Error SellLimit! %s %s %s %s ", os.Getenv("TELEGRAM_HANDLER"), coin, botID, orderType)
-		btcQuantity := newSellQuantity * bidB
-		text = fmt.Sprintf("%s  ===   =====   ========   ======   ===   BuyLimit: %v TotalUSDT %v Error: %s", text, newSellQuantity, btcQuantity, err)
-		go teleClient.SendMessage(text, chatErrorID)
-		time.Sleep(5000 * time.Millisecond)
+		totalUSDT := newSellQuantity * bidB
+		notifyBinanceFailOrder(botID, newSellQuantity, totalUSDT, "SELL", err)
 	}
 	if binanceOrderID != 0 {
 		text := fmt.Sprintf("%s %s Take Profit Binance SellLimit Quant: %v Price: %v ID: %d", coin, botID, newSellQuantity, bidB, binanceOrderID)

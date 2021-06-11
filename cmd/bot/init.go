@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/binance"
@@ -22,6 +23,17 @@ func init() {
 	flag.IntVar(&numWorker, "numWorker", 8, "Numer of worker with each worker control one order")
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 8.0, "Quantity To Get Price")
 	flag.Parse()
+
+	// Setup chatID, chatErrorID
+	var err error
+	chatID, err = strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
+	if err != nil {
+		log.Panic("Missing ChatID")
+	}
+	chatErrorID, err = strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
+	if err != nil {
+		log.Panic("Missing ChatErrorID")
+	}
 
 	// setup client
 	ctx := context.Background()

@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/binance"
 )
 
 func ask_worker(id string, coin string, perProfitStep float64, results chan<- bool) {
-	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	marketParam := coin + "USDT"
 	for {
 		_, askB := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
