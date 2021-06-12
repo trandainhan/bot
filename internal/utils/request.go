@@ -32,6 +32,9 @@ func HttpPost(url string, data interface{}, headers *map[string]string) (string,
 		End()
 	if errs != nil {
 		log.Printf("HttpPost Full errors: %v", errs)
+		if resp == nil {
+			return "", 0, errs[0]
+		}
 		return "", resp.StatusCode, errs[0]
 	}
 	return body, resp.StatusCode, nil
@@ -69,6 +72,9 @@ func HttpGet(url string, headers *map[string]string) (string, int, error) {
 		).End()
 	if errs != nil {
 		log.Printf("HttpGet Full errors: %v", errs)
+		if resp == nil {
+			return "", 0, errs[0]
+		}
 		return "", resp.StatusCode, errs[0]
 	}
 	return body, resp.StatusCode, nil
