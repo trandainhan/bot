@@ -44,7 +44,12 @@ func main() {
 	// resp, _, _ := fiahub.CancelOrder(token, 103184704)
 	// log.Println(resp)
 
-	// detail, _, err := fiahub.GetAskOrderDetails("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzU1NywiY29kZSI6IncyajhXIiwiZXhwIjoxNjI1NzE5MzY4fQ.Mt6PNJDEhHkxTPIiodwiz_W_0bXfr-BLAAyvDgJXbb0", 103411475)
+	// fia := fiahub.Fiahub{
+	// 	RedisClient: redisClient,
+	// 	Token:       token,
+	// }
+	//
+	// detail, _, err := fia.GetAskOrderDetails(103411475)
 	// if err != nil {
 	// 	panic(err)
 	// }

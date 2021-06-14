@@ -69,7 +69,6 @@ func (fiahub Fiahub) CancelAllOrder() (string, int, error) {
 		text := fmt.Sprintf("%s \n resp: %s code: %d", url, resp, code)
 		go teleClient.SendMessage(text, chatID)
 	}
-	log.Println("Successfully cancel all fiahub orders")
 	return resp, code, err
 }
 
@@ -170,8 +169,11 @@ func (fia Fiahub) GetBidOrderDetails(orderID int) (*OrderDetails, int, error) {
 }
 
 func getOrderDetails(token string, orderID int) (string, int, error) {
-	url := fmt.Sprintf("%s/orders/detail?token=%s&id=%d", BASE_URL, token, orderID)
-	body, code, err := u.HttpGet(url, nil)
+	headers := &map[string]string{
+		"access-token": token,
+	}
+	url := fmt.Sprintf("%s/orders/detail?id=%d", BASE_URL, orderID)
+	body, code, err := u.HttpGet(url, headers)
 	if err != nil {
 		return "", code, err
 	}

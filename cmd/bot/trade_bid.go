@@ -86,9 +86,9 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 			log.Printf("Bot: %s cancel fiahub bid order %d due to: perChange: %v, executedQty: %v", botID, fiahubOrderID, perChange, executedQty)
 			orderDetails, code, err = fia.CancelOrder(fiahubOrderID)
 			if err != nil {
-				text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! Cancelorder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
+				text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! CancelOrder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
 				go teleClient.SendMessage(text, chatErrorID)
-				time.Sleep(3000 * time.Millisecond)
+				time.Sleep(3 * time.Second)
 				continue
 			}
 			coinAmount = orderDetails.GetCoinAmount()

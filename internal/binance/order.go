@@ -10,6 +10,10 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
+const (
+	ORDER_FILLED = "FILLED"
+)
+
 type OrderDetailsResp struct {
 	OrderID       int    `json:"orderId"`
 	ClientOrderID string `json:"clientOrderId"`

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/fiahub/bot:v0.1.6-rc2
+          image: registry.gitlab.com/fiahub/bot:v0.1.6-rc6
           imagePullPolicy: IfNotPresent
           command:
             - "bot"

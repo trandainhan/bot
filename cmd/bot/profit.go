@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -87,11 +88,11 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 	baseNetAsset, _ := strconv.ParseFloat(os.Getenv("BASE_NET_ASSET"), 64)
 	if netAsset < baseNetAsset {
 		text := fmt.Sprintf("%s %s", os.Getenv("TELEGRAM_HANDLER"), baseText)
-		go teleClient.SendMessage(text, -357553425)
+		go teleClient.SendMessage(text, chatID)
 		time.Sleep(1000 * time.Millisecond)
 	}
 	text := fmt.Sprintf("USDT(Margin) %v", netAsset)
-	go teleClient.SendMessage(text, -357553425)
+	go teleClient.SendMessage(text, chatID)
 }
 
 func getBinanceOrderDetail(id string, coin string, binanceOrderID int, origClientOrderID string) *binance.OrderDetailsResp {
@@ -100,20 +101,20 @@ func getBinanceOrderDetail(id string, coin string, binanceOrderID int, origClien
 	for j := 0; j <= 2; j++ {
 		orderDetails, err = bn.GetOrder(coin+"USDT", binanceOrderID, origClientOrderID)
 		if err != nil {
-			text := fmt.Sprintf("%s %s ERROR!!! Queryorder %s", coin, id, err)
+			text := fmt.Sprintf("%s %s ERROR getBinanceOrderDetail: %s", coin, id, err)
 			go teleClient.SendMessage(text, chatID)
 		}
 
 		status := orderDetails.Status
-		if status == "FILLED" {
+		if status == binance.ORDER_FILLED {
 			break
 		}
 
-		// Sell uncessfully in 1 minutes
 		if j == 2 {
+			log.Println("Unsucessfully sell in binance after 1 minute")
 			break
 		}
-		time.Sleep(30000 * time.Millisecond)
+		time.Sleep(30 * time.Second)
 	}
 	return orderDetails
 }

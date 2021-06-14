@@ -12,5 +12,5 @@ func notifyBinanceFailOrder(botID string, newSellQuantity, totalUSDT float64, or
 	text = fmt.Sprintf("%s =========================: %sLIMIT: Quantity: %v TotalUSDT %v Error: %s", text, orderType, newSellQuantity, totalUSDT, err)
 	log.Println(text)
 	go teleClient.SendMessage(text, chatErrorID)
-	time.Sleep(5000 * time.Millisecond)
+	time.Sleep(5 * time.Second)
 }

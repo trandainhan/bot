@@ -14,7 +14,7 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	if params.GetAutoMode() != 0 && params.GetAutoMode() != 1 {
 		text := fmt.Sprintf("%s AutoMode: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, -465055332)
+		go teleClient.SendMessage(text, chatID)
 		result = false
 	}
 	if params.GetProfitMax() < 0 || params.GetProfitMax() > 1 {
