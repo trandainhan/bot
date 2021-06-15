@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -35,37 +36,20 @@ func main() {
 	log.Println("Start trading bot")
 
 	results := make(chan bool, numWorker)
-
-	// Ask trading
+	var id string
 	var perProfitStep float64
 
-	perProfitStep = 1.0
-	log.Println("Start ask worker riki1")
-	go ask_worker("riki1", coin, perProfitStep, results)
+	for i := 1; i <= numWorker/2; i++ {
+		// Ask trading
+		perProfitStep = float64(i)
 
-	perProfitStep = 2.0
-	go ask_worker("riki2", coin, perProfitStep, results)
-	//
-	// perProfitStep = 3.0
-	// go ask_worker("riki3", coin, askPriceByQuantity, perProfitStep)
-	//
-	// perProfitStep = 4.0
-	// go ask_worker("riki4", coin, askPriceByQuantity, perProfitStep)
+		id = fmt.Sprintf("ask%d", i)
+		go ask_worker(id, coin, perProfitStep, results)
 
-	// go bid_worker
-
-	perProfitStep = 1.0
-	log.Println("Start bid worker rikiatb1")
-	go bid_worker("rikiatb1", coin, perProfitStep, results)
-
-	perProfitStep = 2.0
-	go bid_worker("rikiatb2", coin, perProfitStep, results)
-	//
-	// perProfitStep = 3.0
-	// go bid_worker("rikiatb3", coin, bidPriceByQuantity, perProfitStep)
-	//
-	// perProfitStep = 4.0
-	// go bid_worker("rikiatb4", coin, bidPriceByQuantity, perProfitStep)
+		// Bid trading
+		id = fmt.Sprintf("bid%d", i)
+		go bid_worker(id, coin, perProfitStep, results)
+	}
 
 	// go renew params, env, token
 	go func() {

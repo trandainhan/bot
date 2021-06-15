@@ -12,10 +12,11 @@ import (
 func ask_worker(id string, coin string, perProfitStep float64, results chan<- bool) {
 	marketParam := coin + "USDT"
 	for {
-		_, askB := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
-		runable := redisClient.GetBool("runable")
+		runableKey := fmt.Sprintf("%s_%s_runable", coin, id)
+		runable := redisClient.GetBool(runableKey)
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
 		perProfitAsk := redisClient.GetFloat64("per_profit_ask")
+		_, askB := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 		if !(runable) {
 			time.Sleep(30 * time.Second)
 			continue

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -77,11 +78,17 @@ func init() {
 
 func initValuesInRedis() {
 	log.Println("Init values in redis")
-	redisClient.Set("runable", true)
 	redisClient.Set("per_cancel", 0.1/100)
 	redisClient.Set("per_fee_binance", 0.075/100)
 	redisClient.Set("per_profit_ask", 0.0)
 	redisClient.Set("per_profit_bid", 0.0)
+	for i := 1; i <= numWorker/2; i++ { // numWorker == 4
+		// Set bot runable
+		runnableAskKey := fmt.Sprintf("%s_ask%d_runable", coin, i)
+		redisClient.Set(runnableAskKey, true)
+		runnableBidKey := fmt.Sprintf("%s_bid%d_runable", coin, i)
+		redisClient.Set(runnableBidKey, true)
+	}
 }
 
 func setCoinGiatotParams() {
