@@ -6,6 +6,7 @@ metadata:
 data:
   BOT_COINGIATOT_NAME: liquid_binance@fiahub.com
   REDIS_URL: redis-coingiatot-prod-master.redis-prod:6379
+  REDIS_DB_NUMBER: "1"
   BINANCE_URL: https://api.binance.com
   COINGIATOT_URL: http://coingiatot.prod/api/v1
   FIAHUB_URL: http://core.prod/api/v1

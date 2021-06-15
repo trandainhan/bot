@@ -26,7 +26,7 @@ func main() {
 	// Test redis
 	ctx := context.Background()
 	redisURL := os.Getenv("REDIS_URL")
-	redisClient := rediswrapper.NewRedisClient(ctx, redisURL)
+	redisClient := rediswrapper.NewRedisClient(ctx, redisURL, 1)
 	redisClient.Set("nhantran", "hello")
 	log.Println(redisClient.Get("nhantran"))
 

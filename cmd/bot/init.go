@@ -39,7 +39,8 @@ func init() {
 	// setup client
 	ctx := context.Background()
 	redisURL := os.Getenv("REDIS_URL")
-	redisClient = rediswrapper.NewRedisClient(ctx, redisURL)
+	redisDBNum, _ := strconv.Atoi(os.Getenv("REDIS_DB_NUMBER"))
+	redisClient = rediswrapper.NewRedisClient(ctx, redisURL, redisDBNum)
 	teleClient = telegram.NewTeleBot(os.Getenv("TELE_BOT_TOKEN"))
 
 	// get environment for login

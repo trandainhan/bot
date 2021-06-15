@@ -27,7 +27,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: REDIS_HOSTS
-              value: "instance1:redis-coingiatot-prod-master.redis-prod:6379"
+              value: "instance1:redis-coingiatot-prod-master.redis-prod:6379:1"
             - name: K8S_SIGTERM
               value: "1"
             - name: HTTP_USER

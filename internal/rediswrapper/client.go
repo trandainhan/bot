@@ -14,11 +14,11 @@ type MyRedis struct {
 	Ctx    context.Context
 }
 
-func NewRedisClient(ctx context.Context, redisURL string) *MyRedis {
+func NewRedisClient(ctx context.Context, redisURL string, dbNum int) *MyRedis {
 	client := redis.NewClient(&redis.Options{
 		Addr:     redisURL,
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Password: "",    // no password set
+		DB:       dbNum, // use default DB
 	})
 
 	return &MyRedis{Client: client, Ctx: ctx}
