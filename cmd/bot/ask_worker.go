@@ -17,6 +17,12 @@ func ask_worker(id string, coin string, perProfitStep float64, results chan<- bo
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
 		perProfitAsk := redisClient.GetFloat64("per_profit_ask")
 		_, askB := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
+		if askB == -1.0 {
+			text := "There is may be a error when get price from binance, skip and wait"
+			go teleClient.SendMessage(text, chatID)
+			time.Sleep(30 * time.Second)
+			continue
+		}
 		if !(runable) {
 			time.Sleep(30 * time.Second)
 			continue

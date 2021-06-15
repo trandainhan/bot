@@ -17,6 +17,12 @@ func bid_worker(id string, coin string, perProfitStep float64, results chan<- bo
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
 		perProfitBid := redisClient.GetFloat64("per_profit_bid")
 		bidB, _ := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
+		if bidB == -1.0 {
+			text := "There is may be a error when get order book from binance, skip and wait"
+			go teleClient.SendMessage(text, chatID)
+			time.Sleep(30 * time.Second)
+			continue
+		}
 		if !runable {
 			time.Sleep(30 * time.Second)
 			continue

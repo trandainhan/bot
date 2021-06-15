@@ -13,6 +13,9 @@ import (
 
 func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string, binanceOrderID int, origClientOrderID string, isLiquidBaseBinanceTradeBid bool) {
 	orderDetails := getBinanceOrderDetail(id, coin, binanceOrderID, origClientOrderID)
+	if orderDetails == nil {
+		return
+	}
 
 	bidB := orderDetails.GetPrice()
 	askB = orderDetails.GetPrice()
@@ -103,11 +106,11 @@ func getBinanceOrderDetail(id string, coin string, binanceOrderID int, origClien
 		if err != nil {
 			text := fmt.Sprintf("%s %s ERROR getBinanceOrderDetail: %s", coin, id, err)
 			go teleClient.SendMessage(text, chatID)
-		}
-
-		status := orderDetails.Status
-		if status == binance.ORDER_FILLED {
-			break
+		} else {
+			status := orderDetails.Status
+			if status == binance.ORDER_FILLED {
+				break
+			}
 		}
 
 		if j == 2 {

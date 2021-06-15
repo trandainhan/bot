@@ -30,9 +30,12 @@ func (od OrderDetailsResp) GetPrice() float64 {
 }
 
 func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64) {
-	orderBook := getOrderBook(marketParam, 100)
 	totalQuantity := 0.0
 	bidPriceByQuantity := 0.0
+	orderBook, err := getOrderBook(marketParam, 100)
+	if err != nil {
+		return -1.0, -1.0 // return negative price
+	}
 	for _, v := range orderBook.Bids {
 		price, _ := strconv.ParseFloat(v[0], 64)
 		innerQuantity, _ := strconv.ParseFloat(v[1], 64)
@@ -62,19 +65,21 @@ type OrderBook struct {
 	Asks [][]string `json:"asks"`
 }
 
-func getOrderBook(marketParam string, limit int) *OrderBook {
+func getOrderBook(marketParam string, limit int) (*OrderBook, error) {
 	var BASE_URL = os.Getenv("BINANCE_URL")
 	url := fmt.Sprintf("%s/api/v3/depth?symbol=%s&limit=%d", BASE_URL, marketParam, limit)
 	body, code, err := utils.HttpGet(url, nil)
 	if err != nil {
 		log.Printf("Err getOrderBook, StatusCode: %d, Err: %s", code, err.Error())
+		return nil, err
 	}
 	var orderBook OrderBook
 	err = json.Unmarshal([]byte(body), &orderBook)
 	if err != nil {
-		panic(err)
+		log.Printf("Err getOrderBook, can not unmarshal, with body: %s", body)
+		return nil, err
 	}
-	return &orderBook
+	return &orderBook, nil
 }
 
 func (binance Binance) GetOrder(marketParam string, orderId int, originClientOrderID string) (*OrderDetailsResp, error) {
@@ -83,14 +88,16 @@ func (binance Binance) GetOrder(marketParam string, orderId int, originClientOrd
 		"orderId":           strconv.Itoa(orderId),
 		"origClientOrderId": originClientOrderID,
 	}
-	body, _, err := binance.makeRequest("GET", params, "/api/v3/order")
+	body, code, err := binance.makeRequest("GET", params, "/api/v3/order")
 	if err != nil {
+		log.Printf("Err GetOrder, StatusCode: %d, Err: %s", code, err.Error())
 		return nil, err
 	}
 	var orderDetailsResp OrderDetailsResp
 	err = json.Unmarshal([]byte(body), &orderDetailsResp)
 	if err != nil {
-		panic(err)
+		log.Printf("Err GetOrder, can not unmarshal, with body: %s", body)
+		return nil, err
 	}
 	return &orderDetailsResp, nil
 }
