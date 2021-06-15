@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"gitlab.com/fiahub/bot/internal/binance"
+	// "gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 )
 
@@ -56,8 +56,8 @@ func main() {
 	// log.Println(detail)
 
 	// Test binance api
-	offset := binance.GetOffsetTimeUnix()
-	redisClient.Set("local_binance_time_difference", offset)
+	// offset := binance.GetOffsetTimeUnix()
+	// redisClient.Set("local_binance_time_difference", offset)
 
 	// bn := binance.Binance{
 	// 	RedisClient: redisClient,

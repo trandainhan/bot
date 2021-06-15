@@ -72,7 +72,7 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 		bidPriceByQuantity, _ := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
 		perChange := math.Abs((bidPriceByQuantity - bidB) / bidB)
 		if perChange > perCancel || executedQty > 0 {
-			lastestCancelAllTime := redisClient.GetInt64("lastest_cancel_all_time")
+			lastestCancelAllTime := fia.GetCancelTime()
 			now := time.Now()
 			miliTime := now.UnixNano() / int64(time.Millisecond)
 			elapsedTime := miliTime - lastestCancelAllTime

@@ -53,7 +53,7 @@ type CreateBidOrderResp struct {
 	BidOrder OrderDetails `json:"bid_order"`
 }
 
-func (fiahub Fiahub) CancelAllOrder() (string, int, error) {
+func (fiahub *Fiahub) CancelAllOrder() (string, int, error) {
 	headers := &map[string]string{
 		"access-token": fiahub.Token,
 	}
@@ -61,7 +61,7 @@ func (fiahub Fiahub) CancelAllOrder() (string, int, error) {
 
 	now := time.Now()
 	miliTime := now.UnixNano() / int64(time.Millisecond)
-	fiahub.RedisClient.Set("lastest_cancel_all_time", miliTime)
+	fiahub.SetCancelTime(miliTime)
 	resp, code, err := u.HttpPost(url, nil, headers)
 	chatID, _ := strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 	if err != nil {

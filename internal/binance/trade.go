@@ -53,8 +53,7 @@ func (binance Binance) makeRequest(httpType string, params map[string]string, po
 	var BASE_URL = os.Getenv("BINANCE_URL")
 	now := time.Now()
 	sec := now.UnixNano()
-	timeDifferences := binance.RedisClient.GetInt64("local_binance_time_difference")
-	mili := (sec-5)/int64(time.Millisecond) + timeDifferences
+	mili := (sec-5)/int64(time.Millisecond) + binance.TimeDifferences
 	params["recvWindow"] = "59000"
 	params["timestamp"] = fmt.Sprintf("%v", mili)
 

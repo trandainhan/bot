@@ -48,11 +48,6 @@ func init() {
 		Token:       fiahubToken,
 	}
 
-	// init binance struct
-	bn = &binance.Binance{
-		RedisClient: redisClient,
-	}
-
 	// Init value in redis
 	initValuesInRedis()
 
@@ -69,8 +64,12 @@ func init() {
 	redisClient.Set("usdtvnd_rate", rate)
 
 	// Set offet time
-	offset := binance.GetOffsetTimeUnix()
-	redisClient.Set("local_binance_time_difference", offset)
+	binanceTimeDifference := binance.GetOffsetTimeUnix()
+
+	bn = &binance.Binance{
+		RedisClient:     redisClient,
+		TimeDifferences: binanceTimeDifference,
+	}
 
 	// Calculate Per profit
 	calculatePerProfit()

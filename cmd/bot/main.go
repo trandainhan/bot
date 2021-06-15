@@ -13,19 +13,21 @@ import (
 )
 
 var (
-	coin                string
-	minPrice            float64
-	maxPrice            float64
-	decimalsToRound     int
-	defaultSleepSeconds int64
-	quantityToGetPrice  float64
-	numWorker           int
-	chatID              int64
-	chatErrorID         int64
-	redisClient         *rediswrapper.MyRedis
-	teleClient          *telegram.TeleBot
-	fia                 *fiahub.Fiahub
-	bn                  *binance.Binance
+	coin                  string
+	minPrice              float64
+	maxPrice              float64
+	decimalsToRound       int
+	defaultSleepSeconds   int64
+	quantityToGetPrice    float64
+	numWorker             int
+	chatID                int64
+	chatErrorID           int64
+	binanceTimeDifference int64
+	lastestCancelAllTime  int64
+	redisClient           *rediswrapper.MyRedis
+	teleClient            *telegram.TeleBot
+	fia                   *fiahub.Fiahub
+	bn                    *binance.Binance
 )
 
 func main() {
