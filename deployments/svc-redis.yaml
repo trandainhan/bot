@@ -4,14 +4,24 @@ kind: Service
 metadata:
   name: redis-commander
   namespace: bot
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert:  arn:aws:acm:ap-southeast-1:909691747421:certificate/b04156fa-83b8-40c5-816e-1f7ad58a419f
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
   labels:
     app: redis-commander
     tier: backend
 spec:
   ports:
-    - port: 8081
-      targetPort: redis-commander
-      name: redis-commander
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: redis-commander
+  - protocol: TCP
+    name: https
+    port: 443
+    targetPort: redis-commander
   selector:
     app: redis-commander
     tier: backend
+  type: LoadBalancer
