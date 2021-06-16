@@ -27,7 +27,6 @@ func HttpPost(url string, data interface{}, headers *map[string]string) (string,
 			http.StatusBadGateway,
 			http.StatusServiceUnavailable,
 			http.StatusGatewayTimeout,
-			http.StatusForbidden,
 		).
 		End()
 	if errs != nil {
@@ -68,7 +67,6 @@ func HttpGet(url string, headers *map[string]string) (string, int, error) {
 			http.StatusBadGateway,
 			http.StatusServiceUnavailable,
 			http.StatusGatewayTimeout,
-			http.StatusForbidden,
 		).End()
 	if errs != nil {
 		log.Printf("HttpGet Full errors: %v", errs)
