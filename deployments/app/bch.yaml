@@ -1,39 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bot-doge
+  name: bot-bch
   namespace: bot
 spec:
   selector:
     matchLabels:
-      app: bot-doge
+      app: bot-bch
       tier: bot
   replicas: 1
   template:
     metadata:
       labels:
-        app: bot-doge
+        app: bot-bch
         tier: bot
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/fiahub/bot:v0.1.6-rc6
+          image: registry.gitlab.com/fiahub/bot:v0.1.8
           imagePullPolicy: IfNotPresent
           command:
             - "bot"
             - "-coin"
-            - "DOGE"
+            - "BCH"
             - "-minPrice"
-            - "3450"
+            - "5750000"
             - "-maxPrice"
-            - "46000"
+            - "55200000"
             - "-quantityToGetPrice"
-            - "1400"
+            - "1"
             - "-numWorker"
+            - "8"
+            - "-defaultSleepSeconds"
+            - "12"
+            - "-decimalsToRound"
             - "4"
           envFrom:
             - secretRef: { name: secrets.bot }
+            - secretRef: { name: secrets.bch }
             - configMapRef: { name: configmap.bot }
+            - configMapRef: { name: configmap.bch }
           resources:
             limits:
               memory: "256Mi"
