@@ -98,6 +98,16 @@ func main() {
 			log.Printf("Reset token after %d seconds", period)
 			token := login()
 			fia.SetToken(token)
+		}
+	}()
+
+	go func() {
+		for {
+			period, err := strconv.Atoi(os.Getenv("RESET_RATES_PERIOD"))
+			if err != nil {
+				log.Panic(err)
+			}
+			time.Sleep(time.Duration(period) * time.Second)
 			getRates()
 		}
 	}()
