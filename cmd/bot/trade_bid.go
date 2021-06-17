@@ -124,24 +124,5 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 	}
 
 	newSellQuantity = utils.RoundTo(newSellQuantity, decimalsToRound)
-	bn := binance.Binance{
-		RedisClient: redisClient,
-	}
-	orderDetails, err := bn.SellLimit(coin+"USDT", bidB, newSellQuantity)
-	binanceOrderID := orderDetails.OrderID
-	origClientOrderID := orderDetails.ClientOrderID
-	if err != nil {
-		totalUSDT := newSellQuantity * bidB
-		notifyBinanceFailOrder(botID, newSellQuantity, totalUSDT, "SELL", err)
-	}
-	if binanceOrderID != 0 {
-		text := fmt.Sprintf("%s %s Take Profit Binance SellLimit Quant: %v Price: %v ID: %d", coin, botID, newSellQuantity, bidB, binanceOrderID)
-		isLiquidBaseBinanceTradeBid := true
-		go calculateProfit(coin, newSellQuantity, bidF, bidB, botID, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
-
-		text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)
-		go teleClient.SendMessage(text, chatID)
-		time.Sleep(time.Duration(defaultSleepSeconds) * time.Second)
-		return
-	}
+	go placeBinanceOrder(botID, newSellQuantity, bidB, bidF, "SELL")
 }

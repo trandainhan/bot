@@ -128,21 +128,5 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 	}
 
 	newSellQuantity = utils.RoundTo(newSellQuantity, decimalsToRound)
-	orderDetails, err := bn.BuyLimit(coin+"USDT", askB, newSellQuantity)
-	if err != nil {
-		totalUSDT := newSellQuantity * askB
-		notifyBinanceFailOrder(botID, newSellQuantity, totalUSDT, "BUY", err)
-	}
-	binanceOrderID := orderDetails.OrderID
-	origClientOrderID := orderDetails.ClientOrderID
-	if binanceOrderID != 0 {
-		text := fmt.Sprintf("%s %s Take profit Binance BuyLimit Quant: %v Price: %v ID: %d", coin, botID, newSellQuantity, askB, binanceOrderID)
-		isLiquidBaseBinanceTradeBid := false
-		go calculateProfit(coin, newSellQuantity, askF, askB, botID, binanceOrderID, origClientOrderID, isLiquidBaseBinanceTradeBid)
-		text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)
-		log.Println(text)
-		go teleClient.SendMessage(text, chatID)
-		time.Sleep(time.Duration(defaultSleepSeconds) * time.Second)
-		return
-	}
+	go placeBinanceOrder(botID, newSellQuantity, askB, askF, "BUY")
 }
