@@ -94,7 +94,7 @@ func notifyWhenAssetIsLow(netAsset float64, baseText string) {
 		go teleClient.SendMessage(text, chatID)
 		time.Sleep(1000 * time.Millisecond)
 	}
-	text := fmt.Sprintf("Asset is too low: USDT(Margin) %v", netAsset)
+	text := fmt.Sprintf("USDT(Margin) %v", netAsset)
 	go teleClient.SendMessage(text, chatID)
 }
 
