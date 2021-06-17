@@ -128,5 +128,5 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 	}
 
 	newSellQuantity = utils.RoundTo(newSellQuantity, decimalsToRound)
-	go placeBinanceOrder(botID, newSellQuantity, askB, askF, "BUY")
+	placeBinanceOrder(botID, newSellQuantity, askB, askF, "BUY")
 }

@@ -61,9 +61,7 @@ func init() {
 	setCoinGiatotParams()
 
 	// Set usdtvnd rate
-	rate, _ := fiahub.GetUSDVNDRate()
-	log.Printf("Set fiahub usdtvnd rate %v", rate)
-	redisClient.Set("usdtvnd_rate", rate)
+	getRates()
 
 	// Set offet time
 	binanceTimeDifference := binance.GetOffsetTimeUnix()
@@ -106,4 +104,10 @@ func login() string {
 	fiahubToken := fiahub.Login(email, password)
 	log.Println("Successfully login in fiahub")
 	return fiahubToken
+}
+
+func getRates() {
+	rate, _ := fiahub.GetUSDVNDRate()
+	log.Printf("Set fiahub usdtvnd rate %v", rate)
+	redisClient.Set("usdtvnd_rate", rate)
 }

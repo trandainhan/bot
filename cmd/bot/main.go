@@ -32,6 +32,8 @@ var (
 )
 
 func main() {
+	// run init.go
+
 	log.Println("=================")
 	log.Println("Start trading bot")
 
@@ -96,6 +98,7 @@ func main() {
 			log.Printf("Reset token after %d seconds", period)
 			token := login()
 			fia.SetToken(token)
+			getRates()
 		}
 	}()
 

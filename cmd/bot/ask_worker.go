@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"time"
 
@@ -12,6 +13,8 @@ import (
 func ask_worker(id string, coin string, perProfitStep float64, results chan<- bool) {
 	marketParam := coin + "USDT"
 	for {
+		randNumber := rand.Intn(1000)
+		time.Sleep(time.Duration(randNumber) * time.Millisecond)
 		runableKey := fmt.Sprintf("%s_%s_runable", coin, id)
 		runable := redisClient.GetBool(runableKey)
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")

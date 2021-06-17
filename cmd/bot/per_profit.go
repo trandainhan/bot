@@ -66,7 +66,7 @@ func calculatePerProfit() bool {
 			text = fmt.Sprintf("perProfitchange: %.5f < 0.1%%", perProfitchange)
 		} else {
 			fia.CancelAllOrder()
-			text = fmt.Sprintf("CancelAllOrder perProfitchange: %v > 0.1%%", perProfitchange)
+			text = fmt.Sprintf("CancelAllOrder perProfitchange: %.5f > 0.1%%", perProfitchange)
 		}
 		text = fmt.Sprintf("%s\n USDTFund: %.5f\n PerProfitAsk: %.5f -> %.5f\n PerProfitBid: %.5f -> %.5f",
 			text, usdtFund, oldPerProfitAsk, perProfitAsk, oldPerProfitBid, perProfitBid)
