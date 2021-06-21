@@ -22,7 +22,7 @@ func bid_worker(id string, coin string, perProfitStep float64, results chan<- bo
 		bidB, _ := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 		if bidB == -1.0 {
 			text := "There is may be a error when get order book from binance, skip and wait"
-			go teleClient.SendMessage(text, chatID)
+			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(30 * time.Second)
 			continue
 		}
@@ -36,7 +36,7 @@ func bid_worker(id string, coin string, perProfitStep float64, results chan<- bo
 			text := fmt.Sprintf("%s %s Error! Price out of range. PriceF: %v PriceBidB: %v Range: %v - %v",
 				coin, os.Getenv("TELEGRAM_HANDLER"), bidF, bidB, minPrice, maxPrice)
 			log.Println(text)
-			go teleClient.SendMessage(text, chatID)
+			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(2 * time.Second)
 		} else {
 			log.Printf("Trade bid order with coin: %s bidf: %v bidB: %v", coin, bidF, bidB)

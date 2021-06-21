@@ -14,37 +14,37 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	if params.GetAutoMode() != 0 && params.GetAutoMode() != 1 {
 		text := fmt.Sprintf("%s AutoMode: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	if params.GetProfitMax() < 0 || params.GetProfitMax() > 1 {
 		text := fmt.Sprintf("%s ProfitMax: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	if params.GetProfitPerThousand() < 0 || params.GetProfitPerThousand() > 0.004 {
 		text := fmt.Sprintf("%s ProfitPerThousand: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	if params.GetSpread() <= 0 || params.GetSpread() > 0.1 {
 		text := fmt.Sprintf("%s Spead: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	if params.GetUSDTMax() < 0 || params.GetUSDTMax() > 60000 {
 		text := fmt.Sprintf("%s USDTMax: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	if params.GetUSDTMidPoint() < 0 || params.GetUSDTMidPoint() > 60000 {
 		text := fmt.Sprintf("%s USDTMidPoint: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	if params.GetUSDTOffset2() < -30000 || params.GetUSDTOffset2() > 240000 {
 		text := fmt.Sprintf("%s USDTOffset2: Out of range", teleHanlder)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
 	return result

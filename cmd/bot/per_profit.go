@@ -33,19 +33,19 @@ func calculatePerProfit() bool {
 	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
 		text = fmt.Sprintf("%s USDTFund: Out of range %v", teleHanlder, usdtFund)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		return false
 	}
 
 	if perProfitBid < -0.16 || perProfitBid > 0.16 {
 		text = fmt.Sprintf("%s PerProfitBid: Out of range %v", teleHanlder, perProfitBid)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		return false
 	}
 
 	if perProfitAsk < -0.16 || perProfitAsk > 0.16 {
 		text = fmt.Sprintf("%s PerProfitAsk: Out of range %v", teleHanlder, perProfitBid)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatErrorID)
 		return false
 	}
 

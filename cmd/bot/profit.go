@@ -41,7 +41,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		marginDetails, _ := bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
-		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
+		text = fmt.Sprintf("%s \n USDT(Margin): %.6f", text, netAsset)
 		go teleClient.SendMessage(text, chatID)
 		time.Sleep(2000 * time.Millisecond)
 
@@ -56,7 +56,7 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 
 		profit := utils.RoundTo((totalUSDTRecieve*rate - totalVNTGive), 0)
 		perProfit := utils.RoundTo((profit/(totalUSDTRecieve*rate))*100, 2)
-		text := fmt.Sprintf("%s %s \n %s: %s %s - %v USDT(+) - %v VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
+		text := fmt.Sprintf("%s %s \n %s: %s %s - %.6f USDT(+) - %.6f VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
 			origQty, coin, totalUSDTRecieve, totalVNTGive, status, bidB, profit, perProfit)
 
 		allFundMessage := bn.GetFundsMessages()
@@ -105,7 +105,7 @@ func getBinanceOrderDetail(id string, coin string, binanceOrderID int, origClien
 		orderDetails, err = bn.GetOrder(coin+"USDT", binanceOrderID, origClientOrderID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s ERROR getBinanceOrderDetail: %s", coin, id, err)
-			go teleClient.SendMessage(text, chatID)
+			go teleClient.SendMessage(text, chatErrorID)
 		} else {
 			status := orderDetails.Status
 			if status == binance.ORDER_FILLED {

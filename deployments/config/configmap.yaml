@@ -9,7 +9,7 @@ data:
   REDIS_DB_NUMBER: "1"
   BINANCE_URL: https://api.binance.com
   COINGIATOT_URL: http://coingiatot.prod/api/v1
-  FIAHUB_URL: http://core.prod/api/v1
+  FIAHUB_URL: http://core-internal.prod/api/v1
   CHAT_ID: "-575917470"
   CHAT_ERROR_ID: "-592829215"
   BASE_NET_ASSET: "10000"
