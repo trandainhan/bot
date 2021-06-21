@@ -15,10 +15,10 @@ func bid_worker(id string, coin string, perProfitStep float64, results chan<- bo
 	for {
 		randNumber := rand.Intn(1000)
 		time.Sleep(time.Duration(randNumber) * time.Millisecond)
-		runableKey := fmt.Sprintf("%s_%s_runable", coin, id)
+		runableKey := fmt.Sprintf("%s_bid_runable", coin)
 		runable := redisClient.GetBool(runableKey)
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
-		perProfitBid := redisClient.GetFloat64("per_profit_bid")
+		perProfitBid := redisClient.GetFloat64(coin + "_per_profit_bid")
 		bidB, _ := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 		if bidB == -1.0 {
 			text := "There is may be a error when get order book from binance, skip and wait"

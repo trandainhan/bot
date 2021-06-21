@@ -32,8 +32,8 @@ func calculatePerProfit() bool {
 	perProfitAsk = utils.RoundTo(perProfitAsk, 6)
 	perProfitBid = utils.RoundTo(perProfitBid, 6)
 
-	oldPerProfitAsk := redisClient.GetFloat64("per_profit_ask")
-	oldPerProfitBid := redisClient.GetFloat64("per_profit_bid")
+	oldPerProfitAsk := redisClient.GetFloat64(coin + "_per_profit_ask")
+	oldPerProfitBid := redisClient.GetFloat64(coin + "_per_profit_bid")
 
 	var text string
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
@@ -59,12 +59,12 @@ func calculatePerProfit() bool {
 	isChange := false
 	if perProfitAsk != oldPerProfitAsk {
 		isChange = true
-		redisClient.Set("per_profit_ask", perProfitAsk)
+		redisClient.Set(coin+"_per_profit_ask", perProfitAsk)
 	}
 
 	if perProfitBid != oldPerProfitBid {
 		isChange = true
-		redisClient.Set("per_profit_bid", perProfitBid)
+		redisClient.Set(coin+"_per_profit_bid", perProfitBid)
 	}
 
 	if isChange {

@@ -55,7 +55,7 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 	for {
 		order, err := fia.GetOrderDetails(fiahubOrderID)
 		if err != nil {
-			text := fmt.Sprintf("Error %s IDTrade: %s type: %s GetAskOrderDetails %s StatusCode: %d fiahubOrderID: %d", coin, botID, orderType, err, code, fiahubOrderID)
+			text := fmt.Sprintf("Error %s IDTrade: %s type: %s GetOrderDetails %s fiahubOrderID: %d", coin, botID, orderType, err, fiahubOrderID)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(1 * time.Second)
