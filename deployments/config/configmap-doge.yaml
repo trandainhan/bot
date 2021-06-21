@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap.doge
+  namespace: bot
+data:
+  BASE_VNT_QUANTITY: "300000"
+  RANDOM_VNT_QUANTITY: "70000"
+  FIAHUB_EMAIL: trdainhan@gmail.com
+  MIN_USDT_FUND: "10"
+  MAX_USDT_FUND: "60000"

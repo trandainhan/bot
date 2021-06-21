@@ -35,7 +35,9 @@ spec:
             - "12"
           envFrom:
             - secretRef: { name: secrets.bot }
+            - secretRef: { name: secrets.doge }
             - configMapRef: { name: configmap.bot }
+            - configMapRef: { name: configmap.doge }
           resources:
             limits:
               memory: "256Mi"
