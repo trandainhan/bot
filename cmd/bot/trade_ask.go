@@ -26,7 +26,7 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 	priceSell := askF
 	pricesellRandom := askF
 	orderType := "AskOrder"
-	askOrder := fiahub.Order{
+	askOrder := fiahub.OrderParams{
 		Coin:              coin,
 		CoinAmount:        originalCoinAmount,
 		PricePerUnitCents: pricesellRandom,
@@ -53,7 +53,7 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 	totalSell := 0.0
 	matching := false
 	for {
-		orderDetails, code, err := fia.GetAskOrderDetails(fiahubOrderID)
+		order, err := fia.GetOrderDetails(fiahubOrderID)
 		if err != nil {
 			text := fmt.Sprintf("Error %s IDTrade: %s type: %s GetAskOrderDetails %s StatusCode: %d fiahubOrderID: %d", coin, botID, orderType, err, code, fiahubOrderID)
 			log.Println(text)
@@ -61,13 +61,14 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 			time.Sleep(1 * time.Second)
 			continue
 		}
-		state := orderDetails.State
-		coinAmount := orderDetails.GetCoinAmount()
-		matching = orderDetails.Matching
+		state := order.State
+		coinAmount := order.CoinAmount
 		if coinAmount > 0 {
 			executedQty = originalCoinAmount - coinAmount
 		}
 		if state == fiahub.ORDER_CANCELLED || state == fiahub.ORDER_FINISHED {
+			matchingTX, _ := fia.GetSelfMatchingTransaction(order.UserID, order.ID)
+			matching = matchingTX != nil
 			break
 		}
 
@@ -87,7 +88,7 @@ func trade_ask(botID string, coin string, askF float64, askB float64) {
 			}
 
 			log.Printf("Bot: %s cancel fiahub ask order %d due to: perChange: %v, executedQty: %v", botID, fiahubOrderID, perChange, executedQty)
-			orderDetails, code, err = fia.CancelOrder(fiahubOrderID)
+			orderDetails, _, err := fia.CancelOrder(fiahubOrderID)
 			if err != nil {
 				text := fmt.Sprintf("Error %s IDTrade: %s, type: %s, ERROR!!! CancelOrder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
 				log.Println(text)

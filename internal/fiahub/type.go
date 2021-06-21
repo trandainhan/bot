@@ -1,11 +1,15 @@
 package fiahub
 
-import "gitlab.com/fiahub/bot/internal/rediswrapper"
+import (
+	"github.com/go-pg/pg/v10"
+	"gitlab.com/fiahub/bot/internal/rediswrapper"
+)
 
 type Fiahub struct {
 	RedisClient         *rediswrapper.MyRedis
 	Token               string
 	latestCancelAllTime int64
+	DB                  *pg.DB
 }
 
 func (fia *Fiahub) SetToken(token string) bool {

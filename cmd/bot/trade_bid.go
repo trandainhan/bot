@@ -25,7 +25,7 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 	originalCoinAmount := utils.RoundTo(vntQuantity/bidF, decimalsToRound)
 	priceBuy := bidF
 	orderType := "BidOrder"
-	bidOrder := fiahub.Order{
+	bidOrder := fiahub.OrderParams{
 		Coin:              coin,
 		CoinAmount:        originalCoinAmount,
 		PricePerUnitCents: priceBuy,
@@ -51,20 +51,21 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 	totalSell := 0.0
 	matching := false
 	for {
-		orderDetails, code, err := fia.GetBidOrderDetails(fiahubOrderID)
+		order, err := fia.GetOrderDetails(fiahubOrderID)
 		if err != nil {
 			text := fmt.Sprintf("Error %s IDTrade: %s type: %s GetBidOrderDetails %s StatusCode: %d fiahubOrderID: %d", coin, botID, orderType, err, code, fiahubOrderID)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(1000 * time.Millisecond)
 			continue
 		}
-		state := orderDetails.State
-		coinAmount := orderDetails.GetCoinAmount()
-		matching = orderDetails.Matching
+		state := order.State
+		coinAmount := order.CoinAmount
 		if coinAmount > 0 {
 			executedQty = originalCoinAmount - coinAmount
 		}
 		if state == fiahub.ORDER_CANCELLED || state == fiahub.ORDER_FINISHED {
+			matchingTX, _ := fia.GetSelfMatchingTransaction(order.UserID, order.ID)
+			matching = matchingTX != nil
 			break
 		}
 
@@ -78,13 +79,13 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 			elapsedTime := miliTime - lastestCancelAllTime
 			if elapsedTime < 10000 {
 				text := fmt.Sprintf("%s IDTrade: %s, CancelTime < 10s continue ElapsedTime: %v Starttime: %v", coin, botID, elapsedTime, lastestCancelAllTime)
-				go teleClient.SendMessage(text, chatID)
+				go teleClient.SendMessage(text, chatErrorID)
 				time.Sleep(3000 * time.Millisecond)
 				continue
 			}
 
 			log.Printf("Bot: %s cancel fiahub bid order %d due to: perChange: %v, executedQty: %v", botID, fiahubOrderID, perChange, executedQty)
-			orderDetails, code, err = fia.CancelOrder(fiahubOrderID)
+			orderDetails, _, err := fia.CancelOrder(fiahubOrderID)
 			if err != nil {
 				text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! CancelOrder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
 				go teleClient.SendMessage(text, chatErrorID)

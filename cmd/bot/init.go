@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-pg/pg/v10"
 	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
@@ -35,6 +36,13 @@ func init() {
 	if err != nil {
 		log.Panic("Missing ChatErrorID")
 	}
+	// Setup db
+	db = pg.Connect(&pg.Options{
+		Addr:     os.Getenv("DATABASE_ADDR"),
+		User:     os.Getenv("DATABASE_USERNAME"),
+		Password: os.Getenv("DATABASE_PASSWORD"),
+		Database: os.Getenv("DATABASE_NAME"),
+	})
 
 	// setup client
 	ctx := context.Background()
@@ -48,6 +56,7 @@ func init() {
 	fia = &fiahub.Fiahub{
 		RedisClient: redisClient,
 		Token:       fiahubToken,
+		DB:          db,
 	}
 
 	// Init value in redis

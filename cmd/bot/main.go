@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-pg/pg/v10"
 	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
@@ -29,6 +30,7 @@ var (
 	teleClient            *telegram.TeleBot
 	fia                   *fiahub.Fiahub
 	bn                    *binance.Binance
+	db                    *pg.DB
 )
 
 func main() {
@@ -115,6 +117,7 @@ func main() {
 	for i := 0; i < numWorker; i++ {
 		<-results
 	}
+	defer db.Close()
 	log.Println("==================")
 	log.Println("Finish trading bot")
 }

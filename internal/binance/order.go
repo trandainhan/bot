@@ -30,12 +30,12 @@ func (od OrderDetailsResp) GetPrice() float64 {
 }
 
 func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64) {
-	totalQuantity := 0.0
-	bidPriceByQuantity := 0.0
 	orderBook, err := getOrderBook(marketParam, 100)
 	if err != nil {
 		return -1.0, -1.0 // return negative price
 	}
+	totalQuantity := 0.0
+	bidPriceByQuantity := 0.0
 	for _, v := range orderBook.Bids {
 		price, _ := strconv.ParseFloat(v[0], 64)
 		innerQuantity, _ := strconv.ParseFloat(v[1], 64)

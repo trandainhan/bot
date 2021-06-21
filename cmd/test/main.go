@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	// "gitlab.com/fiahub/bot/internal/fiahub"
 	"log"
 	"os"
-	"time"
+	// "time"
 
 	// "gitlab.com/fiahub/bot/internal/binance"
+	"github.com/go-pg/pg/v10"
+	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 )
 
@@ -27,8 +28,8 @@ func main() {
 	ctx := context.Background()
 	redisURL := os.Getenv("REDIS_URL")
 	redisClient := rediswrapper.NewRedisClient(ctx, redisURL, 1)
-	redisClient.Set("nhantran", "hello")
-	log.Println(redisClient.Get("nhantran"))
+	// redisClient.Set("nhantran", "hello")
+	// log.Println(redisClient.Get("nhantran"))
 
 	// bid_order: {coin_amount: 3, price_per_unit_cents: 23731, type: "BidOrder"
 	// coin: "USDT", currency: "VNT"}
@@ -44,11 +45,29 @@ func main() {
 	// resp, _, _ := fiahub.CancelOrder(token, 103184704)
 	// log.Println(resp)
 
-	// fia := fiahub.Fiahub{
-	// 	RedisClient: redisClient,
-	// 	Token:       token,
-	// }
-	//
+	db := pg.Connect(&pg.Options{
+		Addr:     os.Getenv("DATABASE_ADDR"),
+		User:     os.Getenv("DATABASE_USERNAME"),
+		Password: os.Getenv("DATABASE_PASSWORD"),
+		Database: os.Getenv("DATABASE_NAME"),
+	})
+
+	fia := fiahub.Fiahub{
+		RedisClient: redisClient,
+		DB:          db,
+	}
+	result, _ := fia.GetOrderDetails(100000000)
+	log.Println(result)
+	log.Println(result.ID)
+	log.Println(result.UserID)
+
+	tx, err := fia.GetSelfMatchingTransaction(result.UserID, result.ID)
+	if err == pg.ErrNoRows {
+		log.Println("Should be fine")
+	}
+	matching := tx != nil
+	log.Println(matching)
+
 	// detail, _, err := fia.GetAskOrderDetails(103411475)
 	// if err != nil {
 	// 	panic(err)
@@ -85,13 +104,14 @@ func main() {
 	// resp, _ := bn.GetOrder("DOGEUSDT", 1239188099, "SLYJI2yBT99GaIo4qc35iM")
 	// log.Println(resp)
 
-	now := time.Now()
-	miliTime := now.UnixNano() / int64(time.Millisecond)
-	log.Println(now.UnixNano())
-	log.Println(miliTime)
-	time.Sleep(1 * time.Second)
-	now = time.Now()
-	miliTime2 := now.UnixNano() / int64(time.Millisecond)
-	log.Println(miliTime2 - miliTime)
+	// now := time.Now().UTC().AddDate(0, 0, -3)
+	// log.Println(now.Format("2006-01-02 15:04:05"))
+	// miliTime := now.UnixNano() / int64(time.Millisecond)
+	// log.Println(now.UnixNano())
+	// log.Println(miliTime)
+	// time.Sleep(1 * time.Second)
+	// now = time.Now()
+	// miliTime2 := now.UnixNano() / int64(time.Millisecond)
+	// log.Println(miliTime2 - miliTime)
 
 }

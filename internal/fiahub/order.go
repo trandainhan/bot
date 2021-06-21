@@ -20,7 +20,7 @@ const (
 	ORDER_FINISHED  = "finished"
 )
 
-type Order struct {
+type OrderParams struct {
 	Coin               string  `json:"coin"`
 	OriginalCoinAmount float64 `json:"original_coin_amount"`
 	CoinAmount         float64 `json:"coin_amount"`
@@ -92,13 +92,13 @@ func (fia Fiahub) CancelOrder(orderID int) (*OrderDetails, int, error) {
 	return &resp.Order, code, nil
 }
 
-func (fia Fiahub) CreateAskOrder(askOrder Order) (*OrderDetails, int, error) {
+func (fia Fiahub) CreateAskOrder(askOrder OrderParams) (*OrderDetails, int, error) {
 	headers := &map[string]string{
 		"access-token": fia.Token,
 	}
 	url := fmt.Sprintf("%s/ask_orders", BASE_URL)
 
-	data := map[string]Order{
+	data := map[string]OrderParams{
 		"ask_order": askOrder,
 	}
 
@@ -118,12 +118,12 @@ func (fia Fiahub) CreateAskOrder(askOrder Order) (*OrderDetails, int, error) {
 	return &resp.AskOrder, code, nil
 }
 
-func (fia Fiahub) CreateBidOrder(bidOrder Order) (*OrderDetails, int, error) {
+func (fia Fiahub) CreateBidOrder(bidOrder OrderParams) (*OrderDetails, int, error) {
 	headers := &map[string]string{
 		"access-token": fia.Token,
 	}
 	url := fmt.Sprintf("%s/bid_orders", BASE_URL)
-	data := map[string]Order{
+	data := map[string]OrderParams{
 		"bid_order": bidOrder,
 	}
 	body, code, err := u.HttpPost(url, data, headers)
@@ -142,6 +142,7 @@ func (fia Fiahub) CreateBidOrder(bidOrder Order) (*OrderDetails, int, error) {
 	return &resp.BidOrder, code, nil
 }
 
+// Switch to call directly to DB, check order-orm
 func (fia Fiahub) GetAskOrderDetails(orderID int) (*OrderDetails, int, error) {
 	body, code, err := getOrderDetails(fia.Token, orderID)
 	if err != nil {
@@ -155,6 +156,7 @@ func (fia Fiahub) GetAskOrderDetails(orderID int) (*OrderDetails, int, error) {
 	return &order.AskOrder, code, nil
 }
 
+// Switch to call directly to DB, check order-orm
 func (fia Fiahub) GetBidOrderDetails(orderID int) (*OrderDetails, int, error) {
 	body, code, err := getOrderDetails(fia.Token, orderID)
 	if err != nil {
