@@ -17,7 +17,15 @@ func calculatePerProfit() bool {
 	var params fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &params)
 
-	usdtFund := bn.CheckFund("USDT")
+	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
+
+	usdtFund, err := bn.CheckFund("USDT")
+	if err != nil {
+		text := fmt.Sprintf("%s %s", teleHanlder, err)
+		go teleClient.SendMessage(text, chatErrorID)
+		return false
+
+	}
 	perProfitBid := params.GetSpread()/2 + (usdtFund-params.GetUSDTOffset2()-params.GetUSDTMidPoint())/1000*params.GetProfitPerThousand()
 	perProfitAsk := params.GetSpread() - perProfitBid
 
@@ -28,7 +36,6 @@ func calculatePerProfit() bool {
 	oldPerProfitBid := redisClient.GetFloat64("per_profit_bid")
 
 	var text string
-	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
 	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {

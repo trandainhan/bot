@@ -2,6 +2,7 @@ package binance
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -27,15 +28,18 @@ type Fund struct {
 	Balances []Balance `json:"balances"`
 }
 
-func (binance Binance) CheckFund(name string) float64 {
+func (binance Binance) CheckFund(name string) (float64, error) {
 	fund := binance.checkFund()
+	if fund == nil {
+		return -1.0, errors.New("Err CheckFund: Can not get fund")
+	}
 	var result float64
 	for _, balance := range fund.Balances {
 		if balance.Asset == name {
 			result = balance.GetFree()
 		}
 	}
-	return result
+	return result, nil
 }
 
 func (binance Binance) checkFund() *Fund {
@@ -43,6 +47,7 @@ func (binance Binance) checkFund() *Fund {
 	body, code, err := binance.makeRequest("GET", params, "/api/v3/account")
 	if err != nil {
 		log.Printf("Err checkFund, statusCode: %d err: %s", code, err.Error())
+		return nil
 	}
 	var fund Fund
 	err = json.Unmarshal([]byte(body), &fund)
@@ -87,6 +92,7 @@ func (binance Binance) GetMarginDetails() (*MarginDetails, error) {
 	body, code, err := binance.makeRequest("GET", params, "/sapi/v1/margin/account")
 	if err != nil {
 		log.Printf("Err GetMarginDetails, statusCode: %d err: %s", code, err.Error())
+		return nil, err
 	}
 	var marginDetails MarginDetails
 	err = json.Unmarshal([]byte(body), &marginDetails)
