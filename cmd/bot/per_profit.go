@@ -23,9 +23,10 @@ func calculatePerProfit() bool {
 	if err != nil {
 		text := fmt.Sprintf("%s %s", teleHanlder, err)
 		go teleClient.SendMessage(text, chatErrorID)
+		fia.CancelAllOrder()
 		return false
-
 	}
+
 	perProfitBid := params.GetSpread()/2 + (usdtFund-params.GetUSDTOffset2()-params.GetUSDTMidPoint())/1000*params.GetProfitPerThousand()
 	perProfitAsk := params.GetSpread() - perProfitBid
 

@@ -71,6 +71,12 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64) {
 
 		// Trigger cancel process
 		bidPriceByQuantity, _ := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
+		if bidPriceByQuantity == -1.0 {
+			text := "There is may be a error when get price from binance, skip and wait " + os.Getenv("TELEGRAM_HANDLER")
+			go teleClient.SendMessage(text, chatErrorID)
+			time.Sleep(1 * time.Second)
+			continue
+		}
 		perChange := math.Abs((bidPriceByQuantity - bidB) / bidB)
 		if perChange > perCancel || executedQty > 0 {
 			lastestCancelAllTime := fia.GetCancelTime()
