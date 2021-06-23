@@ -24,10 +24,10 @@ func (fia Fiahub) GetSelfMatchingTransaction(user_id int, order_id int) (*Transa
 				WhereOr("origin_type = 'Order' and origin_id = ? and type in ('BuyTransaction', 'SellTransaction') and created_at > ?", order_id, created_at)
 			return q, nil
 		}).Limit(1).Select()
-	if err != pg.ErrNoRows {
-		log.Printf("Err GetSelfMatchingTransaction: %s", err.Error())
-	}
 	if err != nil {
+		if err != pg.ErrNoRows {
+			log.Printf("Err GetSelfMatchingTransaction: %s", err.Error())
+		}
 		return nil, err
 	}
 	return tx, nil
