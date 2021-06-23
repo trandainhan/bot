@@ -14,9 +14,9 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func trade_bid(botID string, coin string, bidF float64, bidB float64) {
+func trade_bid(botID string, coin string, bidF float64, bidB float64, cancelFactor int) {
 	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
-	perCancel := redisClient.GetFloat64("per_cancel")
+	perCancel := redisClient.GetFloat64("per_cancel") + float64(cancelFactor-1)*0.05/100
 	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
 	randNumber := rand.Intn(randdomVntQuantity)
 

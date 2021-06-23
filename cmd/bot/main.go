@@ -48,11 +48,11 @@ func main() {
 		perProfitStep = float64(i)
 
 		id = fmt.Sprintf("ask%d", i)
-		go ask_worker(id, coin, perProfitStep, results)
+		go ask_worker(id, coin, perProfitStep, i, results)
 
 		// Bid trading
 		id = fmt.Sprintf("bid%d", i)
-		go bid_worker(id, coin, perProfitStep, results)
+		go bid_worker(id, coin, perProfitStep, i, results)
 	}
 
 	// go renew params, env, token

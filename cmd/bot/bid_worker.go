@@ -10,7 +10,7 @@ import (
 	"gitlab.com/fiahub/bot/internal/binance"
 )
 
-func bid_worker(id string, coin string, perProfitStep float64, results chan<- bool) {
+func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int, results chan<- bool) {
 	marketParam := coin + "USDT"
 	for {
 		randNumber := rand.Intn(1000)
@@ -40,7 +40,7 @@ func bid_worker(id string, coin string, perProfitStep float64, results chan<- bo
 			time.Sleep(2 * time.Second)
 		} else {
 			log.Printf("Trade bid order with coin: %s bidf: %v bidB: %v", coin, bidF, bidB)
-			trade_bid(id, coin, bidF, bidB)
+			trade_bid(id, coin, bidF, bidB, cancalFactor)
 		}
 
 		time.Sleep(3 * time.Second)
