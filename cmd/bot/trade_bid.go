@@ -15,12 +15,13 @@ import (
 )
 
 func trade_bid(botID string, coin string, bidF float64, bidB float64, cancelFactor int) {
-	baseVntQuantity, _ := strconv.Atoi(os.Getenv("BASE_VNT_QUANTITY"))
+	key := fmt.Sprintf("%s_%s_vnt_quantity", coin, botID)
+	baseVntQuantity := redisClient.GetFloat64(key)
 	perCancel := redisClient.GetFloat64("per_cancel") + float64(cancelFactor-1)*0.05/100
 	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
 	randNumber := rand.Intn(randdomVntQuantity)
 
-	vntQuantity := float64(baseVntQuantity + randNumber)
+	vntQuantity := baseVntQuantity + float64(randNumber)
 
 	originalCoinAmount := utils.RoundTo(vntQuantity/bidF, decimalsToRound)
 	priceBuy := bidF

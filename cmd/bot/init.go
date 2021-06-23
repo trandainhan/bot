@@ -94,6 +94,27 @@ func initValuesInRedis() {
 	redisClient.Set(runnableAskKey, true)
 	runnableBidKey := fmt.Sprintf("%s_bid_runable", coin)
 	redisClient.Set(runnableBidKey, true)
+
+	var key string
+	key = fmt.Sprintf("%s_ask1_vnt_quantity", coin)
+	redisClient.Set(key, 20000000)
+	key = fmt.Sprintf("%s_bid1_vnt_quantity", coin)
+	redisClient.Set(key, 20000000)
+
+	key = fmt.Sprintf("%s_ask2_vnt_quantity", coin)
+	redisClient.Set(key, 50000000)
+	key = fmt.Sprintf("%s_bid2_vnt_quantity", coin)
+	redisClient.Set(key, 50000000)
+
+	key = fmt.Sprintf("%s_ask3_vnt_quantity", coin)
+	redisClient.Set(key, 100000000)
+	key = fmt.Sprintf("%s_bid3_vnt_quantity", coin)
+	redisClient.Set(key, 100000000)
+
+	key = fmt.Sprintf("%s_ask4_vnt_quantity", coin)
+	redisClient.Set(key, 200000000)
+	key = fmt.Sprintf("%s_bid4_vnt_quantity", coin)
+	redisClient.Set(key, 200000000)
 }
 
 func setCoinGiatotParams() {
