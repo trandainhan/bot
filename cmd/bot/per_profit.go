@@ -71,10 +71,10 @@ func calculatePerProfit() bool {
 	if isChange {
 		perProfitchange := math.Abs(oldPerProfitAsk - perProfitAsk)
 		if perProfitchange < 0.001 {
-			text = fmt.Sprintf("Per Profit Change: %.6f < 0.1%%", perProfitchange)
+			text = fmt.Sprintf("%s Per Profit Change: %.6f < 0.1%%", coin, perProfitchange)
 		} else {
 			fia.CancelAllOrder()
-			text = fmt.Sprintf("CancelAllOrder Per Profit Change: %.6f > 0.1%%", perProfitchange)
+			text = fmt.Sprintf("%s CancelAllOrder Per Profit Change: %.6f > 0.1%%", coin, perProfitchange)
 		}
 		text = fmt.Sprintf("%s\n USDTFund: %.6f\n PerProfitAsk: %.6f -> %.6f\n PerProfitBid: %.6f -> %.6f",
 			text, usdtFund, oldPerProfitAsk, perProfitAsk, oldPerProfitBid, perProfitBid)

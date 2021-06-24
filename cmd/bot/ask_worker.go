@@ -21,7 +21,7 @@ func ask_worker(id string, coin string, perProfitStep float64, cancelFactor int,
 		perProfitAsk := redisClient.GetFloat64(coin + "_per_profit_ask")
 		_, askB := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 		if askB == -1.0 {
-			text := "There is may be a error when get price from binance, skip and wait"
+			text := "There is may be a error when get price from binance, skip and wait " + os.Getenv("TELEGRAM_HANDLER")
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(30 * time.Second)
 			continue
