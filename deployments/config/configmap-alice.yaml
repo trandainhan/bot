@@ -4,6 +4,4 @@ metadata:
   name: configmap.alice
   namespace: bot
 data:
-  BASE_VNT_QUANTITY: "18000000"
-  RANDOM_VNT_QUANTITY: "4000000"
   FIAHUB_EMAIL: alice_binance@fiahub.com
