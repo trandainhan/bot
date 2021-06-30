@@ -29,10 +29,10 @@ func (od OrderDetailsResp) GetPrice() float64 {
 	return res
 }
 
-func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64) {
+func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64, error) {
 	orderBook, err := getOrderBook(marketParam, 100)
 	if err != nil {
-		return -1.0, -1.0 // return negative price
+		return -1.0, -1.0, err // return negative price
 	}
 	totalQuantity := 0.0
 	bidPriceByQuantity := 0.0
@@ -57,7 +57,7 @@ func GetPriceByQuantity(marketParam string, quantity float64) (float64, float64)
 			break
 		}
 	}
-	return bidPriceByQuantity, askPriceByQuantity
+	return bidPriceByQuantity, askPriceByQuantity, nil
 }
 
 type OrderBook struct {
