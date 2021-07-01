@@ -73,7 +73,7 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64, cancelFact
 		// Trigger cancel process
 		bidPriceByQuantity, _, err := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
 		if err != nil {
-			text := fmt.Sprintf("%s %s Err GetPriceByQuantity: %s", os.Getenv("TELEGRAM_HANDLER"), coin, err.Error())
+			text := fmt.Sprintf("%s Err GetPriceByQuantity inside the loop: %s", coin, err.Error())
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(1 * time.Second)
 			continue

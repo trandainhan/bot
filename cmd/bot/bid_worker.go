@@ -21,7 +21,7 @@ func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int,
 		perProfitBid := redisClient.GetFloat64(coin + "_per_profit_bid")
 		bidB, _, err := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
 		if err != nil {
-			text := fmt.Sprintf("%s %s Err GetPriceByQuantity: %s", os.Getenv("TELEGRAM_HANDLER"), coin, err.Error())
+			text := fmt.Sprintf("%s Err GetPriceByQuantity: %s", coin, err.Error())
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(30 * time.Second)
 			continue
