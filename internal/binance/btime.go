@@ -16,11 +16,11 @@ func GetOffsetTimeUnix() int64 {
 	sec := now.UnixNano()
 	url := "https://api.binance.com/api/v1/time"
 	body, _, _ := utils.HttpGet(url, nil)
+	elapsedTime := time.Now().Sub(now).Milliseconds()
 	var result TimeResponse
 	if err := json.Unmarshal([]byte(body), &result); err != nil {
 		panic(err)
 	}
-
-	offset := result.ServerTime - sec/int64(time.Millisecond)
+	offset := result.ServerTime - (sec/int64(time.Millisecond) + elapsedTime/2)
 	return offset
 }
