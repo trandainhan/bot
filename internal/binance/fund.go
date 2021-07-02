@@ -2,9 +2,9 @@ package binance
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 )
 
@@ -29,9 +29,9 @@ type Fund struct {
 }
 
 func (binance Binance) CheckFund(name string) (float64, error) {
-	fund := binance.checkFund()
-	if fund == nil {
-		return -1.0, errors.New("Err CheckFund: Can not get fund")
+	fund, err := binance.checkFund()
+	if err != nil {
+		return -1.0, err
 	}
 	var result float64
 	for _, balance := range fund.Balances {
@@ -42,23 +42,31 @@ func (binance Binance) CheckFund(name string) (float64, error) {
 	return result, nil
 }
 
-func (binance Binance) checkFund() *Fund {
+func (binance Binance) checkFund() (*Fund, error) {
 	params := make(map[string]string)
 	body, code, err := binance.makeRequest("GET", params, "/api/v3/account")
 	if err != nil {
 		log.Printf("Err checkFund, statusCode: %d err: %s", code, err.Error())
-		return nil
+		return nil, err
+	}
+	if os.Getenv("LOG_DEBUGGER") == "true" {
+		log.Printf("checkFund %s", body)
 	}
 	var fund Fund
 	err = json.Unmarshal([]byte(body), &fund)
 	if err != nil {
 		panic(err)
 	}
-	return &fund
+	return &fund, nil
 }
 
 func (binance Binance) GetFundsMessages() string {
-	fund := binance.checkFund()
+	fund, err := binance.checkFund()
+	if err != nil {
+		text := fmt.Sprintf("Err GetFundsMessages %s", err)
+		log.Println(text)
+		return text
+	}
 	text1 := "Binance Funds:  "
 	text2 := "\n Inorder: "
 	for _, balance := range fund.Balances {
