@@ -21,6 +21,6 @@ func GetOffsetTimeUnix() int64 {
 	if err := json.Unmarshal([]byte(body), &result); err != nil {
 		panic(err)
 	}
-	offset := result.ServerTime - (sec/int64(time.Millisecond) + elapsedTime/2)
+	offset := result.ServerTime - (sec/int64(time.Millisecond) + elapsedTime)
 	return offset
 }
