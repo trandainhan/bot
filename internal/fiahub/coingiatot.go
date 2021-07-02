@@ -59,19 +59,19 @@ type Coingiatotresp struct {
 	Params CoinGiaTotParams `json:"bot_vars"`
 }
 
-func GetCoinGiaTotParams() *CoinGiaTotParams {
+func GetCoinGiaTotParams() (*CoinGiaTotParams, error) {
 	BASE_URL := os.Getenv("COINGIATOT_URL")
 	BOT_NAME := os.Getenv("BOT_COINGIATOT_NAME")
 	url := fmt.Sprintf("%s/bot_vars?bot_name=%s", BASE_URL, BOT_NAME)
 	body, _, err := u.HttpGet(url, nil)
 	if err != nil {
 		log.Printf("Err in RenewParam with Body: %s, Err: %s", body, err.Error())
-		return nil
+		return nil, err
 	}
 
 	var resp Coingiatotresp
 	if err := json.Unmarshal([]byte(body), &resp); err != nil {
 		panic(err)
 	}
-	return &resp.Params
+	return &resp.Params, nil
 }

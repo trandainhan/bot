@@ -8,8 +8,8 @@ data:
   REDIS_URL: redis-coingiatot-prod-master.redis-prod:6379
   REDIS_DB_NUMBER: "1"
   BINANCE_URL: https://api.binance.com
-  COINGIATOT_URL: http://coingiatot.prod/api/v1
-  FIAHUB_URL: http://core-internal.prod/api/v1
+  COINGIATOT_URL: http://10.100.79.128/api/v1
+  FIAHUB_URL: http://10.100.67.104/api/v1
   CHAT_ID: "-575917470"
   CHAT_ERROR_ID: "-592829215"
   BASE_NET_ASSET: "10000"
