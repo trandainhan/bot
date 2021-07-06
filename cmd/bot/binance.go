@@ -34,6 +34,10 @@ func placeBinanceOrder(botID string, newSellQuantity, priceB, priceF float64, si
 		go teleClient.SendMessage(text, chatID)
 		time.Sleep(time.Duration(defaultSleepSeconds) * time.Second)
 		return
+	} else {
+		text := fmt.Sprintf("%s %s Err Take profit Binance BuyLimit Quant: %v Price: %v ID: %d", coin, botID, newSellQuantity, priceB, binanceOrderID)
+		log.Println(text)
+		go teleClient.SendMessage(text, chatErrorID)
 	}
 }
 
