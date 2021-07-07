@@ -36,13 +36,13 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		allFundMessage := bn.GetFundsMessages()
 		text = fmt.Sprintf("%s %s", text, allFundMessage)
 
-		// ;Tinh USDT Margin
+		// Calculate USDT Margin
 		name := "USDT"
 		marginDetails, _ := bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %.6f", text, netAsset)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatProfitID)
 		time.Sleep(2000 * time.Millisecond)
 
 		notifyWhenAssetIsLow(netAsset, text)
@@ -62,13 +62,13 @@ func calculateProfit(coin string, newSellQuantity, askF, askB float64, id string
 		allFundMessage := bn.GetFundsMessages()
 		text = fmt.Sprintf("%s %s", text, allFundMessage)
 
-		// ;Tinh USDT Margin
+		// Calculate USDT Margin
 		name := "USDT"
 		marginDetails, _ := bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatProfitID)
 		time.Sleep(2000 * time.Millisecond)
 
 		notifyWhenAssetIsLow(netAsset, text)
