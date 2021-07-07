@@ -23,6 +23,7 @@ var (
 	quantityToGetPrice    float64
 	numWorker             int
 	chatID                int64
+	chatProfitID          int64
 	chatErrorID           int64
 	binanceTimeDifference int64
 	lastestCancelAllTime  int64

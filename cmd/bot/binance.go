@@ -31,7 +31,7 @@ func placeBinanceOrder(botID string, newSellQuantity, priceB, priceF float64, si
 		go calculateProfit(coin, newSellQuantity, priceF, priceB, botID, binanceOrderID, origClientOrderID, isPlaceSellOrder)
 		text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)
 		log.Println(text)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatProfitID)
 		time.Sleep(time.Duration(defaultSleepSeconds) * time.Second)
 		return
 	} else {

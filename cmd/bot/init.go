@@ -26,11 +26,15 @@ func init() {
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 8.0, "Quantity To Get Price")
 	flag.Parse()
 
-	// Setup chatID, chatErrorID
+	// Setup chatID, chatProfitID, chatErrorID
 	var err error
 	chatID, err = strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if err != nil {
 		log.Panic("Missing ChatID")
+	}
+	chatProfitID, err = strconv.ParseInt(os.Getenv("CHAT_PROFIT_ID"), 10, 64)
+	if err != nil {
+		log.Panic("Missing ChatProfitID")
 	}
 	chatErrorID, err = strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 	if err != nil {
