@@ -61,9 +61,7 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64, cancelFact
 		}
 		state := order.State
 		coinAmount := order.CoinAmount
-		if coinAmount > 0 {
-			executedQty = originalCoinAmount - coinAmount
-		}
+		executedQty = originalCoinAmount - coinAmount
 		if state == fiahub.ORDER_CANCELLED || state == fiahub.ORDER_FINISHED {
 			matchingTX, _ := fia.GetSelfMatchingTransaction(order.UserID, order.ID)
 			matching = matchingTX != nil
