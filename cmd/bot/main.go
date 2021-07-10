@@ -8,7 +8,8 @@ import (
 	"time"
 
 	"github.com/go-pg/pg/v10"
-	"gitlab.com/fiahub/bot/internal/binance"
+	"gitlab.com/fiahub/bot/internal/exchanges"
+	"gitlab.com/fiahub/bot/internal/exchanges/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 	"gitlab.com/fiahub/bot/internal/telegram"
@@ -30,8 +31,9 @@ var (
 	redisClient           *rediswrapper.MyRedis
 	teleClient            *telegram.TeleBot
 	fia                   *fiahub.Fiahub
-	bn                    *binance.Binance
 	db                    *pg.DB
+	exchangeClient        *exchanges.ExchangeClient
+	bn                    *binance.Binance
 )
 
 func main() {
@@ -75,7 +77,7 @@ func main() {
 				log.Panic(err)
 			}
 			time.Sleep(time.Duration(period) * time.Second)
-			calculatePerProfit()
+			validatePerProfit()
 		}
 	}()
 

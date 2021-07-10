@@ -15,7 +15,7 @@ const (
 )
 
 type OrderDetailsResp struct {
-	OrderID       int    `json:"orderId"`
+	OrderID       int64  `json:"orderId"`
 	ClientOrderID string `json:"clientOrderId"`
 	OriginQty     string `json:"origQty"`
 	ExecutedQty   string `json:"executedQty"`
@@ -26,6 +26,16 @@ type OrderDetailsResp struct {
 
 func (od OrderDetailsResp) GetPrice() float64 {
 	res, _ := strconv.ParseFloat(od.Price, 64)
+	return res
+}
+
+func (od OrderDetailsResp) GetOriginQty() float64 {
+	res, _ := strconv.ParseFloat(od.OriginQty, 64)
+	return res
+}
+
+func (od OrderDetailsResp) GetExecutedQty() float64 {
+	res, _ := strconv.ParseFloat(od.ExecutedQty, 64)
 	return res
 }
 
@@ -82,10 +92,10 @@ func getOrderBook(marketParam string, limit int) (*OrderBook, error) {
 	return &orderBook, nil
 }
 
-func (binance Binance) GetOrder(marketParam string, orderId int, originClientOrderID string) (*OrderDetailsResp, error) {
+func (binance Binance) GetOrder(marketParam string, orderId int64, originClientOrderID string) (*OrderDetailsResp, error) {
 	params := map[string]string{
 		"symbol":            marketParam,
-		"orderId":           strconv.Itoa(orderId),
+		"orderId":           strconv.FormatInt(orderId, 10),
 		"origClientOrderId": originClientOrderID,
 	}
 	body, code, err := binance.makeRequest("GET", params, "/api/v3/order")

@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"math"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
 
-	"gitlab.com/fiahub/bot/internal/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/utils"
 )
@@ -48,63 +46,11 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64, cancelFact
 
 	// Loop to check order
 	fiahubOrderID := fiahubOrder.ID
-	executedQty := 0.0
-	totalSell := 0.0
-	matching := false
-	for {
-		order, err := fia.GetOrderDetails(fiahubOrderID)
-		if err != nil {
-			text := fmt.Sprintf("Error %s IDTrade: %s type: %s GetBidOrderDetails %s StatusCode: %d fiahubOrderID: %d", coin, botID, orderType, err, code, fiahubOrderID)
-			go teleClient.SendMessage(text, chatErrorID)
-			time.Sleep(1000 * time.Millisecond)
-			continue
-		}
-		state := order.State
-		coinAmount := order.CoinAmount
-		executedQty = originalCoinAmount - coinAmount
-		if state == fiahub.ORDER_CANCELLED || state == fiahub.ORDER_FINISHED {
-			matchingTX, _ := fia.GetSelfMatchingTransaction(order.UserID, order.ID)
-			matching = matchingTX != nil
-			break
-		}
-
-		// Trigger cancel process
-		bidPriceByQuantity, _, err := binance.GetPriceByQuantity(coin+"USDT", quantityToGetPrice)
-		if err != nil {
-			text := fmt.Sprintf("%s Err GetPriceByQuantity inside the loop: %s", coin, err.Error())
-			go teleClient.SendMessage(text, chatErrorID)
-			time.Sleep(1 * time.Second)
-			continue
-		}
-		perChange := math.Abs((bidPriceByQuantity - bidB) / bidB)
-		if perChange > perCancel || executedQty > 0 {
-			lastestCancelAllTime := fia.GetCancelTime()
-			now := time.Now()
-			miliTime := now.UnixNano() / int64(time.Millisecond)
-			elapsedTime := miliTime - lastestCancelAllTime
-			if elapsedTime < 10000 {
-				text := fmt.Sprintf("%s IDTrade: %s, CancelTime < 10s continue ElapsedTime: %v Starttime: %v", coin, botID, elapsedTime, lastestCancelAllTime)
-				go teleClient.SendMessage(text, chatErrorID)
-				time.Sleep(3000 * time.Millisecond)
-				continue
-			}
-
-			log.Printf("Bot: %s cancel fiahub bid order %d due to: perChange: %v, executedQty: %v", botID, fiahubOrderID, perChange, executedQty)
-			_, _, err := fia.CancelOrder(fiahubOrderID)
-			if err != nil {
-				text := fmt.Sprintf("Error! %s IDTrade: %s, type: %s, ERROR!!! CancelOrder: %d with error: %s", coin, botID, orderType, fiahubOrderID, err)
-				go teleClient.SendMessage(text, chatErrorID)
-				time.Sleep(3 * time.Second)
-				continue
-			}
-			continue
-		}
-		time.Sleep(5000 * time.Millisecond)
-	}
+	executedQty, matching := checkFiahubOrder(botID, fiahubOrderID, originalCoinAmount, bidB, perCancel, orderType)
 
 	// If newSellVNTQuantity < 50.000 ignore
 	// If newSellVNTQuantity > 250.000 mới tạo lệnh mua bù trên binance không thì tạo lệnh bán lại luôn giá + rand từ 1->3000
-	newSellQuantity := executedQty - totalSell
+	newSellQuantity := executedQty
 	newSellVNTQuantity := newSellQuantity * bidF
 	if newSellVNTQuantity <= 50000 {
 		return
@@ -125,5 +71,5 @@ func trade_bid(botID string, coin string, bidF float64, bidB float64, cancelFact
 	}
 
 	newSellQuantity = utils.RoundTo(newSellQuantity, decimalsToRound)
-	placeBinanceOrder(botID, newSellQuantity, bidB, bidF, "SELL")
+	placeOrder(botID, newSellQuantity, bidB, bidF, "SELL")
 }

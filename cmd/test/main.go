@@ -4,13 +4,19 @@ import (
 	"context"
 	"log"
 	"os"
+
 	// "time"
 
 	// "gitlab.com/fiahub/bot/internal/binance"
-	"github.com/go-pg/pg/v10"
-	"gitlab.com/fiahub/bot/internal/fiahub"
+
+	"gitlab.com/fiahub/bot/internal/ftx"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 )
+
+type NewOrder struct {
+	Future string `json:"future"`
+	Market string `json:"market"`
+}
 
 func main() {
 	// Test login
@@ -45,28 +51,28 @@ func main() {
 	// resp, _, _ := fiahub.CancelOrder(token, 103184704)
 	// log.Println(resp)
 
-	db := pg.Connect(&pg.Options{
-		Addr:     os.Getenv("DATABASE_ADDR"),
-		User:     os.Getenv("DATABASE_USERNAME"),
-		Password: os.Getenv("DATABASE_PASSWORD"),
-		Database: os.Getenv("DATABASE_NAME"),
-	})
+	// db := pg.Connect(&pg.Options{
+	// 	Addr:     os.Getenv("DATABASE_ADDR"),
+	// 	User:     os.Getenv("DATABASE_USERNAME"),
+	// 	Password: os.Getenv("DATABASE_PASSWORD"),
+	// 	Database: os.Getenv("DATABASE_NAME"),
+	// })
+	//
+	// fia := fiahub.Fiahub{
+	// 	RedisClient: redisClient,
+	// 	DB:          db,
+	// }
+	// result, _ := fia.GetOrderDetails(100000000)
+	// log.Println(result)
+	// log.Println(result.ID)
+	// log.Println(result.UserID)
 
-	fia := fiahub.Fiahub{
-		RedisClient: redisClient,
-		DB:          db,
-	}
-	result, _ := fia.GetOrderDetails(100000000)
-	log.Println(result)
-	log.Println(result.ID)
-	log.Println(result.UserID)
-
-	tx, err := fia.GetSelfMatchingTransaction(result.UserID, result.ID)
-	if err == pg.ErrNoRows {
-		log.Println("Should be fine")
-	}
-	matching := tx != nil
-	log.Println(matching)
+	// tx, err := fia.GetSelfMatchingTransaction(result.UserID, result.ID)
+	// if err == pg.ErrNoRows {
+	// 	log.Println("Should be fine")
+	// }
+	// matching := tx != nil
+	// log.Println(matching)
 
 	// detail, _, err := fia.GetAskOrderDetails(103411475)
 	// if err != nil {
@@ -76,14 +82,14 @@ func main() {
 
 	// Test binance api
 	// offset := binance.GetOffsetTimeUnix()
-	// redisClient.Set("local_binance_time_difference", offset)
+	// log.Println(offset)
 
-	// bn := binance.Binance{
-	// 	RedisClient: redisClient,
-	// }
-	//
-	// usdtFund := bn.CheckFund("USDT")
+	ftx := ftx.FtxClient{}
+	log.Println(string(res))
+	// usdtFund, err := bn.CheckFund("USDT")
+	// log.Println(err)
 	// log.Println(usdtFund)
+
 	//
 	// msg := bn.GetFundsMessages()
 	// log.Println(msg)

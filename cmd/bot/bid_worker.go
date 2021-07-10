@@ -7,11 +7,10 @@ import (
 	"os"
 	"time"
 
-	"gitlab.com/fiahub/bot/internal/binance"
+	"gitlab.com/fiahub/bot/internal/exchanges"
 )
 
 func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int, results chan<- bool) {
-	marketParam := coin + "USDT"
 	for {
 		randNumber := rand.Intn(1000)
 		time.Sleep(time.Duration(randNumber) * time.Millisecond)
@@ -19,7 +18,7 @@ func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int,
 		runable := redisClient.GetBool(runableKey)
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
 		perProfitBid := redisClient.GetFloat64(coin + "_per_profit_bid")
-		bidB, _, err := binance.GetPriceByQuantity(marketParam, quantityToGetPrice)
+		bidB, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
 		if err != nil {
 			text := fmt.Sprintf("%s Err GetPriceByQuantity: %s", coin, err.Error())
 			go teleClient.SendMessage(text, chatErrorID)
