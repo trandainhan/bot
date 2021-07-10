@@ -12,7 +12,7 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func trade_ask(botID string, coin string, askF float64, askB float64, cancelFactor int) {
+func trade_ask(botID string, coin string, fiahubPrice float64, exchangePrice float64, cancelFactor int) {
 	key := fmt.Sprintf("%s_%s_vnt_quantity", coin, botID)
 	baseVntQuantity := redisClient.GetFloat64(key)
 	perCancel := redisClient.GetFloat64("per_cancel") + float64(cancelFactor-1)*0.05/100
@@ -21,8 +21,8 @@ func trade_ask(botID string, coin string, askF float64, askB float64, cancelFact
 
 	vntQuantity := baseVntQuantity + float64(randNumber)
 
-	originalCoinAmount := utils.RoundTo(vntQuantity/askF, decimalsToRound)
-	priceSell := askF
+	originalCoinAmount := utils.RoundTo(vntQuantity/fiahubPrice, decimalsToRound)
+	priceSell := fiahubPrice
 	orderType := "AskOrder"
 	askOrder := fiahub.OrderParams{
 		Coin:              coin,
@@ -47,7 +47,7 @@ func trade_ask(botID string, coin string, askF float64, askB float64, cancelFact
 
 	// Loop to check order
 	fiahubOrderID := fiahubOrder.ID
-	executedQty, matching := checkFiahubOrder(botID, fiahubOrderID, originalCoinAmount, askB, perCancel, orderType)
+	executedQty, matching := checkFiahubOrder(botID, fiahubOrderID, originalCoinAmount, exchangePrice, perCancel, orderType)
 
 	// If newSellVNTQuantity < 50.000 ignore
 	// If newSellVNTQuantity > 250.000 mới tạo lệnh mua bù trên binance không thì tạo lệnh bán lại luôn giá + rand từ 1->3000
@@ -72,5 +72,5 @@ func trade_ask(botID string, coin string, askF float64, askB float64, cancelFact
 	}
 
 	newSellQuantity = utils.RoundTo(newSellQuantity, decimalsToRound)
-	placeOrder(botID, newSellQuantity, askB, askF, "buy")
+	placeOrder(botID, newSellQuantity, exchangePrice, fiahubPrice, "buy")
 }

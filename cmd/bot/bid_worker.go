@@ -18,7 +18,7 @@ func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int,
 		runable := redisClient.GetBool(runableKey)
 		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
 		perProfitBid := redisClient.GetFloat64(coin + "_per_profit_bid")
-		bidB, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
+		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
 		if err != nil {
 			text := fmt.Sprintf("%s Err GetPriceByQuantity: %s", coin, err.Error())
 			go teleClient.SendMessage(text, chatErrorID)
@@ -30,16 +30,16 @@ func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int,
 			continue
 		}
 		perProfitBid = perProfitBid + perProfitStep*0.6/100
-		bidF, isOutRange := calculateBidFFromBidB(bidB, perFeeBinance, perProfitBid, minPrice, maxPrice)
+		fiahubBidPrice, isOutRange := calculateBidFFromBidB(exchangeBidPrice, perFeeBinance, perProfitBid, minPrice, maxPrice)
 		if isOutRange {
 			text := fmt.Sprintf("%s %s Error! Price out of range. PriceF: %v PriceBidB: %v Range: %v - %v",
-				coin, os.Getenv("TELEGRAM_HANDLER"), bidF, bidB, minPrice, maxPrice)
+				coin, os.Getenv("TELEGRAM_HANDLER"), fiahubBidPrice, exchangeBidPrice, minPrice, maxPrice)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(2 * time.Second)
 		} else {
-			log.Printf("Trade bid order with coin: %s bidf: %v bidB: %v", coin, bidF, bidB)
-			trade_bid(id, coin, bidF, bidB, cancalFactor)
+			log.Printf("Trade bid order with coin: %s fiahubBidPrice: %v exchangeBidPrice: %v", coin, fiahubBidPrice, exchangeBidPrice)
+			trade_bid(id, coin, fiahubBidPrice, exchangeBidPrice, cancalFactor)
 		}
 
 		time.Sleep(3 * time.Second)
