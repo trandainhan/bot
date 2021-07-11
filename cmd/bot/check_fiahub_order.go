@@ -47,6 +47,8 @@ func checkFiahubOrder(botID string, fiahubOrderID int, originalCoinAmount float6
 			time.Sleep(1 * time.Second)
 			continue
 		}
+
+		// Calculate price change percentage since the Order was created
 		perChange := math.Abs((newPriceOnExchange - oldPriceOnExchange) / oldPriceOnExchange)
 		if perChange > perCancel || executedQty > 0 {
 			lastestCancelAllTime := fia.GetCancelTime()
