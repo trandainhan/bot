@@ -39,7 +39,7 @@ func ask_worker(id string, coin string, perProfitStep float64, cancelFactor int,
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(2 * time.Second)
 		} else {
-			log.Printf("Trade ask order with coin: %s fiahubAskPrice: %v exchangeAskPrice: %v", coin, fiahubAskPrice, exchangeAskPrice)
+			log.Printf("Trade ask order with coin: %s fiahubAskPrice: %.6f exchangeAskPrice: %.6f", coin, fiahubAskPrice, exchangeAskPrice)
 			trade_ask(id, coin, fiahubAskPrice, exchangeAskPrice, cancelFactor)
 		}
 

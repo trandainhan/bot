@@ -28,6 +28,7 @@ func (ex ExchangeClient) BuyLimit(coin string, price float64, quantity float64) 
 			ExecutedQty: ftxOrderResp.FilledSize,
 			Price:       ftxOrderResp.Price,
 			Status:      ftxOrderResp.Status,
+			Side:        ftxOrderResp.Side,
 		}
 		return &order, nil
 	}
@@ -42,6 +43,7 @@ func (ex ExchangeClient) BuyLimit(coin string, price float64, quantity float64) 
 		ExecutedQty: binanceOrderDetails.GetExecutedQty(),
 		Price:       binanceOrderDetails.GetPrice(),
 		Status:      binanceOrderDetails.Status,
+		Side:        binanceOrderDetails.Side,
 	}
 	return &order, nil
 }
@@ -60,6 +62,7 @@ func (ex ExchangeClient) SellLimit(coin string, price float64, quantity float64)
 			ExecutedQty: ftxOrderResp.FilledSize,
 			Price:       ftxOrderResp.Price,
 			Status:      ftxOrderResp.Status,
+			Side:        ftxOrderResp.Side,
 		}
 		return &order, nil
 	}
@@ -74,6 +77,7 @@ func (ex ExchangeClient) SellLimit(coin string, price float64, quantity float64)
 		ExecutedQty: binanceOrderDetails.GetExecutedQty(),
 		Price:       binanceOrderDetails.GetPrice(),
 		Status:      binanceOrderDetails.Status,
+		Side:        binanceOrderDetails.Side,
 	}
 	return &order, nil
 }
@@ -93,6 +97,7 @@ func (ex ExchangeClient) GetOrder(coin string, orderID int64, clientID string) (
 			ExecutedQty: ftxOrderResp.FilledSize,
 			Price:       ftxOrderResp.Price,
 			Status:      ftxOrderResp.Status,
+			Side:        ftxOrderResp.Side,
 		}
 		return &order, nil
 	}
@@ -107,6 +112,7 @@ func (ex ExchangeClient) GetOrder(coin string, orderID int64, clientID string) (
 		ExecutedQty: binanceOrderDetails.GetExecutedQty(),
 		Price:       binanceOrderDetails.GetPrice(),
 		Status:      binanceOrderDetails.Status,
+		Side:        binanceOrderDetails.Side,
 	}
 	return &order, nil
 }

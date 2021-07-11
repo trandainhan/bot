@@ -32,13 +32,13 @@ func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int,
 		perProfitBid = perProfitBid + perProfitStep*0.6/100
 		fiahubBidPrice, isOutRange := calculateBidFFromBidB(exchangeBidPrice, perFeeBinance, perProfitBid, minPrice, maxPrice)
 		if isOutRange {
-			text := fmt.Sprintf("%s %s Error! Price out of range. PriceF: %v PriceBidB: %v Range: %v - %v",
+			text := fmt.Sprintf("%s %s Err Price out of range. PriceF: %v PriceBidB: %v Range: %v - %v",
 				coin, os.Getenv("TELEGRAM_HANDLER"), fiahubBidPrice, exchangeBidPrice, minPrice, maxPrice)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(2 * time.Second)
 		} else {
-			log.Printf("Trade bid order with coin: %s fiahubBidPrice: %v exchangeBidPrice: %v", coin, fiahubBidPrice, exchangeBidPrice)
+			log.Printf("Trade bid order with coin: %s fiahubBidPrice: %.6f exchangeBidPrice: %.6f", coin, fiahubBidPrice, exchangeBidPrice)
 			trade_bid(id, coin, fiahubBidPrice, exchangeBidPrice, cancalFactor)
 		}
 
