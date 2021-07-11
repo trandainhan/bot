@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
-	"log"
+	// "log"
 	"os"
 
 	// "time"
 
 	// "gitlab.com/fiahub/bot/internal/binance"
 
-	"gitlab.com/fiahub/bot/internal/ftx"
+	// "gitlab.com/fiahub/bot/internal/exchanges/ftx"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 )
 
@@ -34,7 +34,7 @@ func main() {
 	ctx := context.Background()
 	redisURL := os.Getenv("REDIS_URL")
 	redisClient := rediswrapper.NewRedisClient(ctx, redisURL, 1)
-	// redisClient.Set("nhantran", "hello")
+	redisClient.Set("nhantran", "hello")
 	// log.Println(redisClient.Get("nhantran"))
 
 	// bid_order: {coin_amount: 3, price_per_unit_cents: 23731, type: "BidOrder"
@@ -84,8 +84,8 @@ func main() {
 	// offset := binance.GetOffsetTimeUnix()
 	// log.Println(offset)
 
-	ftx := ftx.FtxClient{}
-	log.Println(string(res))
+	// ftx := ftx.FtxClient{}
+	// log.Println(string(res))
 	// usdtFund, err := bn.CheckFund("USDT")
 	// log.Println(err)
 	// log.Println(usdtFund)
