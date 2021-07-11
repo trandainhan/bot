@@ -9,7 +9,6 @@ import (
 
 	"github.com/go-pg/pg/v10"
 	"gitlab.com/fiahub/bot/internal/exchanges"
-	"gitlab.com/fiahub/bot/internal/exchanges/binance"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 	"gitlab.com/fiahub/bot/internal/telegram"
@@ -33,7 +32,6 @@ var (
 	fia                   *fiahub.Fiahub
 	db                    *pg.DB
 	exchangeClient        *exchanges.ExchangeClient
-	bn                    *binance.Binance
 )
 
 func main() {

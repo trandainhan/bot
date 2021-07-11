@@ -4,16 +4,6 @@ import (
 	"os"
 )
 
-type OrderResp struct {
-	ID          int64
-	ClientID    string
-	OriginQty   float64
-	ExecutedQty float64
-	Status      string
-	Side        string
-	Price       float64
-}
-
 func (ex ExchangeClient) BuyLimit(coin string, price float64, quantity float64) (*OrderResp, error) {
 	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
 	if exchangeClient == "FTX" {

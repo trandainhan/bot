@@ -80,7 +80,7 @@ func init() {
 
 	// Set offet time
 	binanceTimeDifference := binance.GetOffsetTimeUnix()
-	bn = &binance.Binance{
+	bn := &binance.Binance{
 		TimeDifferences: binanceTimeDifference,
 	}
 	exchangeClient = &exchanges.ExchangeClient{

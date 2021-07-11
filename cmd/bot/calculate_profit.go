@@ -54,10 +54,10 @@ func calculateProfit(coin string, newSellQuantity, fiahubPrice float64, id strin
 	}
 
 	// Calculate USDT Margin
-	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
-	if exchangeClient == "BINANCE" {
+	exchangeUse := os.Getenv("EXCHANGE_CLIENT")
+	if exchangeUse == "BINANCE" {
 		name := "USDT"
-		marginDetails, _ := bn.GetMarginDetails()
+		marginDetails, _ := exchangeClient.Bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
 
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
