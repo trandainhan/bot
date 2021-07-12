@@ -73,9 +73,7 @@ func getOrderBook(marketParam string, limit int) (*OrderBook, error) {
 
 func (ftx FtxClient) GetOrder(marketParam string, orderId int64) (*Order, error) {
 	path := fmt.Sprintf("/orders/%d", orderId)
-	BASE_URL := os.Getenv("FTX_URL")
-	final_url := fmt.Sprintf("%s/api%s", BASE_URL, path)
-	body, code, err := utils.HttpGet(final_url, nil)
+	body, code, err := ftx.makeRequest("GET", path, "")
 	if err != nil {
 		log.Printf("Err GetOrder, StatusCode: %d, Err: %s", code, err.Error())
 		return nil, err

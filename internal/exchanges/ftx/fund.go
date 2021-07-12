@@ -47,10 +47,10 @@ func (ftx FtxClient) GetFundsMessages() string {
 	for _, balance := range balances {
 		asset := balance.Coin
 		freeFund := balance.Free
-		lockedFund := balance.SpotBorrow
+		lockedFund := balance.Total - balance.Free
 		if freeFund > 0 || lockedFund > 0 {
-			text1 = fmt.Sprintf("%s %v %v - ", text1, freeFund, asset)
-			text2 = fmt.Sprintf("%s %v %v - ", text1, lockedFund, asset)
+			text1 = fmt.Sprintf("%s %.6f %s - ", text1, freeFund, asset)
+			text2 = fmt.Sprintf("%s %.6f %s - ", text2, lockedFund, asset)
 		}
 	}
 	return text1 + text2

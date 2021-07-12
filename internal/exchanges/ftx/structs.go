@@ -7,16 +7,16 @@ import (
 type FtxClient struct{}
 
 type NewOrder struct {
-	Market                  string  `json:"market"`
-	Side                    string  `json:"side"`
-	Price                   float64 `json:"price"`
-	Type                    string  `json:"type"`
-	Size                    float64 `json:"size"`
-	ReduceOnly              bool    `json:"reduceOnly"`
-	Ioc                     bool    `json:"ioc"`
-	PostOnly                bool    `json:"postOnly"`
-	ExternalReferralProgram string  `json:"externalReferralProgram"`
+	Market     string  `json:"market"`
+	Side       string  `json:"side"`
+	Price      float64 `json:"price"`
+	Type       string  `json:"type"`
+	Size       float64 `json:"size"`
+	ReduceOnly bool    `json:"reduceOnly"`
+	Ioc        bool    `json:"ioc"`
+	PostOnly   bool    `json:"postOnly"`
 	// ClientID                string  `json:"clientId"`
+	// ExternalReferralProgram string  `json:"externalReferralProgram"`
 }
 
 type Order struct {

@@ -75,7 +75,7 @@ func (binance Binance) GetFundsMessages() string {
 		lockedFund := balance.GetLockedFund()
 		if freeFund > 0 || lockedFund > 0 {
 			text1 = fmt.Sprintf("%s %v %v - ", text1, freeFund, asset)
-			text2 = fmt.Sprintf("%s %v %v - ", text1, lockedFund, asset)
+			text2 = fmt.Sprintf("%s %v %v - ", text2, lockedFund, asset)
 		}
 	}
 	return text1 + text2
