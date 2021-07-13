@@ -6,7 +6,7 @@ import (
 )
 
 type ExchangeClient struct {
-	Ftx ftx.FtxClient
+	Ftx *ftx.FtxClient
 	Bn  *binance.Binance
 }
 

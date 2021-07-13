@@ -66,7 +66,6 @@ func (ftx FtxClient) makeRequest(method, path, requestBody string) (string, int,
 
 	ts := strconv.FormatInt(time.Now().UTC().Unix()*1000, 10)
 	signaturePayload := ts + method + "/api" + path + requestBody
-	log.Println(signaturePayload)
 	ftxAPIKey := os.Getenv("FTX_API_KEY")
 	ftxAPISecret := os.Getenv("FTX_API_SECRET")
 
