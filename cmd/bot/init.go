@@ -10,7 +10,9 @@ import (
 	"time"
 
 	"github.com/go-pg/pg/v10"
-	"gitlab.com/fiahub/bot/internal/binance"
+	"gitlab.com/fiahub/bot/internal/exchanges"
+	"gitlab.com/fiahub/bot/internal/exchanges/binance"
+	"gitlab.com/fiahub/bot/internal/exchanges/ftx"
 	"gitlab.com/fiahub/bot/internal/fiahub"
 	"gitlab.com/fiahub/bot/internal/rediswrapper"
 	"gitlab.com/fiahub/bot/internal/telegram"
@@ -78,14 +80,17 @@ func init() {
 
 	// Set offet time
 	binanceTimeDifference := binance.GetOffsetTimeUnix()
-
-	bn = &binance.Binance{
-		RedisClient:     redisClient,
+	bn := &binance.Binance{
 		TimeDifferences: binanceTimeDifference,
 	}
+	ftxClient := ftx.FtxClient{}
+	exchangeClient = &exchanges.ExchangeClient{
+		Ftx: &ftxClient,
+		Bn:  bn,
+	}
 
-	// Calculate Per profit
-	calculatePerProfit()
+	// Validate Per profit Ask/Bid
+	validatePerProfit()
 }
 
 func initValuesInRedis() {

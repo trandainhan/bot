@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"net/url"
@@ -84,4 +85,13 @@ func BuildQueryStringFromMap(params map[string]string) string {
 		values.Add(k, v)
 	}
 	return values.Encode()
+}
+
+func ProcessResponse(respBody string, result interface{}) error {
+	err := json.Unmarshal([]byte(respBody), result)
+	if err != nil {
+		log.Printf("Error processing response: %s", err)
+		return err
+	}
+	return nil
 }

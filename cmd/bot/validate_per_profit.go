@@ -11,15 +11,14 @@ import (
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
-func calculatePerProfit() bool {
-
+func validatePerProfit() bool {
 	redisValue := redisClient.Get("coingiatot_params")
 	var params fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &params)
 
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 
-	usdtFund, err := bn.CheckFund("USDT")
+	usdtFund, err := exchangeClient.CheckFund("USDT")
 	if err != nil {
 		text := fmt.Sprintf("%s %s", teleHanlder, err)
 		go teleClient.SendMessage(text, chatErrorID)
