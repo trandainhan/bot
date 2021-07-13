@@ -83,8 +83,9 @@ func init() {
 	bn := &binance.Binance{
 		TimeDifferences: binanceTimeDifference,
 	}
+	ftxClient := ftx.FtxClient{}
 	exchangeClient = &exchanges.ExchangeClient{
-		Ftx: ftx.FtxClient{},
+		Ftx: &ftxClient,
 		Bn:  bn,
 	}
 
