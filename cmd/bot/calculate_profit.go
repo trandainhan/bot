@@ -59,13 +59,10 @@ func calculateProfit(coin string, newSellQuantity, fiahubPrice float64, id strin
 		name := "USDT"
 		marginDetails, _ := exchangeClient.Bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
-
 		text = fmt.Sprintf("%s \n USDT(Margin): %v", text, netAsset)
-		go teleClient.SendMessage(text, chatProfitID)
-		time.Sleep(2000 * time.Millisecond)
-
 		notifyWhenAssetIsLow(netAsset, text)
 	}
+	go teleClient.SendMessage(text, chatProfitID)
 }
 
 func calculateUSDTMargin(marginDetails *binance.MarginDetails, name string) float64 {
