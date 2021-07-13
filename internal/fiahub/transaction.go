@@ -12,7 +12,16 @@ type Transaction struct {
 	State string
 }
 
-func (fia Fiahub) GetSelfMatchingTransaction(user_id int, order_id int) (*Transaction, error) {
+func (fia Fiahub) CheckSelfMatchingOrder(order *Order) bool {
+	if !order.Bot {
+		return false
+	}
+	matchingTX, _ := fia.getSelfMatchingTransaction(order.UserID, order.ID)
+	matching := matchingTX != nil
+	return matching
+}
+
+func (fia Fiahub) getSelfMatchingTransaction(user_id int, order_id int) (*Transaction, error) {
 	tx := &Transaction{}
 	now := time.Now().UTC().AddDate(0, 0, -3)
 	created_at := now.Format("2006-01-02 15:04:05")

@@ -7,6 +7,7 @@ type Order struct {
 	State      string
 	CoinAmount float64
 	UserID     int
+	Bot        bool
 }
 
 func (fia Fiahub) GetOrderDetails(orderID int) (*Order, error) {

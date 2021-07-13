@@ -28,8 +28,7 @@ func checkFiahubOrder(botID string, fiahubOrderID int, originalCoinAmount float6
 		coinAmount := order.CoinAmount
 		executedQty = originalCoinAmount - coinAmount
 		if state == fiahub.ORDER_CANCELLED || state == fiahub.ORDER_FINISHED {
-			matchingTX, _ := fia.GetSelfMatchingTransaction(order.UserID, order.ID)
-			matching = matchingTX != nil
+			matching = fia.CheckSelfMatchingOrder(order)
 			break
 		}
 
