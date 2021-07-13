@@ -18,7 +18,7 @@ func validatePerProfit() bool {
 
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 
-	usdtFund, err := exchangeClient.Bn.CheckFund("USDT")
+	usdtFund, err := exchangeClient.CheckFund("USDT")
 	if err != nil {
 		text := fmt.Sprintf("%s %s", teleHanlder, err)
 		go teleClient.SendMessage(text, chatErrorID)

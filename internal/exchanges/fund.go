@@ -9,3 +9,11 @@ func (ex ExchangeClient) GetFundsMessages() string {
 	}
 	return ex.Bn.GetFundsMessages()
 }
+
+func (ex ExchangeClient) CheckFund(name string) (float64, error) {
+	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
+	if exchangeClient == "FTX" {
+		return ex.Ftx.CheckFund(name)
+	}
+	return ex.Bn.CheckFund(name)
+}
