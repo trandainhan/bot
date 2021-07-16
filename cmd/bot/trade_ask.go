@@ -39,7 +39,6 @@ func trade_ask(botID string, coin string, fiahubPrice float64, exchangePrice flo
 		time.Sleep(60 * time.Second)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatErrorID)
-		fia.CancelAllOrder()
 		time.Sleep(5 * time.Second)
 		return
 	}

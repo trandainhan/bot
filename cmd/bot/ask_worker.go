@@ -33,7 +33,7 @@ func ask_worker(id string, coin string, perProfitStep float64, cancelFactor int,
 		perProfitAsk = perProfitAsk + perProfitStep*0.6/100
 		fiahubAskPrice, isOutRange := calculateAskFFromAskB(exchangeAskPrice, perFeeBinance, perProfitAsk, minPrice, maxPrice)
 		if isOutRange {
-			text := fmt.Sprintf("%s %s Error! Price out of range. PriceF: %v PriceAskB: %v Range: %v - %v",
+			text := fmt.Sprintf("%s %s Err Price out of range. PriceF: %v PriceAskB: %v Range: %v - %v",
 				coin, os.Getenv("TELEGRAM_HANDLER"), fiahubAskPrice, exchangeAskPrice, minPrice, maxPrice)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
