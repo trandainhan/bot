@@ -20,7 +20,7 @@ func GetBidPriceByQuantity(coin string, quantity float64) (float64, error) {
 func getPriceByQuantity(coin string, quantity float64) (float64, float64, error) {
 	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
 	if exchangeClient == "FTX" {
-		ftx.GetPriceByQuantity(coin+"/USDT", quantity)
+		return ftx.GetPriceByQuantity(coin+"/USDT", quantity)
 	}
 	return binance.GetPriceByQuantity(coin+"USDT", quantity)
 }
