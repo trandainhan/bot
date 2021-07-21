@@ -52,7 +52,8 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 
 func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	isChange := false
-	redisValue := redisClient.Get("coingiatot_params")
+	redisKey := currentExchange + "_coingiatot_params"
+	redisValue := redisClient.Get(redisKey)
 	var oldParams fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &oldParams)
 
@@ -68,7 +69,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	if isChange {
 		log.Printf("set CoinGiatot new params %v", params)
 		jsonParams, _ := json.Marshal(params)
-		redisClient.Set("coingiatot_params", string(jsonParams))
+		redisClient.Set(redisKey, string(jsonParams))
 
 		autoMode := fmt.Sprintf("AutoMode: %s -> %s", oldParams.AutoMode, params.AutoMode)
 		profitMax := fmt.Sprintf("ProfitMax: %v -> %v", oldParams.ProfitMax, params.ProfitMax)

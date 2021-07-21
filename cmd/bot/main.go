@@ -32,6 +32,7 @@ var (
 	fia                   *fiahub.Fiahub
 	db                    *pg.DB
 	exchangeClient        *exchanges.ExchangeClient
+	currentExchange       string
 )
 
 func main() {

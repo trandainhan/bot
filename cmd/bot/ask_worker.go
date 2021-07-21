@@ -16,8 +16,8 @@ func ask_worker(id string, coin string, perProfitStep float64, cancelFactor int,
 		time.Sleep(time.Duration(randNumber) * time.Millisecond)
 		runableKey := fmt.Sprintf("%s_ask_runable", coin)
 		runable := redisClient.GetBool(runableKey)
-		perFeeBinance := redisClient.GetFloat64("per_fee_binance")
-		perProfitAsk := redisClient.GetFloat64(coin + "_per_profit_ask")
+		perFeeBinance := redisClient.GetFloat64("per_fee_" + currentExchange)
+		perProfitAsk := redisClient.GetFloat64(coin + "_" + currentExchange + "_per_profit_ask")
 		exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, quantityToGetPrice)
 		if err != nil {
 			text := fmt.Sprintf("%s Err GetPriceByQuantity: %s", coin, err.Error())

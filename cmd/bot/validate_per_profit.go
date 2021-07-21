@@ -12,7 +12,7 @@ import (
 )
 
 func validatePerProfit() bool {
-	redisValue := redisClient.Get("coingiatot_params")
+	redisValue := redisClient.Get(currentExchange + "_coingiatot_params")
 	var params fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &params)
 
@@ -32,8 +32,10 @@ func validatePerProfit() bool {
 	perProfitAsk = utils.RoundTo(perProfitAsk, 6)
 	perProfitBid = utils.RoundTo(perProfitBid, 6)
 
-	oldPerProfitAsk := redisClient.GetFloat64(coin + "_per_profit_ask")
-	oldPerProfitBid := redisClient.GetFloat64(coin + "_per_profit_bid")
+	askRedisKey := fmt.Sprintf("%s_%s_per_profit_ask", coin, currentExchange)
+	bidRedisKey := fmt.Sprintf("%s_%s_per_profit_bid", coin, currentExchange)
+	oldPerProfitAsk := redisClient.GetFloat64(askRedisKey)
+	oldPerProfitBid := redisClient.GetFloat64(bidRedisKey)
 
 	var text string
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
@@ -59,12 +61,12 @@ func validatePerProfit() bool {
 	isChange := false
 	if perProfitAsk != oldPerProfitAsk {
 		isChange = true
-		redisClient.Set(coin+"_per_profit_ask", perProfitAsk)
+		redisClient.Set(askRedisKey, perProfitAsk)
 	}
 
 	if perProfitBid != oldPerProfitBid {
 		isChange = true
-		redisClient.Set(coin+"_per_profit_bid", perProfitBid)
+		redisClient.Set(bidRedisKey, perProfitBid)
 	}
 
 	if isChange {

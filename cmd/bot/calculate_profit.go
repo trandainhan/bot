@@ -54,8 +54,7 @@ func calculateProfit(coin string, newSellQuantity, fiahubPrice float64, id strin
 	}
 
 	// Calculate USDT Margin
-	exchangeUse := os.Getenv("EXCHANGE_CLIENT")
-	if exchangeUse == "BINANCE" {
+	if currentExchange == "BINANCE" {
 		name := "USDT"
 		marginDetails, _ := exchangeClient.Bn.GetMarginDetails()
 		netAsset := calculateUSDTMargin(marginDetails, name)
@@ -103,7 +102,7 @@ func getOrderDetails(id string, coin string, exchangeOrderID int64, origClientOr
 		}
 
 		if j == 2 {
-			log.Println("Unsucessfully sell in binance after 1 minute")
+			log.Printf("Unsucessfully sell in %s after 1 minute", currentExchange)
 			break
 		}
 		time.Sleep(30 * time.Second)
@@ -112,8 +111,7 @@ func getOrderDetails(id string, coin string, exchangeOrderID int64, origClientOr
 }
 
 func isFilledStatus(status string) bool {
-	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
-	if exchangeClient == "FTX" {
+	if currentExchange == "FTX" {
 		return status == ftx.ORDER_CLOSED
 	}
 	return status == binance.ORDER_FILLED
