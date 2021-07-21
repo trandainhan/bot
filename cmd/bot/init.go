@@ -28,6 +28,9 @@ func init() {
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 8.0, "Quantity To Get Price")
 	flag.Parse()
 
+	// get currentExchange
+	currentExchange = os.Getenv("EXCHANGE_CLIENT")
+
 	// Setup chatID, chatProfitID, chatErrorID
 	var err error
 	chatID, err = strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
@@ -79,7 +82,6 @@ func init() {
 	getRates()
 
 	// Set offet time
-	currentExchange = os.Getenv("EXCHANGE_CLIENT")
 	binanceTimeDifference := binance.GetOffsetTimeUnix()
 	bn := &binance.Binance{
 		TimeDifferences: binanceTimeDifference,
