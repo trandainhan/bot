@@ -29,7 +29,7 @@ spec:
             - "55200000"
             - "-quantityToGetPrice"
             - "1"
-            - "-numWorker"
+            - "-numWorker" # shoule be even number
             - "8"
             - "-defaultSleepSeconds"
             - "12"

@@ -5,3 +5,4 @@ metadata:
   namespace: bot
 data:
   FIAHUB_EMAIL: bch_binance@fiahub.com
+  RESET_ALL_ORDER_PERIOD: "6220800" # Cancel all, in seconds
