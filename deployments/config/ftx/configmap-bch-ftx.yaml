@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap.bch-ftx
+  namespace: bot
+data:
+  FIAHUB_EMAIL: bch_ftx@fiahub.com
+  RESET_ALL_ORDER_PERIOD: "6220800" # Cancel all, in seconds
