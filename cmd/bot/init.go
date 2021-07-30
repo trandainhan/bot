@@ -107,9 +107,9 @@ func initValuesInRedis() {
 	redisClient.Set(runnableBidKey, true)
 
 	var key string
-	key = fmt.Sprintf("%s_%s_ask1_vnt_quantity", currentExchange, coin)
+	key = fmt.Sprintf("%s_%s_ask1_vnt_quantity", coin, currentExchange)
 	redisClient.Set(key, 60000)
-	key = fmt.Sprintf("%s_%s_bid1_vnt_quantity", currentExchange, coin)
+	key = fmt.Sprintf("%s_%s_bid1_vnt_quantity", coin, currentExchange)
 	redisClient.Set(key, 60000)
 
 	// key = fmt.Sprintf("%s_ask2_vnt_quantity", coin)

@@ -13,7 +13,7 @@ import (
 )
 
 func trade_ask(botID string, coin string, fiahubPrice float64, exchangePrice float64, cancelFactor int) {
-	key := fmt.Sprintf("%s_%s_%s_vnt_quantity", currentExchange, coin, botID)
+	key := fmt.Sprintf("%s_%s_%s_vnt_quantity", coin, currentExchange, botID)
 	baseVntQuantity := redisClient.GetFloat64(key)
 	perCancel := redisClient.GetFloat64("per_cancel") + float64(cancelFactor-1)*0.05/100
 	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
