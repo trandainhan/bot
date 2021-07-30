@@ -100,18 +100,16 @@ func initValuesInRedis() {
 	log.Println("Init values in redis")
 	redisClient.Set("per_cancel", 0.1/100)
 	redisClient.Set("per_fee_"+currentExchange, 0.075/100)
-	redisClient.Set("per_fee_"+currentExchange, 0.075/100)
 	redisClient.Set(coin+"_"+currentExchange+"_per_profit_ask", 0.0)
-	redisClient.Set(coin+"_"+currentExchange+"_per_profit_bid", 0.0)
 	runnableAskKey := fmt.Sprintf("%s_ask_runable", coin)
 	redisClient.Set(runnableAskKey, true)
 	runnableBidKey := fmt.Sprintf("%s_bid_runable", coin)
 	redisClient.Set(runnableBidKey, true)
 
 	var key string
-	key = fmt.Sprintf("%s_ask1_vnt_quantity", coin)
+	key = fmt.Sprintf("%s_%s_ask1_vnt_quantity", currentExchange, coin)
 	redisClient.Set(key, 60000)
-	key = fmt.Sprintf("%s_bid1_vnt_quantity", coin)
+	key = fmt.Sprintf("%s_%s_bid1_vnt_quantity", currentExchange, coin)
 	redisClient.Set(key, 60000)
 
 	// key = fmt.Sprintf("%s_ask2_vnt_quantity", coin)
