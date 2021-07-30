@@ -22,7 +22,7 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 		go teleClient.SendMessage(text, chatErrorID)
 		result = false
 	}
-	if params.GetProfitPerThousand() < 0 || params.GetProfitPerThousand() > 0.004 {
+	if params.GetProfitPerThousand() < 0 || params.GetProfitPerThousand() > 0.02 {
 		text := fmt.Sprintf("%s ProfitPerThousand: Out of range", teleHanlder)
 		go teleClient.SendMessage(text, chatErrorID)
 		result = false
