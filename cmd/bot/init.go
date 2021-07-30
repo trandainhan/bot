@@ -130,6 +130,7 @@ func initValuesInRedis() {
 
 func setCoinGiatotParams() {
 	params, err := fiahub.GetCoinGiaTotParams()
+	redisClient.Set("auto_mode", params.GetAutoMode() == 1)
 	if err != nil {
 		panic(err)
 	}
