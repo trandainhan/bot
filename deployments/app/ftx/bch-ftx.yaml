@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/fiahub/bot:v0.3.0-rc2
+          image: registry.gitlab.com/fiahub/bot:v0.3.0-rc6
           imagePullPolicy: IfNotPresent
           command:
             - "bot"
@@ -29,12 +29,12 @@ spec:
             - "55200000"
             - "-quantityToGetPrice"
             - "1"
-            - "-numWorker" # shoule be even number
-            - "8"
+            - "-numWorker" # should be even number
+            - "2"
             - "-defaultSleepSeconds"
             - "12"
             - "-decimalsToRound"
-            - "4"
+            - "3"
           envFrom:
             - secretRef: { name: secrets.bot }
             - secretRef: { name: secrets.bch-ftx }

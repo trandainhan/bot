@@ -5,4 +5,10 @@ metadata:
   namespace: bot
 data:
   FIAHUB_EMAIL: bch_ftx@fiahub.com
+  BOT_COINGIATOT_NAME: liquid_ftx@fiahub.com
+  CHAT_ID: "-538050090"
+  EXCHANGE_CLIENT: FTX
+  MIN_USDT_FUND: "50"
+  MAX_USDT_FUND: "3000"
   RESET_ALL_ORDER_PERIOD: "6220800" # Cancel all, in seconds
+  RANDOM_VNT_QUANTITY: "40000"
