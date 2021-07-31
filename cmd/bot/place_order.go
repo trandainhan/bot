@@ -26,7 +26,7 @@ func placeOrder(botID string, quantity, exchancePrice, fiahubPrice float64, side
 	ID := orderDetails.ID
 	clientID := orderDetails.ClientID
 
-	text := fmt.Sprintf("%s %s Take profit From Exchange %s Quantity: %v Price: %v ID: %d", coin, botID, side, quantity, exchancePrice, ID)
+	text := fmt.Sprintf("%s %s Take profit From %s %s Quantity: %v Price: %v ID: %d", coin, botID, currentExchange, side, quantity, exchancePrice, ID)
 	isPlaceSellOrder := side == "sell"
 	go calculateProfit(coin, quantity, fiahubPrice, botID, ID, clientID, isPlaceSellOrder)
 	text = fmt.Sprintf("%s Sleep %d seconds", text, defaultSleepSeconds)
