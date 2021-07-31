@@ -32,10 +32,10 @@ func trade_bid(botID string, coin string, fiahubPrice float64, exchangePrice flo
 		Currency:          "VNT",
 		Type:              orderType,
 	}
-	log.Printf("make bid order: %v", bidOrder)
+	log.Printf("Make bid order: %v", bidOrder)
 	fiahubOrder, code, err := fia.CreateBidOrder(bidOrder)
 	if err != nil {
-		text := fmt.Sprintf("Error CreateBidOrder %s %s %s Coin Amount: %v Price: %v, StatusCode: %d Err: %s. Proceed cancel all order",
+		text := fmt.Sprintf("Error CreateBidOrder %s %s %s Coin Amount: %v Price: %v, StatusCode: %d Err: %s",
 			coin, botID, orderType, originalCoinAmount, priceBuy, code, err)
 		time.Sleep(60 * time.Second)
 		go teleClient.SendMessage(text, chatErrorID)

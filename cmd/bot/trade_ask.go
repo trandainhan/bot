@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/fiahub"
@@ -13,7 +14,7 @@ import (
 )
 
 func trade_ask(botID string, coin string, fiahubPrice float64, exchangePrice float64, cancelFactor int) {
-	key := fmt.Sprintf("%s_VNT_QUANTITY", botID)
+	key := fmt.Sprintf("%s_VNT_QUANTITY", strings.ToUpper(botID))
 	baseVntQuantity, _ := strconv.ParseFloat(os.Getenv(key), 64)
 	perCancel := redisClient.GetFloat64("per_cancel") + float64(cancelFactor-1)*0.05/100
 	randdomVntQuantity, _ := strconv.Atoi(os.Getenv("RANDOM_VNT_QUANTITY"))
@@ -31,10 +32,10 @@ func trade_ask(botID string, coin string, fiahubPrice float64, exchangePrice flo
 		Currency:          "VNT",
 		Type:              orderType,
 	}
-	log.Printf("make ask order: %v", askOrder)
+	log.Printf("Make ask order: %v", askOrder)
 	fiahubOrder, code, err := fia.CreateAskOrder(askOrder)
 	if err != nil {
-		text := fmt.Sprintf("Error CreateAskOrder %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s. Proceed cancel all order",
+		text := fmt.Sprintf("Error CreateAskOrder %s %s %s Coin Amount: %v Price: %v Code: %d Error: %s",
 			coin, botID, orderType, originalCoinAmount, priceSell, code, err)
 		time.Sleep(60 * time.Second)
 		log.Println(text)
