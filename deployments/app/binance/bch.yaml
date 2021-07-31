@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bot-alice
+  name: bot-bch
   namespace: bot
 spec:
   selector:
     matchLabels:
-      app: bot-alice
+      app: bot-bch
       tier: bot
   replicas: 1
   template:
     metadata:
       labels:
-        app: bot-alice
+        app: bot-bch
         tier: bot
     spec:
       containers:
@@ -22,24 +22,24 @@ spec:
           command:
             - "bot"
             - "-coin"
-            - "ALICE"
+            - "BCH"
             - "-minPrice"
-            - "69000"
+            - "5750000"
             - "-maxPrice"
-            - "2300000"
+            - "55200000"
             - "-quantityToGetPrice"
-            - "20"
-            - "-numWorker" # shoule be even number
+            - "1"
+            - "-numWorker" # should be even number
             - "8"
             - "-defaultSleepSeconds"
             - "12"
             - "-decimalsToRound"
-            - "2"
+            - "4"
           envFrom:
             - secretRef: { name: secrets.bot }
-            - secretRef: { name: secrets.alice }
+            - secretRef: { name: secrets.bch }
             - configMapRef: { name: configmap.bot }
-            - configMapRef: { name: configmap.alice }
+            - configMapRef: { name: configmap.bch }
           resources:
             limits:
               memory: "256Mi"
