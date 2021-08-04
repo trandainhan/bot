@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/fiahub/bot:VERSION
+          image: registry.gitlab.com/fiahub/bot:v0.3.1
           imagePullPolicy: IfNotPresent
           command:
             - "bot"
@@ -30,7 +30,7 @@ spec:
             - "-quantityToGetPrice"
             - "1"
             - "-numWorker" # should be even number
-            - "2"
+            - "8"
             - "-defaultSleepSeconds"
             - "12"
             - "-decimalsToRound"
