@@ -34,7 +34,7 @@ func bid_worker(id string, coin string, perProfitStep float64, cancalFactor int,
 			time.Sleep(30 * time.Second)
 			continue
 		}
-		perProfitBid = perProfitBid + perProfitStep*0.6/100
+		perProfitBid = perProfitBid + (perProfitStep-1)*0.6/100
 		fiahubBidPrice, isOutRange := calculateBidFFromBidB(exchangeBidPrice, perFeeBinance, perProfitBid, minPrice, maxPrice)
 		if isOutRange {
 			text := fmt.Sprintf("%s %s Err Price out of range. PriceF: %v PriceBidB: %v Range: %v - %v",

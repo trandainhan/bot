@@ -35,7 +35,7 @@ func ask_worker(id string, coin string, perProfitStep float64, cancelFactor int,
 			continue
 		}
 
-		perProfitAsk = perProfitAsk + perProfitStep*0.6/100
+		perProfitAsk = perProfitAsk + (perProfitStep-1)*0.6/100
 		fiahubAskPrice, isOutRange := calculateAskFFromAskB(exchangeAskPrice, perFeeBinance, perProfitAsk, minPrice, maxPrice)
 		if isOutRange {
 			text := fmt.Sprintf("%s %s Err Price out of range. PriceF: %v PriceAskB: %v Range: %v - %v",
