@@ -51,6 +51,9 @@ func trade_bid(botID string, coin string, fiahubPrice float64, exchangePrice flo
 	// If newSellVNTQuantity > 250.000 mới tạo lệnh mua bù trên binance không thì tạo lệnh bán lại luôn giá + rand từ 1->3000
 	newSellQuantity := executedQty
 	newSellVNTQuantity := newSellQuantity * fiahubPrice
+	if newSellVNTQuantity == 0 {
+		return
+	}
 	if newSellVNTQuantity <= 50000 {
 		text := fmt.Sprintf("%s %s  Take profit < 10$ %s Quant: %.6f Price: %.6f ID: %d", coin, botID, orderType, newSellQuantity, priceBuy, fiahubOrderID)
 		go teleClient.SendMessage(text, chatID)
