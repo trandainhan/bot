@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bot-bch-ftx
+  name: bot-btc-ftx
   namespace: bot
 spec:
   selector:
     matchLabels:
-      app: bot-bch-ftx
+      app: bot-btc-ftx
       tier: bot
   replicas: 1
   template:
     metadata:
       labels:
-        app: bot-bch-ftx
+        app: bot-btc-ftx
         tier: bot
     spec:
       containers:
@@ -22,24 +22,24 @@ spec:
           command:
             - "bot"
             - "-coin"
-            - "BCH"
+            - "BTC"
             - "-minPrice"
-            - "5750000"
+            - "345000000"
             - "-maxPrice"
-            - "55200000"
+            - "3680000000"
             - "-quantityToGetPrice"
-            - "1"
+            - "0.01"
             - "-numWorker" # should be even number
             - "8"
             - "-defaultSleepSeconds"
             - "12"
             - "-decimalsToRound"
-            - "3"
+            - "4"
           envFrom:
             - secretRef: { name: secrets.bot }
-            - secretRef: { name: secrets.bch-ftx }
+            - secretRef: { name: secrets.btc-ftx }
             - configMapRef: { name: configmap.bot }
-            - configMapRef: { name: configmap.bch-ftx }
+            - configMapRef: { name: configmap.btc-ftx }
           resources:
             limits:
               memory: "256Mi"

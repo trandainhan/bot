@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: configmap.bch-ftx
+  name: configmap.eth-ftx
   namespace: bot
 data:
-  FIAHUB_EMAIL: bch_ftx@fiahub.com
+  FIAHUB_EMAIL: eth_ftx@fiahub.com
   BOT_COINGIATOT_NAME: liquid_ftx@fiahub.com
   CHAT_ID: "-538050090"
   EXCHANGE_CLIENT: FTX
