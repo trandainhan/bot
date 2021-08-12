@@ -3,6 +3,7 @@ package ftx
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -111,6 +112,10 @@ func post(path string, body []byte) (*Order, error) {
 	if err != nil {
 		log.Printf("Error processing response: %s", err.Error())
 		return nil, err
+	}
+	if resp.StatusCode != 200 {
+		text := fmt.Sprintf("Fail to make post request to ftx: %d %s", resp.StatusCode, body)
+		return nil, errors.New(text)
 	}
 	var orderResp NewOrderResponse
 	err = json.Unmarshal(body, &orderResp)

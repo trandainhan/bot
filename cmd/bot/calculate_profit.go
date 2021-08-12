@@ -46,7 +46,7 @@ func calculateProfit(coin string, newSellQuantity, fiahubPrice float64, id strin
 
 		profit := utils.RoundTo((totalUSDTRecieve*rate - totalVNTGive), 0)
 		perProfit := utils.RoundTo((profit/(totalUSDTRecieve*rate))*100, 2)
-		text = fmt.Sprintf("%s %s \n %s: %f %s - %.6f USDT(+) - %.6f VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", coin, id, side,
+		text = fmt.Sprintf("%s %s %s \n %s: %f %s - %.6f USDT(+) - %.6f VNT(-) \n Status: %s Price %v \n Profit: %v - Perprofit %v %% \n", currentExchange, coin, id, side,
 			origQty, coin, totalUSDTRecieve, totalVNTGive, status, exchangePrice, profit, perProfit)
 
 		allFundMessage := exchangeClient.GetFundsMessages()
