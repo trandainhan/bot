@@ -86,9 +86,12 @@ func main() {
 
 	// ftx := ftx.FtxClient{}
 	// log.Println(string(res))
-	// usdtFund, err := bn.CheckFund("USDT")
+	// usdtFund, err := ftx.CheckFund("USDT")
 	// log.Println(err)
 	// log.Println(usdtFund)
+	// order, err := ftx.SellLimit("ETH/USDT", 3200, 0.01)
+	// log.Println(err)
+	// log.Println(order)
 
 	//
 	// msg := bn.GetFundsMessages()
