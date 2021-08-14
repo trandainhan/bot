@@ -1,6 +1,7 @@
 package ftx
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -26,6 +27,10 @@ func (ftx FtxClient) checkFund() ([]Balance, error) {
 	if err != nil {
 		log.Printf("Err checkFund, statusCode: %d err: %s", code, err.Error())
 		return nil, err
+	}
+	if code >= 400 {
+		text := fmt.Sprintf("Err checkFund, statusCode: %d err: %s", code, body)
+		return nil, errors.New(text)
 	}
 	var resp WalletResponse
 	err = utils.ProcessResponse(body, &resp)
