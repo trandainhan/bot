@@ -106,3 +106,42 @@ func (ex ExchangeClient) GetOrder(coin string, orderID int64, clientID string) (
 	}
 	return &order, nil
 }
+
+func (ex ExchangeClient) CancelOrder(coin string, orderID int64, clientID string) (*OrderResp, error) {
+	var order OrderResp
+	binanceOrderDetails, err := ex.Bn.CancelOrder(coin+"USDT", orderID, clientID)
+	if err != nil {
+		return nil, err
+	}
+	order = OrderResp{
+		ID:          binanceOrderDetails.OrderID,
+		ClientID:    binanceOrderDetails.ClientOrderID,
+		OriginQty:   binanceOrderDetails.GetOriginQty(),
+		ExecutedQty: binanceOrderDetails.GetExecutedQty(),
+		Price:       binanceOrderDetails.GetPrice(),
+		Status:      binanceOrderDetails.Status,
+		Side:        binanceOrderDetails.Side,
+	}
+	return &order, nil
+}
+
+func (ex ExchangeClient) CancelAllOrder(coin string) ([]OrderResp, error) {
+	var result []OrderResp
+	orders, err := ex.Bn.CancelAllOrder(coin + "USDT")
+	if err != nil {
+		return nil, err
+	}
+	for _, order := range orders {
+		temp := OrderResp{
+			ID:          order.OrderID,
+			ClientID:    order.ClientOrderID,
+			OriginQty:   order.GetOriginQty(),
+			ExecutedQty: order.GetExecutedQty(),
+			Price:       order.GetPrice(),
+			Status:      order.Status,
+			Side:        order.Side,
+		}
+		result = append(result, temp)
+	}
+	return result, nil
+}

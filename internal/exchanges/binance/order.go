@@ -111,3 +111,41 @@ func (binance Binance) GetOrder(marketParam string, orderId int64, originClientO
 	}
 	return &orderDetailsResp, nil
 }
+
+func (binance Binance) CancelOrder(marketParam string, orderId int64, originClientOrderID string) (*OrderDetailsResp, error) {
+	params := map[string]string{
+		"symbol":            marketParam,
+		"orderId":           strconv.FormatInt(orderId, 10),
+		"origClientOrderId": originClientOrderID,
+	}
+	body, code, err := binance.makeRequest("DELETE", params, "/api/v3/order")
+	if err != nil {
+		log.Printf("Err GetOrder, StatusCode: %d, Err: %s", code, err.Error())
+		return nil, err
+	}
+	var orderDetailsResp OrderDetailsResp
+	err = json.Unmarshal([]byte(body), &orderDetailsResp)
+	if err != nil {
+		log.Printf("Err GetOrder, can not unmarshal, with body: %s", body)
+		return nil, err
+	}
+	return &orderDetailsResp, nil
+}
+
+func (binance Binance) CancelAllOrder(marketParam string) ([]OrderDetailsResp, error) {
+	params := map[string]string{
+		"symbol": marketParam,
+	}
+	body, code, err := binance.makeRequest("DELETE", params, "/api/v3/openOrders")
+	if err != nil {
+		log.Printf("Err GetOrder, StatusCode: %d, Err: %s", code, err.Error())
+		return nil, err
+	}
+	var orderDetails []OrderDetailsResp
+	err = json.Unmarshal([]byte(body), &orderDetails)
+	if err != nil {
+		log.Printf("Err CancelAll Open Orders, can not unmarshal, with body: %s", body)
+		return nil, err
+	}
+	return orderDetails, nil
+}

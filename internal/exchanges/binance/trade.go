@@ -43,6 +43,7 @@ func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetails
 	var order OrderDetailsResp
 	err = json.Unmarshal([]byte(body), &order)
 	if err != nil {
+		log.Printf("Err makeTradeRequest Unmarshal: %s", body)
 		return nil, err
 	}
 	log.Printf("Successfully make an order in binance: %v", order)
@@ -72,6 +73,9 @@ func (binance Binance) makeRequest(httpType string, params map[string]string, po
 	}
 	if httpType == "POST" {
 		return utils.HttpPost(final_url, nil, &headers)
+	}
+	if httpType == "DELETE" {
+		return utils.HttpDelete(final_url, nil, &headers)
 	}
 	return utils.HttpGet(final_url, &headers)
 }
