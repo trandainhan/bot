@@ -20,7 +20,6 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		}
 
 		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
-		log.Println(exchangeBidPrice)
 
 		jumpPrice := exchangeBidPrice * jumpPercentage / 100
 

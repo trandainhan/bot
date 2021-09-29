@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/exchanges"
@@ -32,6 +34,21 @@ var (
 
 func main() {
 	// run init.go
+
+	sigc := make(chan os.Signal, 1)
+	signal.Notify(sigc,
+		syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT)
+	go func() {
+		<-sigc
+		log.Println("Recieve OS signal, CancelAllOrder and stop bot")
+		exchangeClient.CancelAllOrder(coin)
+		log.Println("==================")
+		log.Println("Finish trading bot")
+		os.Exit(0)
+	}()
 
 	log.Println("=================")
 	log.Println("Start trading bot")
@@ -74,6 +91,10 @@ func main() {
 
 	for i := 0; i < numWorker; i++ {
 		<-results
+	}
+	_, err := exchangeClient.CancelAllOrder(coin)
+	if err != nil {
+		log.Printf("Err CancelAllOrder: %s", err.Error())
 	}
 	log.Println("==================")
 	log.Println("Finish trading bot")
