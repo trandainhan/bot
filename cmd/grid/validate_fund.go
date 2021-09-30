@@ -20,6 +20,9 @@ func validateFund() bool {
 	var text string
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
 	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
+	if usdtFund < minUSDTFund {
+		redisClient.Set(coin+"_buy_worker_runable", false, 0)
+	}
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
 		text = fmt.Sprintf("%s %s %s USDTFund: Out of range %v", currentExchange, coin, teleHanlder, usdtFund)
 		go teleClient.SendMessage(text, chatErrorID)

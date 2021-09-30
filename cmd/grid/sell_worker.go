@@ -12,7 +12,8 @@ import (
 func sell_worker(id string, coin string, step int, results chan<- bool) {
 	for {
 		autoMode := redisClient.GetBool(currentExchange + "_auto_mode")
-		if !autoMode {
+		runable := redisClient.GetBool(coin + "_sell_worker_runable")
+		if !autoMode || !runable {
 			time.Sleep(30 * time.Second)
 			continue
 		}
@@ -21,7 +22,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		jumpPrice := exchangeAskPrice * jumpPricePercentage / 100
 
 		key := fmt.Sprintf("%s_up_trend_percentage", coin)
-		upTrendPercentage := redisClient.GetFloat64(key)
+		upTrendPercentage, _ := redisClient.GetFloat64(key)
 		upTrendPriceAdjust := jumpPrice * upTrendPercentage / 100
 
 		// When market is up trend, upTrendPercentage > 0 => upTrendPriceAdjust > 0, Sell order price should be distanced from the current market price
