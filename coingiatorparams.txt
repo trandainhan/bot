@@ -1,0 +1,6 @@
+Binance: {"AutoMode":"1","ProfitMax":"0.05","ProfitPerThousand":"0.001","Spread":"0.016","USDTMax":"30000","USDTMidPoint":"15000","USDTOffset2":"14555"}
+FTX: {"AutoMode":"1","ProfitMax":"0.05","ProfitPerThousand":"0.01","Spread":"0.016","USDTMax":"3000","USDTMidPoint":"1500","USDTOffset2":"2400"}
+
+BTC_FTX_per_profit_ask: 0.028498
+BTC_FTX_per_profit_bid: -0.012498
+
