@@ -36,6 +36,10 @@ func checkPriceVolatility() {
 	percentage2 := math.Abs((currentBidPrice - last10Price) * 100 / last10Price)
 	percentage3 := math.Abs((currentBidPrice - last15Price) * 100 / last15Price)
 
+	redisClient.Set(coin+"_price_percentage_change_in_5min", percentage1, 0)
+	redisClient.Set(coin+"_price_percentage_change_in_10min", percentage2, 0)
+	redisClient.Set(coin+"_price_percentage_change_in_15min", percentage3, 0)
+
 	if percentage1 > 3.5 || percentage2 > 4.5 || percentage3 > 5.5 {
 		redisClient.Set(coin+"_buy_worker_runable", false, 0)
 		redisClient.Set(coin+"_sell_worker_runable", false, 0)
