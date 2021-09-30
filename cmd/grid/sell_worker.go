@@ -18,9 +18,15 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		}
 
 		exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, quantityToGetPrice)
-		jumpPrice := exchangeAskPrice * jumpPercentage / 100
+		jumpPrice := exchangeAskPrice * jumpPricePercentage / 100
 
-		finalPrice := utils.RoundTo(currentAskPrice+jumpPrice*float64(step), decimalsToRound)
+		key := fmt.Sprintf("%s_up_trend_percentage", coin)
+		upTrendPercentage := redisClient.GetFloat64(key)
+		upTrendPriceAdjust := jumpPrice * upTrendPercentage / 100
+
+		// When market is up trend, upTrendPercentage > 0 => upTrendPriceAdjust > 0, Sell order price should be distanced from the current market price
+		// When market is down trend, upTrendPercentage < 0 => upTrendPriceAdjust < 0, Buy order price should be closed to the current market price
+		finalPrice := utils.RoundTo(currentAskPrice+jumpPrice*float64(step)+upTrendPriceAdjust, decimalsToRound)
 		order, err := placeOrder(id, defaultQuantity, finalPrice, "sell")
 		if err != nil {
 			continue
@@ -32,18 +38,24 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 			orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
 			if err != nil {
 				text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, id, err)
-				go teleClient.SendMessage(text, chatErrorID)
-			} else {
-				text := fmt.Sprintf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
 				log.Println(text)
-				if isFilledStatus(orderDetails.Status) {
-					text := fmt.Sprintf("%s %s Order %d is filled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
-					go teleClient.SendMessage(text, chatID)
-					log.Println(text)
-					break
-				}
+				go teleClient.SendMessage(text, chatErrorID)
+				time.Sleep(60 * time.Second)
+				continue
 			}
-			if currentAskPrice > exchangeAskPrice+jumpPrice || currentAskPrice < exchangeAskPrice-jumpPrice {
+
+			log.Printf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
+			if orderDetails.IsFilled() {
+				text := fmt.Sprintf("%s %s Order %d is filled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
+				go teleClient.SendMessage(text, chatID)
+				log.Println(text)
+				break
+			} else if orderDetails.IsCanceled() {
+				log.Printf("%s %s Order %d is canceled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
+				break
+			}
+
+			if currentAskPrice > exchangeAskPrice+jumpPrice+upTrendPriceAdjust || currentAskPrice < exchangeAskPrice-jumpPrice+upTrendPriceAdjust {
 				_, err := exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
 				if err != nil {
 					text := fmt.Sprintf("%s %s Err CancelOrder: %s", coin, id, err)
@@ -51,7 +63,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 				} else {
 					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %f, lastPrice: %f", coin, id, orderDetails.ID, currentAskPrice, exchangeAskPrice)
 					log.Println(text)
-					go teleClient.SendMessage(text, chatID)
+					go teleClient.SendMessage(text, chatErrorID)
 				}
 				break
 			}

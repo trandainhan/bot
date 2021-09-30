@@ -20,7 +20,8 @@ var (
 	quantityToGetPrice    float64
 	numWorker             int
 	defaultQuantity       float64
-	jumpPercentage        float64
+	jumpPricePercentage   float64
+	upTrendPercentage     float64
 	chatID                int64
 	chatErrorID           int64
 	binanceTimeDifference int64
@@ -57,12 +58,12 @@ func main() {
 	var id string
 
 	for i := 1; i <= numWorker/2; i++ {
-		// Ask trading
-		id = fmt.Sprintf("ask%d", i)
+		// buy
+		id = fmt.Sprintf("buy%d", i)
 		go buy_worker(id, coin, i, results)
 
-		// Bid trading
-		id = fmt.Sprintf("bid%d", i)
+		// sell
+		id = fmt.Sprintf("sell%d", i)
 		go sell_worker(id, coin, i, results)
 	}
 
