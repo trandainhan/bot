@@ -32,6 +32,10 @@ func init() {
 	if err != nil {
 		log.Panic("Missing ChatID ENV Variable")
 	}
+	chatProfitID, err = strconv.ParseInt(os.Getenv("CHAT_PROFIT_ID"), 10, 64)
+	if err != nil {
+		log.Panic("Missing ChatProfitID ENV Variable")
+	}
 	chatErrorID, err = strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 	if err != nil {
 		log.Panic("Missing ChatErrorID ENV Variable")
