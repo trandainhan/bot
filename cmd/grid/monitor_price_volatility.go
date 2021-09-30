@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"time"
 )
@@ -31,9 +32,9 @@ func checkPriceVolatility() {
 		return
 	}
 
-	percentage1 := (currentBidPrice - last5Price) * 100 / last5Price
-	percentage2 := (currentBidPrice - last10Price) * 100 / last10Price
-	percentage3 := (currentBidPrice - last15Price) * 100 / last15Price
+	percentage1 := math.Abs((currentBidPrice - last5Price) * 100 / last5Price)
+	percentage2 := math.Abs((currentBidPrice - last10Price) * 100 / last10Price)
+	percentage3 := math.Abs((currentBidPrice - last15Price) * 100 / last15Price)
 
 	if percentage1 > 3.5 || percentage2 > 4.5 || percentage3 > 5.5 {
 		redisClient.Set(coin+"_buy_worker_runable", false, 0)
