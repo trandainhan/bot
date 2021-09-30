@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"gitlab.com/fiahub/bot/internal/exchanges"
 )
@@ -26,5 +27,9 @@ func updateCurrentBidPrice() {
 		return
 	}
 	currentBidPrice = exchangeBidPrice
+	now := time.Now()
+	key := fmt.Sprintf("%s_price_%d_%d_%d", coin, now.Day(), now.Hour(), now.Minute())
+	redisClient.Set(key, currentBidPrice, time.Duration(24)*time.Hour)
+
 	log.Printf("%s Updated currentBidPrice to: %f", coin, currentBidPrice)
 }

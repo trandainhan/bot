@@ -24,8 +24,8 @@ func NewRedisClient(ctx context.Context, redisURL string, dbNum int) *MyRedis {
 	return &MyRedis{Client: client, Ctx: ctx}
 }
 
-func (myRedis *MyRedis) Set(key string, value interface{}) bool {
-	err := myRedis.Client.Set(myRedis.Ctx, key, value, 0).Err()
+func (myRedis *MyRedis) Set(key string, value interface{}, expiration time.Duration) bool {
+	err := myRedis.Client.Set(myRedis.Ctx, key, value, expiration).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -48,12 +48,12 @@ func (myRedis *MyRedis) GetBool(key string) bool {
 	return val
 }
 
-func (myRedis *MyRedis) GetFloat64(key string) float64 {
+func (myRedis *MyRedis) GetFloat64(key string) (float64, error) {
 	val, err := myRedis.Client.Get(myRedis.Ctx, key).Float64()
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
-	return val
+	return val, nil
 }
 
 func (myRedis *MyRedis) GetInt64(key string) int64 {

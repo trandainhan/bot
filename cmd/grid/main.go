@@ -69,11 +69,7 @@ func main() {
 
 	go func() {
 		for {
-			period, err := strconv.Atoi(os.Getenv("GET_NEW_PRICE_PERIOD"))
-			if err != nil {
-				log.Panic(err)
-			}
-			time.Sleep(time.Duration(period) * time.Second)
+			time.Sleep(time.Duration(60) * time.Second)
 			go updateCurrentAskPrice()
 			go updateCurrentBidPrice()
 		}
@@ -87,6 +83,13 @@ func main() {
 			}
 			time.Sleep(time.Duration(period) * time.Second)
 			validateFund()
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(time.Duration(15) * time.Minute)
+			adjustUpTrendPercentage()
 		}
 	}()
 

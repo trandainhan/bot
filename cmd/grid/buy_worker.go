@@ -22,7 +22,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		jumpPrice := exchangeBidPrice * jumpPricePercentage / 100
 
 		key := fmt.Sprintf("%s_up_trend_percentage", coin)
-		upTrendPercentage := redisClient.GetFloat64(key)
+		upTrendPercentage, _ := redisClient.GetFloat64(key)
 		upTrendPriceAdjust := jumpPrice * upTrendPercentage / 100
 
 		// When market is up trend, upTrendPercentage > 0 => upTrendPriceAdjust > 0, Buy order price should be closed to the current market price
