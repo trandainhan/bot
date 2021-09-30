@@ -19,3 +19,11 @@ type OrderResp struct {
 	Side        string
 	Price       float64
 }
+
+func (or OrderResp) IsCanceled() bool {
+	return or.Status == binance.ORDER_CANCELED
+}
+
+func (or OrderResp) IsFilled() bool {
+	return or.Status == binance.ORDER_FILLED
+}

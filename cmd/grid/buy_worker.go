@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/exchanges"
-	"gitlab.com/fiahub/bot/internal/exchanges/binance"
-	"gitlab.com/fiahub/bot/internal/exchanges/ftx"
 	"gitlab.com/fiahub/bot/internal/utils"
 )
 
@@ -21,9 +19,15 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 
 		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
 
-		jumpPrice := exchangeBidPrice * jumpPercentage / 100
+		jumpPrice := exchangeBidPrice * jumpPricePercentage / 100
 
-		finalPrice := utils.RoundTo(exchangeBidPrice-jumpPrice*float64(step), decimalsToRound)
+		key := fmt.Sprintf("%s_up_trend_percentage", coin)
+		upTrendPercentage := redisClient.GetFloat64(key)
+		upTrendPriceAdjust := jumpPrice * upTrendPercentage / 100
+
+		// When market is up trend, upTrendPercentage > 0 => upTrendPriceAdjust > 0, Buy order price should be closed to the current market price
+		// When market is down trend, upTrendPercentage < 0 => upTrendPriceAdjust < 0, Buy order price should be distance from the current market price
+		finalPrice := utils.RoundTo(exchangeBidPrice-jumpPrice*float64(step)+upTrendPriceAdjust, decimalsToRound)
 		order, err := placeOrder(id, defaultQuantity, finalPrice, "buy")
 		if err != nil {
 			continue
@@ -36,17 +40,22 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 				text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, id, err)
 				log.Println(text)
 				go teleClient.SendMessage(text, chatErrorID)
-			} else {
-				text := fmt.Sprintf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
-				log.Println(text)
-				if isFilledStatus(orderDetails.Status) {
-					text := fmt.Sprintf("%s %s Order %d is filled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
-					go teleClient.SendMessage(text, chatID)
-					log.Println(text)
-					break
-				}
+				time.Sleep(60 * time.Second)
+				continue
 			}
-			if currentBidPrice > exchangeBidPrice+jumpPrice || currentBidPrice < exchangeBidPrice-jumpPrice {
+
+			log.Printf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
+			if orderDetails.IsFilled() {
+				text := fmt.Sprintf("%s %s Order %d is filled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
+				go teleClient.SendMessage(text, chatID)
+				log.Println(text)
+				break
+			} else if orderDetails.IsCanceled() {
+				log.Printf("%s %s Order %d is canceled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
+				break
+			}
+
+			if currentBidPrice > exchangeBidPrice+jumpPrice+upTrendPriceAdjust || currentBidPrice < exchangeBidPrice-jumpPrice+upTrendPriceAdjust {
 				_, err := exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
 				if err != nil {
 					text := fmt.Sprintf("%s %s Err CancelOrder: %s", coin, id, err)
@@ -55,7 +64,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 				} else {
 					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %f, lastPrice: %f", coin, id, orderDetails.ID, currentBidPrice, exchangeBidPrice)
 					log.Println(text)
-					go teleClient.SendMessage(text, chatID)
+					go teleClient.SendMessage(text, chatErrorID)
 				}
 				break
 			}
@@ -63,11 +72,4 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		}
 	}
 	results <- true
-}
-
-func isFilledStatus(status string) bool {
-	if currentExchange == "FTX" {
-		return status == ftx.ORDER_CLOSED
-	}
-	return status == binance.ORDER_FILLED
 }

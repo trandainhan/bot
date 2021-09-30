@@ -15,8 +15,7 @@ func updateCurrentAskPrice() {
 		return
 	}
 	currentAskPrice = exchangeAskPrice
-	text := fmt.Sprintf("%s Updated currentAskPrice to: %f", coin, currentAskPrice)
-	log.Println(text)
+	log.Printf("%s Updated currentAskPrice to: %f", coin, currentAskPrice)
 }
 
 func updateCurrentBidPrice() {
@@ -26,7 +25,6 @@ func updateCurrentBidPrice() {
 		go teleClient.SendMessage(text, chatErrorID)
 		return
 	}
-	text := fmt.Sprintf("%s Updated currentBidPrice to: %f", coin, currentBidPrice)
-	log.Println(text)
 	currentBidPrice = exchangeBidPrice
+	log.Printf("%s Updated currentBidPrice to: %f", coin, currentBidPrice)
 }

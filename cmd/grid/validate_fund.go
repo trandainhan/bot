@@ -25,7 +25,6 @@ func validateFund() bool {
 		go teleClient.SendMessage(text, chatErrorID)
 		return false
 	}
-	text = fmt.Sprintf("%s %s USDTFund: %v", currentExchange, coin, usdtFund)
-	log.Println(text)
+	log.Printf("%s %s USDTFund: %v", currentExchange, coin, usdtFund)
 	return true
 }

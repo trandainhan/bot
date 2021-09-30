@@ -20,7 +20,7 @@ func init() {
 	flag.IntVar(&numWorker, "numWorker", 2, "Numer of worker with each worker control one order")
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 20, "Quantity To Get Price")
 	flag.Float64Var(&defaultQuantity, "defaultQuantity", 1, "Order Quantity")
-	flag.Float64Var(&jumpPercentage, "jumpPercentage", 1, "Price Jump Percentage to cancel order")
+	flag.Float64Var(&jumpPricePercentage, "jumpPricePercentage", 1, "Price Jump Percentage to cancel order")
 	flag.Parse()
 
 	// get currentExchange
@@ -30,11 +30,11 @@ func init() {
 	var err error
 	chatID, err = strconv.ParseInt(os.Getenv("CHAT_ID"), 10, 64)
 	if err != nil {
-		log.Panic("Missing ChatID")
+		log.Panic("Missing ChatID ENV Variable")
 	}
 	chatErrorID, err = strconv.ParseInt(os.Getenv("CHAT_ERROR_ID"), 10, 64)
 	if err != nil {
-		log.Panic("Missing ChatErrorID")
+		log.Panic("Missing ChatErrorID ENV Variable")
 	}
 
 	// setup client
@@ -66,4 +66,5 @@ func init() {
 func initValuesInRedis() {
 	log.Println("Init values in redis")
 	redisClient.Set(currentExchange+"_auto_mode", 1)
+	redisClient.Set(coin+"_up_trend_percentage", "0")
 }

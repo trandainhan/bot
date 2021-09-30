@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	ORDER_FILLED = "FILLED"
+	ORDER_FILLED   = "FILLED"
+	ORDER_CANCELED = "CANCELED"
 )
 
 type OrderDetailsResp struct {
