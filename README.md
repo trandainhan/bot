@@ -1,1 +1,1 @@
-## Fiahub Trading Bot
+## Trading Bot
