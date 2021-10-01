@@ -37,6 +37,7 @@ func validateFund() bool {
 		return false
 	}
 	redisClient.Set(coin+"_buy_worker_runable", true, 0)
+	redisClient.Set(coin+"_sell_worker_runable", true, 0)
 	log.Printf("%s %s USDTFund: %.4f", currentExchange, coin, usdtFund)
 	return true
 }
