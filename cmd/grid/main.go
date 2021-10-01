@@ -90,7 +90,7 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(time.Duration(5) * time.Minute)
+			time.Sleep(time.Duration(3) * time.Minute)
 			adjustUpTrendPercentage()
 		}
 	}()

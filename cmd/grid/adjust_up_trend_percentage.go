@@ -35,9 +35,8 @@ func adjustUpTrendPercentage() {
 	percentage1 := (currentBidPrice - oneHourAgoPrice) * 100 / oneHourAgoPrice
 	percentage2 := (currentBidPrice - threeHourAgoPrice) * 100 / threeHourAgoPrice
 	percentage3 := (currentBidPrice - sixHourAgoPrice) * 100 / sixHourAgoPrice
-	upTrendfactor := 1.5
-	finalPercentage := utils.RoundTo((percentage1+percentage2+percentage3)/3, 2)
-	finalPercentage = finalPercentage * upTrendfactor
+	upTrendfactor := 1.25
+	finalPercentage := utils.RoundTo((percentage1+percentage2+percentage3)*upTrendfactor/3, 2)
 
 	upTrendKey := coin + "_up_trend_percentage"
 	redisClient.Set(upTrendKey, fmt.Sprintf("%.2f", finalPercentage), 0)
