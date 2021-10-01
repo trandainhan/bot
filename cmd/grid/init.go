@@ -19,7 +19,8 @@ func init() {
 	flag.IntVar(&decimalsToRound, "decimalsToRound", 2, "Decimal to round")
 	flag.IntVar(&numWorker, "numWorker", 2, "Numer of worker with each worker control one order")
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 20, "Quantity To Get Price")
-	flag.Float64Var(&defaultQuantity, "defaultQuantity", 1, "Order Quantity")
+	flag.Float64Var(&orderQuantity, "orderQuantity", 1, "Order Quantity")
+	flag.Float64Var(&maximumOrderUsdt, "maximumOrderUsdt", 100, "Order Quantity")
 	flag.Float64Var(&jumpPricePercentage, "jumpPricePercentage", 1, "Price Jump Percentage to cancel order")
 	flag.Parse()
 

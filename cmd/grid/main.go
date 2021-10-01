@@ -19,7 +19,8 @@ var (
 	decimalsToRound       int
 	quantityToGetPrice    float64
 	numWorker             int
-	defaultQuantity       float64
+	orderQuantity         float64
+	maximumOrderUsdt      float64
 	jumpPricePercentage   float64
 	upTrendPercentage     float64
 	chatID                int64

@@ -28,7 +28,12 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		// When market is up trend, upTrendPercentage > 0 => upTrendPriceAdjust > 0, Sell order price should be distanced from the current market price
 		// When market is down trend, upTrendPercentage < 0 => upTrendPriceAdjust < 0, Buy order price should be closed to the current market price
 		finalPrice := utils.RoundTo(currentAskPrice+jumpPrice*float64(step)+upTrendPriceAdjust, decimalsToRound)
-		order, err := placeOrder(id, defaultQuantity, finalPrice, "sell")
+
+		maxOrderQuantity := maximumOrderUsdt / currentAskPrice
+		if orderQuantity > maxOrderQuantity {
+			orderQuantity = utils.RoundTo(maxOrderQuantity, 1)
+		}
+		order, err := placeOrder(id, orderQuantity, finalPrice, "sell")
 		if err != nil {
 			continue
 		}
