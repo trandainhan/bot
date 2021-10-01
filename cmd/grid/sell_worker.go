@@ -56,6 +56,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 				go teleClient.SendMessage(text, chatProfitID)
 				log.Println(text)
 				go calculate_profit(orderDetails.ExecutedQty, orderDetails.Price, "sell")
+				time.Sleep(10 * time.Second)
 				break
 			} else if orderDetails.IsCanceled() {
 				log.Printf("%s %s Order %d is canceled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
