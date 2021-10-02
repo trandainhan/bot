@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/utils"
@@ -38,6 +39,11 @@ func adjustUpTrendPercentage() {
 
 	upTrendfactor, _ := redisClient.GetFloat64(coin + "_up_trend_percentage_factor")
 	finalPercentage := utils.RoundTo((percentage1+percentage2+percentage3)*upTrendfactor/3, 2)
+
+	maximumUpTrendPercentage := 50.0
+	if math.Abs(finalPercentage) > maximumUpTrendPercentage {
+		finalPercentage = maximumUpTrendPercentage
+	}
 
 	upTrendKey := coin + "_up_trend_percentage"
 	redisClient.Set(upTrendKey, fmt.Sprintf("%.2f", finalPercentage), 0)

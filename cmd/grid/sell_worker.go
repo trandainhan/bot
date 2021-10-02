@@ -67,7 +67,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 					text := fmt.Sprintf("%s %s Err CancelOrder: %s", coin, id, err)
 					go teleClient.SendMessage(text, chatErrorID)
 				} else {
-					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %f, lastPrice: %f", coin, id, orderDetails.ID, currentAskPrice, exchangeAskPrice)
+					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %.2f, lastPrice: %.2f", coin, id, orderDetails.ID, currentAskPrice, exchangeAskPrice)
 					log.Println(text)
 					go teleClient.SendMessage(text, chatID)
 				}
