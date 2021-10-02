@@ -92,6 +92,6 @@ func makeAdditionalBuySell() {
 			log.Printf("%s addition%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
 			break
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(30 * time.Second)
 	}
 }
