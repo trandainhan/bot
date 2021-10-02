@@ -23,6 +23,7 @@ var (
 	maximumOrderUsdt      float64
 	jumpPricePercentage   float64
 	upTrendPercentage     float64
+	buySellDiffSize       float64
 	chatID                int64
 	chatProfitID          int64
 	chatErrorID           int64
@@ -85,6 +86,13 @@ func main() {
 			}
 			time.Sleep(time.Duration(period) * time.Second)
 			validateFund()
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(time.Duration(5) * time.Minute)
+			makeAdditionalBuySell()
 		}
 	}()
 
