@@ -23,21 +23,33 @@ func validateFund() bool {
 	if usdtFund < minUSDTFund {
 		redisClient.Set(coin+"_buy_worker_runable", false, 0)
 		text := fmt.Sprintf("Update %s_buy_worker_runable to %v", coin, false)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatRunableID)
 	}
 
 	if usdtFund > maxUSDTFund {
 		redisClient.Set(coin+"_sell_worker_runable", false, 0)
 		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, false)
-		go teleClient.SendMessage(text, chatID)
+		teleClient.SendMessage(text, chatRunableID)
 	}
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
 		text = fmt.Sprintf("%s %s %s USDTFund: Out of range %v", currentExchange, coin, teleHanlder, usdtFund)
-		go teleClient.SendMessage(text, chatErrorID)
+		teleClient.SendMessage(text, chatErrorID)
 		return false
 	}
-	redisClient.Set(coin+"_buy_worker_runable", true, 0)
-	redisClient.Set(coin+"_sell_worker_runable", true, 0)
 	log.Printf("%s %s USDTFund: %.4f", currentExchange, coin, usdtFund)
+
+	buyRunnable := redisClient.GetBool(coin + "_buy_worker_runable")
+	if buyRunnable == false {
+		redisClient.Set(coin+"_buy_worker_runable", true, 0)
+		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, true)
+		teleClient.SendMessage(text, chatRunableID)
+	}
+	sellRunnable := redisClient.GetBool(coin + "_sell_worker_runable")
+	if sellRunnable == false {
+		redisClient.Set(coin+"_sell_worker_runable", true, 0)
+		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, false)
+		teleClient.SendMessage(text, chatErrorID)
+	}
+
 	return true
 }
