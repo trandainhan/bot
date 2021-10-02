@@ -78,4 +78,10 @@ func initValuesInRedis() {
 	if err != nil {
 		redisClient.Set(coin+"_up_trend_percentage", "0", 0)
 	}
+
+	upTrendFactor := coin + "_up_trend_percentage_factor"
+	_, errFactor := redisClient.GetFloat64(upTrendFactor)
+	if errFactor != nil {
+		redisClient.Set(coin+"_up_trend_percentage_factor", 1.5, 0)
+	}
 }
