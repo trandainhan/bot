@@ -36,6 +36,8 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		}
 		order, err := placeOrder(id, orderQuantity, finalPrice, "sell")
 		if err != nil {
+			log.Printf("%s Err Can not place sell order %s", coin, err.Error())
+			time.Sleep(5 * time.Second)
 			continue
 		}
 
