@@ -35,14 +35,14 @@ func makeAdditionalBuySell() {
 		if finalPrice > currentAskPrice {
 			finalPrice = currentAskPrice
 		}
-		text := fmt.Sprintf("Make additionBuy Size: %.2f Price: %.2f", diff1, finalPrice)
+		text := fmt.Sprintf("Make additionalBuy Size: %.2f Price: %.2f", diff1, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 		finalPrice = utils.RoundTo(finalPrice, 2)
 		diff1 = utils.RoundTo(diff1, 2)
-		order, err = placeOrder("additionBuy", diff1, finalPrice, "buy")
+		order, err = placeOrder("additionalBuy", diff1, finalPrice, "buy")
 		if err != nil {
-			text := fmt.Sprintf("%s %s Err Can not make order: %s", coin, "additionBuy", err)
+			text := fmt.Sprintf("%s %s Err Can not make order: %s", coin, "additionalBuy", err)
 			go teleClient.SendMessage(text, chatErrorID)
 		}
 	}
@@ -53,21 +53,21 @@ func makeAdditionalBuySell() {
 		side = "sell"
 		isOrderPlaced = true
 
-		// additionSell should be equal to averageBuyPrice for profit purpose
+		// additionalSell should be equal to averageBuyPrice for profit purpose
 		// and the sell order could be filled quickly
 		finalPrice := averageBuyPrice
 		if finalPrice < currentBidPrice {
 			finalPrice = currentBidPrice
 		}
-		text := fmt.Sprintf("Make additionSell Size: %.2f Price: %.2f", diff2, finalPrice)
+		text := fmt.Sprintf("Make additionalSell Size: %.2f Price: %.2f", diff2, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 
 		finalPrice = utils.RoundTo(finalPrice, 2)
 		diff2 = utils.RoundTo(diff2, 2)
-		order, err = placeOrder("additionSell", diff2, finalPrice, "sell")
+		order, err = placeOrder("additionalSell", diff2, finalPrice, "sell")
 		if err != nil {
-			text := fmt.Sprintf("%s %s Err Can not make order: %s", coin, "additionSell", err)
+			text := fmt.Sprintf("%s %s Err Can not make order: %s", coin, "additionalSell", err)
 			go teleClient.SendMessage(text, chatErrorID)
 		}
 	}
@@ -82,18 +82,18 @@ func makeAdditionalBuySell() {
 	for {
 		orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
 		if err != nil {
-			text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, "additionBuy/Sell", err)
+			text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, "additionalBuy/Sell", err)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatErrorID)
 			time.Sleep(60 * time.Second)
 			continue
 		}
 
-		log.Printf("%s addition%s Check Order %d status: %s", coin, side, orderDetails.ID, orderDetails.Status)
+		log.Printf("%s additional%s Check Order %d status: %s", coin, side, orderDetails.ID, orderDetails.Status)
 		if orderDetails.IsFilled() {
 			calculateProfit(orderDetails.ExecutedQty, orderDetails.Price, side)
 		} else if orderDetails.IsCanceled() {
-			log.Printf("%s addition%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
+			log.Printf("%s additional%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
 			break
 		}
 		time.Sleep(30 * time.Second)
