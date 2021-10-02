@@ -48,7 +48,7 @@ func validateFund() bool {
 	if sellRunnable == false {
 		redisClient.Set(coin+"_sell_worker_runable", true, 0)
 		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, false)
-		teleClient.SendMessage(text, chatErrorID)
+		teleClient.SendMessage(text, chatRunableID)
 	}
 
 	return true

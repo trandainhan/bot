@@ -12,8 +12,9 @@ import (
 func buy_worker(id string, coin string, step int, results chan<- bool) {
 	for {
 		autoMode := redisClient.GetBool(currentExchange + "_auto_mode")
-		runable := redisClient.GetBool(coin + "_buy_worker_runable")
-		if !autoMode || !runable {
+		coinRunable := redisClient.GetBool(currentExchange + coin + "_worker_runable")
+		workerRunable := redisClient.GetBool(coin + "_buy_worker_runable")
+		if !autoMode || !!coinRunable || !workerRunable {
 			time.Sleep(30 * time.Second)
 			continue
 		}

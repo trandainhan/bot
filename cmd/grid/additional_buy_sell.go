@@ -79,7 +79,7 @@ func makeAdditionalBuySell() {
 		return
 	}
 
-	for {
+	for i := 1; i <= 30; i++ {
 		orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, "additionalBuy/Sell", err)
@@ -92,10 +92,21 @@ func makeAdditionalBuySell() {
 		log.Printf("%s additional%s Check Order %d status: %s", coin, side, orderDetails.ID, orderDetails.Status)
 		if orderDetails.IsFilled() {
 			calculateProfit(orderDetails.ExecutedQty, orderDetails.Price, side)
+			return // just return
 		} else if orderDetails.IsCanceled() {
 			log.Printf("%s additional%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
 			break
 		}
-		time.Sleep(30 * time.Second)
+		if i == 30 {
+			text := fmt.Sprintf("%s additional%s Order %d %.2f is not filled after 30 minutes will cancel it", coin, side, orderDetails.ID, orderDetails.Price)
+			teleClient.SendMessage(text, chatID)
+			_, err = exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
+			if err != nil {
+				text := fmt.Sprintf("%s %s Err Can not cancel order: %d err: %s", coin, "additionalBuy/Sell", order.ID, err)
+				teleClient.SendMessage(text, chatErrorID)
+			}
+			log.Printf("%s additional%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
+		}
+		time.Sleep(60 * time.Second)
 	}
 }

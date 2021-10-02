@@ -76,6 +76,7 @@ func init() {
 func initValuesInRedis() {
 	log.Println("Init values in redis")
 	redisClient.Set(currentExchange+"_auto_mode", true, 0)
+	redisClient.Set(currentExchange+coin+"_worker_runable", true, 0)
 	redisClient.Set(coin+"_buy_worker_runable", true, 0)
 	redisClient.Set(coin+"_sell_worker_runable", true, 0)
 	upTrendKey := coin + "_up_trend_percentage"
