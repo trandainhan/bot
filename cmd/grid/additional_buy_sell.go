@@ -80,7 +80,7 @@ func makeAdditionalBuySell() {
 		return
 	}
 
-	for i := 1; i <= 30; i++ {
+	for i := 1; i <= 5; i++ {
 		if !isStillGoodToMakeAdditionalBuySell() {
 			_, err = exchangeClient.CancelOrder(coin, order.ID, order.ClientID)
 			if err != nil {
@@ -107,8 +107,8 @@ func makeAdditionalBuySell() {
 			log.Printf("%s additional%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
 			break
 		}
-		if i == 30 {
-			text := fmt.Sprintf("%s additional%s Order %d %.2f is not filled after 30 minutes will cancel it", coin, side, orderDetails.ID, orderDetails.Price)
+		if i == 5 {
+			text := fmt.Sprintf("%s additional%s Order %d %.2f is not filled after 5 minutes will cancel it", coin, side, orderDetails.ID, orderDetails.Price)
 			teleClient.SendMessage(text, chatID)
 			_, err = exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
 			if err != nil {
