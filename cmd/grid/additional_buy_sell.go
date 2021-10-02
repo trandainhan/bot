@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/exchanges"
@@ -35,7 +36,7 @@ func makeAdditionalBuySell() {
 		if finalPrice > currentAskPrice {
 			finalPrice = currentAskPrice
 		}
-		text := fmt.Sprintf("Make additionalBuy Size: %.2f Price: %.2f", diff1, finalPrice)
+		text := fmt.Sprintf("%s Make additionalBuy Size: %.2f Price: %.2f", coin, diff1, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 		finalPrice = utils.RoundTo(finalPrice, 2)
@@ -59,7 +60,7 @@ func makeAdditionalBuySell() {
 		if finalPrice < currentBidPrice {
 			finalPrice = currentBidPrice
 		}
-		text := fmt.Sprintf("Make additionalSell Size: %.2f Price: %.2f", diff2, finalPrice)
+		text := fmt.Sprintf("%s Make additionalSell Size: %.2f Price: %.2f", coin, diff2, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 
@@ -80,6 +81,15 @@ func makeAdditionalBuySell() {
 	}
 
 	for i := 1; i <= 30; i++ {
+		if !isStillGoodToMakeAdditionalBuySell() {
+			_, err = exchangeClient.CancelOrder(coin, order.ID, order.ClientID)
+			if err != nil {
+				text := fmt.Sprintf("%s %s Err Can not cancel order: %d err: %s", coin, "additionalBuy/Sell", order.ID, err)
+				teleClient.SendMessage(text, chatErrorID)
+			}
+			log.Printf("%s additional%s Order %d is canceled at price %f due to total buy/sell has changed", coin, side, order.ID, order.Price)
+			break
+		}
 		orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
 		if err != nil {
 			text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, "additionalBuy/Sell", err)
@@ -109,4 +119,10 @@ func makeAdditionalBuySell() {
 		}
 		time.Sleep(60 * time.Second)
 	}
+}
+
+func isStillGoodToMakeAdditionalBuySell() bool {
+	totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
+	totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
+	return math.Abs(totalSellSize-totalBuySize) > buySellDiffSize
 }
