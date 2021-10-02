@@ -101,7 +101,7 @@ func makeAdditionalBuySell() {
 
 		log.Printf("%s additional%s Check Order %d status: %s", coin, side, orderDetails.ID, orderDetails.Status)
 		if orderDetails.IsFilled() {
-			calculateProfit(orderDetails.ExecutedQty, orderDetails.Price, side)
+			calculateProfit(orderDetails.ID, orderDetails.ExecutedQty, orderDetails.Price, side)
 			return // just return
 		} else if orderDetails.IsCanceled() {
 			log.Printf("%s additional%s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
