@@ -38,7 +38,7 @@ func adjustUpTrendPercentage() {
 	percentage3 := (currentBidPrice - sixHourAgoPrice) * 100 / sixHourAgoPrice
 
 	upTrendfactor, _ := redisClient.GetFloat64(coin + "_up_trend_percentage_factor")
-	finalPercentage := utils.RoundTo((percentage1+percentage2+percentage3)*upTrendfactor/3, 2)
+	finalPercentage := utils.RoundTo((percentage1+percentage2+percentage3)*upTrendfactor/3, decimalsToRound)
 
 	maximumUpTrendPercentage := 50.0
 	if math.Abs(finalPercentage) > maximumUpTrendPercentage {

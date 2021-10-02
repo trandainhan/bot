@@ -39,7 +39,7 @@ func makeAdditionalBuySell() {
 		text := fmt.Sprintf("%s Make additionalBuy Size: %.2f Price: %.2f", coin, diff1, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
-		finalPrice = utils.RoundTo(finalPrice, 2)
+		finalPrice = utils.RoundTo(finalPrice, decimalsToRound)
 		diff1 = utils.RoundTo(diff1, 2)
 		order, err = placeOrder("additionalBuy", diff1, finalPrice, "buy")
 		if err != nil {
@@ -64,7 +64,7 @@ func makeAdditionalBuySell() {
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 
-		finalPrice = utils.RoundTo(finalPrice, 2)
+		finalPrice = utils.RoundTo(finalPrice, decimalsToRound)
 		diff2 = utils.RoundTo(diff2, 2)
 		order, err = placeOrder("additionalSell", diff2, finalPrice, "sell")
 		if err != nil {
