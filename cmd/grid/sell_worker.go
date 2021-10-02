@@ -52,7 +52,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 
 			log.Printf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
 			if orderDetails.IsFilled() {
-				go calculate_profit(orderDetails.ExecutedQty, orderDetails.Price, "sell")
+				go calculateProfit(orderDetails.ExecutedQty, orderDetails.Price, "sell")
 				time.Sleep(10 * time.Second)
 				break
 			} else if orderDetails.IsCanceled() {

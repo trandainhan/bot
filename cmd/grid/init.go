@@ -22,6 +22,7 @@ func init() {
 	flag.Float64Var(&orderQuantity, "orderQuantity", 1, "Order Quantity")
 	flag.Float64Var(&maximumOrderUsdt, "maximumOrderUsdt", 100, "Order Quantity")
 	flag.Float64Var(&jumpPricePercentage, "jumpPricePercentage", 1, "Price Jump Percentage to cancel order")
+	flag.Float64Var(&buySellDiffSize, "buySellDiffSize", 50, "Maximum Difference between buy and sell size")
 	flag.Parse()
 
 	// get currentExchange
