@@ -19,6 +19,16 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 			continue
 		}
 
+		totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
+		totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
+		if totalBuySize-totalSellSize > buySellDiffSize {
+			text := fmt.Sprintf("Ignore buy worker, due to buy too much, diff: %f", totalBuySize-totalSellSize)
+			log.Println(text)
+			go teleClient.SendMessage(text, chatID)
+			time.Sleep(1 * time.Minute)
+			continue
+		}
+
 		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
 
 		jumpPrice := exchangeBidPrice * jumpPricePercentage / 100
