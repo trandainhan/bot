@@ -14,7 +14,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		autoMode := redisClient.GetBool(currentExchange + "_auto_mode")
 		coinRunable := redisClient.GetBool(currentExchange + coin + "_worker_runable")
 		workerRunable := redisClient.GetBool(coin + "_sell_worker_runable")
-		if !autoMode || !!coinRunable || !workerRunable {
+		if !autoMode || !coinRunable || !workerRunable {
 			time.Sleep(30 * time.Second)
 			continue
 		}
