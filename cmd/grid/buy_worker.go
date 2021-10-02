@@ -53,9 +53,6 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 
 			log.Printf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
 			if orderDetails.IsFilled() {
-				text := fmt.Sprintf("%s %s Order %d is filled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
-				go teleClient.SendMessage(text, chatProfitID)
-				log.Println(text)
 				go calculate_profit(orderDetails.ExecutedQty, orderDetails.Price, "buy")
 				time.Sleep(10 * time.Second)
 				break
