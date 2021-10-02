@@ -29,7 +29,9 @@ func makeAdditionalBuySell() {
 		side = "buy"
 		isOrderPlaced = true
 
-		finalPrice := averageBuyPrice
+		// additionBuy should be equal to averageSellPrice for profit purpose
+		// and the buy order could be filled quickly
+		finalPrice := averageSellPrice
 		if finalPrice > currentAskPrice {
 			finalPrice = currentAskPrice
 		}
@@ -51,7 +53,9 @@ func makeAdditionalBuySell() {
 		side = "sell"
 		isOrderPlaced = true
 
-		finalPrice := averageSellPrice
+		// additionSell should be equal to averageBuyPrice for profit purpose
+		// and the sell order could be filled quickly
+		finalPrice := averageBuyPrice
 		if finalPrice < currentBidPrice {
 			finalPrice = currentBidPrice
 		}

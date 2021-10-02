@@ -25,6 +25,7 @@ var (
 	upTrendPercentage     float64
 	buySellDiffSize       float64
 	chatID                int64
+	chatRunableID         int64
 	chatProfitID          int64
 	chatErrorID           int64
 	binanceTimeDifference int64
