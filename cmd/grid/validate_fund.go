@@ -22,13 +22,13 @@ func validateFund() bool {
 	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
 	if usdtFund < minUSDTFund {
 		redisClient.Set(coin+"_buy_worker_runable", false, 0)
-		text := fmt.Sprintf("Update %s_buy_worker_runable to %v", coin, false)
+		text := fmt.Sprintf("Update %s_buy_worker_runable to %v due to usdtFund is too low", coin, false)
 		go teleClient.SendMessage(text, chatRunableID)
 	}
 
 	if usdtFund > maxUSDTFund {
 		redisClient.Set(coin+"_sell_worker_runable", false, 0)
-		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, false)
+		text := fmt.Sprintf("Update %s_sell_worker_runable to %v due to usdtFund excceed limit", coin, false)
 		teleClient.SendMessage(text, chatRunableID)
 	}
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
@@ -41,13 +41,13 @@ func validateFund() bool {
 	buyRunnable := redisClient.GetBool(coin + "_buy_worker_runable")
 	if buyRunnable == false {
 		redisClient.Set(coin+"_buy_worker_runable", true, 0)
-		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, true)
+		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, true)
 		teleClient.SendMessage(text, chatRunableID)
 	}
 	sellRunnable := redisClient.GetBool(coin + "_sell_worker_runable")
 	if sellRunnable == false {
 		redisClient.Set(coin+"_sell_worker_runable", true, 0)
-		text := fmt.Sprintf("Update %s_sell_worker_runable to %v", coin, false)
+		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, false)
 		teleClient.SendMessage(text, chatRunableID)
 	}
 

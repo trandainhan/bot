@@ -52,7 +52,7 @@ func checkPriceVolatility() {
 	coinRunable := redisClient.GetBool(currentExchange + coin + "_worker_runable")
 	if coinRunable == false {
 		redisClient.Set(currentExchange+coin+"_worker_runable", true, 0)
-		text := fmt.Sprintf("Update %s_%s_worker_runable to %v", currentExchange, coin, true)
+		text := fmt.Sprintf("Reset %s_%s_worker_runable to %v", currentExchange, coin, true)
 		teleClient.SendMessage(text, chatRunableID)
 	}
 }
