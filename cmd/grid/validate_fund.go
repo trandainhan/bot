@@ -32,11 +32,11 @@ func validateFund() bool {
 		teleClient.SendMessage(text, chatRunableID)
 	}
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
-		text = fmt.Sprintf("%s %s %s USDTFund: Out of range %v", currentExchange, coin, teleHanlder, usdtFund)
+		text = fmt.Sprintf("%s %s %s USDTFund: Out of range %.2f", teleHanlder, currentExchange, coin, usdtFund)
 		teleClient.SendMessage(text, chatErrorID)
 		return false
 	}
-	log.Printf("%s %s USDTFund: %.4f", currentExchange, coin, usdtFund)
+	log.Printf("%s %s USDTFund: %.2f", currentExchange, coin, usdtFund)
 
 	buyRunnable := redisClient.GetBool(coin + "_buy_worker_runable")
 	if buyRunnable == false {
