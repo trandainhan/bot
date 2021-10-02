@@ -14,8 +14,8 @@ func calculateProfit(orderSize float64, price float64, side string) {
 	totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
 	totalSellValue, _ := redisClient.GetFloat64(coin + "_total_sell_value")
 
-	averageBuyPrice := 0.0
-	averageSellPrice := 0.0
+	averageBuyPrice := totalBuyValue / totalBuySize
+	averageSellPrice := totalSellValue / totalSellSize
 
 	if side == "buy" {
 		totalBuySize = totalBuySize + orderSize
@@ -34,6 +34,7 @@ func calculateProfit(orderSize float64, price float64, side string) {
 		totalSellValue = totalSellValue + orderSize*price
 		redisClient.Set(coin+"_total_sell_value", totalSellValue, 0)
 		averageSellPrice = totalSellValue / totalSellSize
+
 		log.Println(text)
 	}
 
