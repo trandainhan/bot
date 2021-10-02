@@ -51,7 +51,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 			continue
 		}
 
-		time.Sleep(3 * time.Second)
+		time.Sleep(15 * time.Second)
 
 		for {
 			orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
@@ -65,7 +65,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 
 			log.Printf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
 			if orderDetails.IsFilled() {
-				go calculateProfit(orderDetails.ExecutedQty, orderDetails.Price, "sell")
+				go calculateProfit(orderDetails.ID, orderDetails.ExecutedQty, orderDetails.Price, "sell")
 				time.Sleep(10 * time.Second)
 				break
 			} else if orderDetails.IsCanceled() {
