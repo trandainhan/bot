@@ -64,10 +64,10 @@ func (myRedis *MyRedis) GetInt64(key string) int64 {
 	return val
 }
 
-func (myRedis *MyRedis) GetTime(key string) time.Time {
+func (myRedis *MyRedis) GetTime(key string) (*time.Time, error) {
 	val, err := myRedis.Client.Get(myRedis.Ctx, key).Time()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return val
+	return &val, nil
 }
