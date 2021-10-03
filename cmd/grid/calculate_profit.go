@@ -6,7 +6,7 @@ import (
 )
 
 func calculateProfit(orderID int64, orderSize float64, price float64, side string) {
-	text := fmt.Sprintf("%s %s Order %d is filled at price %.2f", coin, side, orderID, price)
+	text := fmt.Sprintf("%s %s Order %d size: %.2f is filled at price %.2f", coin, side, orderID, orderSize, price)
 
 	totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
 	totalBuyValue, _ := redisClient.GetFloat64(coin + "_total_buy_value")
