@@ -86,7 +86,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 				}
 				break
 			}
-			time.Sleep(20 * time.Second)
+			time.Sleep(30 * time.Second)
 		}
 	}
 	results <- true
