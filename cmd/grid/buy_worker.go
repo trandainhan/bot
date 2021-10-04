@@ -67,7 +67,6 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 			log.Printf("%s %s Check Order %d status: %s", coin, id, orderDetails.ID, orderDetails.Status)
 			if orderDetails.IsFilled() {
 				go calculateProfit(orderDetails.ID, orderDetails.ExecutedQty, orderDetails.Price, "buy")
-				time.Sleep(10 * time.Second)
 				break
 			} else if orderDetails.IsCanceled() {
 				log.Printf("%s %s Order %d is canceled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
@@ -87,7 +86,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 				}
 				break
 			}
-			time.Sleep(60 * time.Second)
+			time.Sleep(20 * time.Second)
 		}
 	}
 	results <- true
