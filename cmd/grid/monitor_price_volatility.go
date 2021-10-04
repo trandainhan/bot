@@ -45,7 +45,7 @@ func checkPriceVolatility() {
 		teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 		text := fmt.Sprintf("%s %s stop buy and sell worker due to high price volatility\n Price changed in: 5min: %.2f, 10min: %.2f, 15min: %.2f",
 			teleHanlder, coin, percentage1, percentage2, percentage3)
-		go teleClient.SendMessage(text, chatID)
+		go teleClient.SendMessage(text, chatRunableID)
 		return
 	}
 

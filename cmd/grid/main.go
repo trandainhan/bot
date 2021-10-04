@@ -73,7 +73,7 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(time.Duration(60) * time.Second)
+			time.Sleep(time.Duration(1) * time.Minute)
 			go updateCurrentAskPrice()
 			go updateCurrentBidPrice()
 		}
@@ -106,7 +106,7 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(time.Duration(5) * time.Minute)
+			time.Sleep(time.Duration(1) * time.Minute)
 			checkPriceVolatility()
 		}
 	}()
