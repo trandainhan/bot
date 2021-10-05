@@ -69,7 +69,7 @@ func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	if isChange {
 		log.Printf("set CoinGiatot new params %v", params)
 		jsonParams, _ := json.Marshal(params)
-		redisClient.Set(redisKey, string(jsonParams))
+		redisClient.Set(redisKey, string(jsonParams), 0)
 
 		autoMode := fmt.Sprintf("AutoMode: %s -> %s", oldParams.AutoMode, params.AutoMode)
 		profitMax := fmt.Sprintf("ProfitMax: %v -> %v", oldParams.ProfitMax, params.ProfitMax)

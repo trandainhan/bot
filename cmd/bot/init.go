@@ -98,20 +98,20 @@ func init() {
 
 func initValuesInRedis() {
 	log.Println("Init values in redis")
-	redisClient.Set("per_cancel", 0.1/100)
-	redisClient.Set("per_fee_"+currentExchange, 0.075/100)
-	redisClient.Set(coin+"_"+currentExchange+"_per_profit_ask", 0.0)
-	redisClient.Set(coin+"_"+currentExchange+"_per_profit_bid", 0.0)
+	redisClient.Set("per_cancel", 0.1/100, 0)
+	redisClient.Set("per_fee_"+currentExchange, 0.075/100, 0)
+	redisClient.Set(coin+"_"+currentExchange+"_per_profit_ask", 0.0, 0)
+	redisClient.Set(coin+"_"+currentExchange+"_per_profit_bid", 0.0, 0)
 	runnableAskKey := fmt.Sprintf("%s_ask_runable", coin)
-	redisClient.Set(runnableAskKey, true)
+	redisClient.Set(runnableAskKey, true, 0)
 	runnableBidKey := fmt.Sprintf("%s_bid_runable", coin)
-	redisClient.Set(runnableBidKey, true)
+	redisClient.Set(runnableBidKey, true, 0)
 }
 
 func setCoinGiatotParams() {
 	params, err := fiahub.GetCoinGiaTotParams()
 	autoModeKey := currentExchange + "_auto_mode"
-	redisClient.Set(autoModeKey, params.GetAutoMode() == 1)
+	redisClient.Set(autoModeKey, params.GetAutoMode() == 1, 0)
 	if err != nil {
 		panic(err)
 	}
@@ -132,5 +132,5 @@ func login() string {
 func getRates() {
 	rate, _ := fiahub.GetUSDVNDRate()
 	log.Printf("Set fiahub usdtvnd rate %v", rate)
-	redisClient.Set("usdtvnd_rate", rate)
+	redisClient.Set("usdtvnd_rate", rate, 0)
 }

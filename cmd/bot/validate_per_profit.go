@@ -34,8 +34,8 @@ func validatePerProfit() bool {
 
 	askRedisKey := fmt.Sprintf("%s_%s_per_profit_ask", coin, currentExchange)
 	bidRedisKey := fmt.Sprintf("%s_%s_per_profit_bid", coin, currentExchange)
-	oldPerProfitAsk := redisClient.GetFloat64(askRedisKey)
-	oldPerProfitBid := redisClient.GetFloat64(bidRedisKey)
+	oldPerProfitAsk, _ := redisClient.GetFloat64(askRedisKey)
+	oldPerProfitBid, _ := redisClient.GetFloat64(bidRedisKey)
 
 	var text string
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
@@ -61,12 +61,12 @@ func validatePerProfit() bool {
 	isChange := false
 	if perProfitAsk != oldPerProfitAsk {
 		isChange = true
-		redisClient.Set(askRedisKey, perProfitAsk)
+		redisClient.Set(askRedisKey, perProfitAsk, 0)
 	}
 
 	if perProfitBid != oldPerProfitBid {
 		isChange = true
-		redisClient.Set(bidRedisKey, perProfitBid)
+		redisClient.Set(bidRedisKey, perProfitBid, 0)
 	}
 
 	if isChange {

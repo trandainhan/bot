@@ -20,7 +20,7 @@ func calculateProfit(coin string, newSellQuantity, fiahubPrice float64, id strin
 	}
 
 	exchangePrice := orderDetails.Price
-	rate := redisClient.GetFloat64("usdtvnd_rate")
+	rate, _ := redisClient.GetFloat64("usdtvnd_rate")
 	origQty := orderDetails.OriginQty
 	status := orderDetails.Status
 	side := orderDetails.Side

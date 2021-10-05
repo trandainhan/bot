@@ -34,7 +34,7 @@ func main() {
 	ctx := context.Background()
 	redisURL := os.Getenv("REDIS_URL")
 	redisClient := rediswrapper.NewRedisClient(ctx, redisURL, 1)
-	redisClient.Set("nhantran", "hello")
+	redisClient.Set("nhantran", "hello", 0)
 	// log.Println(redisClient.Get("nhantran"))
 
 	// bid_order: {coin_amount: 3, price_per_unit_cents: 23731, type: "BidOrder"
