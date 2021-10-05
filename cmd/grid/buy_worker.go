@@ -22,7 +22,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
 		totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
 		if totalBuySize-totalSellSize > buySellDiffSize {
-			text := fmt.Sprintf("%s Ignore buy, due to buy too much, diff: %.2f", coin, totalBuySize-totalSellSize)
+			text := fmt.Sprintf("%s Ignore buy, due to buy too much, diff: %.3f", coin, totalBuySize-totalSellSize)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatID)
 			time.Sleep(1 * time.Minute)
@@ -69,7 +69,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 				go calculateProfit(orderDetails.ID, orderDetails.ExecutedQty, orderDetails.Price, "buy")
 				break
 			} else if orderDetails.IsCanceled() {
-				log.Printf("%s %s Order %d is canceled at price %f", coin, id, orderDetails.ID, orderDetails.Price)
+				log.Printf("%s %s Order %d is canceled at price %.3f", coin, id, orderDetails.ID, orderDetails.Price)
 				break
 			}
 
@@ -80,7 +80,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 					log.Println(text)
 					go teleClient.SendMessage(text, chatErrorID)
 				} else {
-					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %.2f, lastPrice: %.2f", coin, id, orderDetails.ID, currentBidPrice, exchangeBidPrice)
+					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %.3f, lastPrice: %.3f", coin, id, orderDetails.ID, currentBidPrice, exchangeBidPrice)
 					log.Println(text)
 					go teleClient.SendMessage(text, chatID)
 				}

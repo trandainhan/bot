@@ -22,7 +22,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
 		totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
 		if totalSellSize-totalBuySize > buySellDiffSize {
-			text := fmt.Sprintf("%s Ignore sell, due to sell too much, diff: %.2f", coin, totalSellSize-totalBuySize)
+			text := fmt.Sprintf("%s Ignore sell, due to sell too much, diff: %.3f", coin, totalSellSize-totalBuySize)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatID)
 			time.Sleep(1 * time.Minute)
@@ -78,7 +78,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 					text := fmt.Sprintf("%s %s Err CancelOrder: %s", coin, id, err)
 					go teleClient.SendMessage(text, chatErrorID)
 				} else {
-					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %.2f, lastPrice: %.2f", coin, id, orderDetails.ID, currentAskPrice, exchangeAskPrice)
+					text := fmt.Sprintf("%s %s CancelOrder %d due to price change: currentPrice: %.3f, lastPrice: %.3f", coin, id, orderDetails.ID, currentAskPrice, exchangeAskPrice)
 					log.Println(text)
 					go teleClient.SendMessage(text, chatID)
 				}

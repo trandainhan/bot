@@ -6,7 +6,7 @@ import (
 )
 
 func calculateProfit(orderID int64, orderSize float64, price float64, side string) {
-	text := fmt.Sprintf("%s %s Order %d size: %.2f is filled at price %.2f", coin, side, orderID, orderSize, price)
+	text := fmt.Sprintf("%s %s Order %d size: %.3f is filled at price %.3f", coin, side, orderID, orderSize, price)
 
 	totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
 	totalBuyValue, _ := redisClient.GetFloat64(coin + "_total_buy_value")
@@ -39,8 +39,8 @@ func calculateProfit(orderID int64, orderSize float64, price float64, side strin
 	}
 
 	text = text + "\nTotal Buy"
-	text = fmt.Sprintf("%s\nSize: %.2f, Value: %.2f, avgPrice: %.3f", text, totalBuySize, totalBuyValue, averageBuyPrice)
+	text = fmt.Sprintf("%s\nSize: %.3f, Value: %.3f, avgPrice: %.3f", text, totalBuySize, totalBuyValue, averageBuyPrice)
 	text = text + "\nTotal Sell"
-	text = fmt.Sprintf("%s\nSize: %.2f, Value: %.2f, avgPrice: %.3f", text, totalSellSize, totalSellValue, averageSellPrice)
+	text = fmt.Sprintf("%s\nSize: %.3f, Value: %.3f, avgPrice: %.3f", text, totalSellSize, totalSellValue, averageSellPrice)
 	teleClient.SendMessage(text, chatProfitID)
 }

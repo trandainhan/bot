@@ -36,12 +36,12 @@ func validateFund() bool {
 		_, err := redisClient.GetTime(currentExchange + "_usdt_fund_notify_time")
 		if err != nil { // mean the key is not existed, Only notify fund if it haven't been notified in 5 minutes
 			redisClient.Set(currentExchange+"_usdt_fund_notify_time", time.Now(), time.Duration(5)*time.Minute)
-			text = fmt.Sprintf("%s %s %s USDT Fund: Out of range %.2f", teleHanlder, currentExchange, coin, usdtFund)
+			text = fmt.Sprintf("%s %s %s USDT Fund: Out of range %.3f", teleHanlder, currentExchange, coin, usdtFund)
 			teleClient.SendMessage(text, chatErrorID)
 		}
 		return false
 	}
-	log.Printf("%s %s USDTFund: %.2f", currentExchange, coin, usdtFund)
+	log.Printf("%s %s USDTFund: %.3f", currentExchange, coin, usdtFund)
 
 	buyRunnable := redisClient.GetBool(coin + "_buy_worker_runable")
 	if buyRunnable == false {

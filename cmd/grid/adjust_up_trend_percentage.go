@@ -55,7 +55,7 @@ func adjustUpTrendPercentage() {
 	}
 
 	upTrendKey := coin + "_up_trend_percentage"
-	redisClient.Set(upTrendKey, fmt.Sprintf("%.2f", finalPercentage), 0)
-	text := fmt.Sprintf("Update %s to %.2f", upTrendKey, finalPercentage)
+	redisClient.Set(upTrendKey, fmt.Sprintf("%.3f", finalPercentage), 0)
+	text := fmt.Sprintf("Update %s to %.3f", upTrendKey, finalPercentage)
 	go teleClient.SendMessage(text, chatID)
 }

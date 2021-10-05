@@ -36,7 +36,7 @@ func makeAdditionalBuySell() {
 		if finalPrice > currentAskPrice {
 			finalPrice = currentAskPrice
 		}
-		text := fmt.Sprintf("%s Make additionalBuy Size: %.2f Price: %.2f", coin, diff1, finalPrice)
+		text := fmt.Sprintf("%s Make additionalBuy Size: %.3f Price: %.3f", coin, diff1, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 		finalPrice = utils.RoundTo(finalPrice, decimalsToRound)
@@ -60,7 +60,7 @@ func makeAdditionalBuySell() {
 		if finalPrice < currentBidPrice {
 			finalPrice = currentBidPrice
 		}
-		text := fmt.Sprintf("%s Make additionalSell Size: %.2f Price: %.2f", coin, diff2, finalPrice)
+		text := fmt.Sprintf("%s Make additionalSell Size: %.2f Price: %.3f", coin, diff2, finalPrice)
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 
@@ -108,7 +108,7 @@ func makeAdditionalBuySell() {
 			break
 		}
 		if i == 5 {
-			text := fmt.Sprintf("%s additional%s Order %d %.2f is not filled after 5 minutes will cancel it", coin, side, orderDetails.ID, orderDetails.Price)
+			text := fmt.Sprintf("%s additional%s Order %d %.3f is not filled after 5 minutes will cancel it", coin, side, orderDetails.ID, orderDetails.Price)
 			teleClient.SendMessage(text, chatID)
 			_, err = exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
 			if err != nil {
