@@ -17,6 +17,7 @@ import (
 var (
 	coin                  string
 	decimalsToRound       int
+	orderQuantityToRound  int
 	quantityToGetPrice    float64
 	numWorker             int
 	orderQuantity         float64

@@ -17,6 +17,7 @@ import (
 func init() {
 	flag.StringVar(&coin, "coin", "ALICE", "Coin")
 	flag.IntVar(&decimalsToRound, "decimalsToRound", 2, "Decimal to round")
+	flag.IntVar(&orderQuantityToRound, "orderQuantityToRound", 1, "Order quantity decimals to round")
 	flag.IntVar(&numWorker, "numWorker", 2, "Numer of worker with each worker control one order")
 	flag.Float64Var(&quantityToGetPrice, "quantityToGetPrice", 20, "Quantity To Get Price")
 	flag.Float64Var(&orderQuantity, "orderQuantity", 1, "Order Quantity")

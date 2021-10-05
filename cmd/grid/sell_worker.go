@@ -42,7 +42,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 
 		maxOrderQuantity := maximumOrderUsdt / currentAskPrice
 		if orderQuantity > maxOrderQuantity {
-			orderQuantity = utils.RoundTo(maxOrderQuantity, 1)
+			orderQuantity = utils.RoundTo(maxOrderQuantity, orderQuantityToRound)
 		}
 		order, err := placeOrder(id, orderQuantity, finalPrice, "sell")
 		if err != nil {
