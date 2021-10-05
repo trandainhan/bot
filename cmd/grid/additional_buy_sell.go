@@ -40,7 +40,7 @@ func makeAdditionalBuySell() {
 		log.Println(text)
 		go teleClient.SendMessage(text, chatID)
 		finalPrice = utils.RoundTo(finalPrice, decimalsToRound)
-		diff1 = utils.RoundTo(diff1, 2)
+		diff1 = utils.RoundTo(diff1, 1)
 		order, err = placeOrder("additionalBuy", diff1, finalPrice, "buy")
 		if err != nil {
 			text := fmt.Sprintf("%s %s Err Can not make order: %s", coin, "additionalBuy", err)
@@ -65,7 +65,7 @@ func makeAdditionalBuySell() {
 		go teleClient.SendMessage(text, chatID)
 
 		finalPrice = utils.RoundTo(finalPrice, decimalsToRound)
-		diff2 = utils.RoundTo(diff2, 2)
+		diff2 = utils.RoundTo(diff2, 1)
 		order, err = placeOrder("additionalSell", diff2, finalPrice, "sell")
 		if err != nil {
 			text := fmt.Sprintf("%s %s Err Can not make order: %s", coin, "additionalSell", err)

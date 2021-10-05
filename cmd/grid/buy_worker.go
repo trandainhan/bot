@@ -44,7 +44,7 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		// Contraint order maximum quanity
 		maxOrderQuantity := maximumOrderUsdt / currentBidPrice
 		if orderQuantity > maxOrderQuantity {
-			orderQuantity = utils.RoundTo(maxOrderQuantity, decimalsToRound)
+			orderQuantity = utils.RoundTo(maxOrderQuantity, 1)
 		}
 		order, err := placeOrder(id, orderQuantity, finalPrice, "buy")
 		if err != nil {
