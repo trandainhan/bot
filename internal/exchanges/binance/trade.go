@@ -2,6 +2,7 @@ package binance
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -35,9 +36,13 @@ func (binance Binance) BuyLimit(marketParam string, price float64, quantity floa
 }
 
 func (binance Binance) makeTradeRequest(params map[string]string) (*OrderDetailsResp, error) {
-	body, _, err := binance.makeRequest("POST", params, "/api/v3/order")
+	body, code, err := binance.makeRequest("POST", params, "/api/v3/order")
 	if err != nil {
 		log.Printf("Error makeTradeRequest: %s", err.Error())
+		return nil, err
+	}
+	if code >= 400 {
+		err = errors.New(body)
 		return nil, err
 	}
 	var order OrderDetailsResp
