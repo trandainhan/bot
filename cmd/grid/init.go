@@ -72,6 +72,9 @@ func init() {
 		Ftx: &ftxClient,
 		Bn:  bn,
 	}
+
+	// Validate fund when starting bot
+	validateFund()
 }
 
 func initValuesInRedis() {
