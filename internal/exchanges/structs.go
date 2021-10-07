@@ -27,3 +27,7 @@ func (or OrderResp) IsCanceled() bool {
 func (or OrderResp) IsFilled() bool {
 	return or.Status == binance.ORDER_FILLED
 }
+
+func (or OrderResp) IsPartiallyFilled() bool {
+	return or.Status == binance.ORDER_PARTIALLY_FILLED
+}

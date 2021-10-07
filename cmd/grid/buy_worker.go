@@ -74,6 +74,9 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 			}
 
 			if currentBidPrice > exchangeBidPrice+jumpPrice+upTrendPriceAdjust || currentBidPrice < exchangeBidPrice-jumpPrice+upTrendPriceAdjust {
+				if orderDetails.IsPartiallyFilled() {
+					go calculateProfit(orderDetails.ID, orderDetails.ExecutedQty, orderDetails.Price, "buy")
+				}
 				_, err := exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
 				if err != nil {
 					text := fmt.Sprintf("%s %s Err CancelOrder: %s", coin, id, err)
