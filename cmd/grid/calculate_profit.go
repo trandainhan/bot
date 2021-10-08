@@ -43,5 +43,5 @@ func calculateProfit(orderID int64, orderSize float64, price float64, side strin
 	text = text + "\nTotal Sell"
 	text = fmt.Sprintf("%s\nSize: %.3f, Value: %.3f, avgPrice: %.4f", text, totalSellSize, totalSellValue, averageSellPrice)
 	text = fmt.Sprintf("%s\nDiff Avg Price: %.4f", text, averageSellPrice-averageBuyPrice)
-	teleClient.SendMessage(text, chatProfitID)
+	go teleClient.SendMessage(text, chatProfitID)
 }
