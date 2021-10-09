@@ -18,21 +18,15 @@ func validateFund() bool {
 		return false
 	}
 
-	var text string
 	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
 	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
-	if usdtFund < minUSDTFund {
-		redisClient.Set(coin+"_buy_worker_runable", false, 0)
-		text := fmt.Sprintf("Update %s_buy_worker_runable to %v due to usdtFund is too low", coin, false)
-		go teleClient.SendMessage(text, chatRunableID)
-	}
 
-	if usdtFund > maxUSDTFund {
-		redisClient.Set(coin+"_sell_worker_runable", false, 0)
-		text := fmt.Sprintf("Update %s_sell_worker_runable to %v due to usdtFund excceed limit", coin, false)
-		teleClient.SendMessage(text, chatRunableID)
-	}
 	if usdtFund < minUSDTFund || usdtFund > maxUSDTFund {
+
+		redisClient.Set(currentExchange+coin+"_worker_runable", false, 0)
+		text := fmt.Sprintf("Update %s_worker_runable to %v due to usdtFund is too low", coin, false)
+		go teleClient.SendMessage(text, chatRunableID)
+
 		_, err := redisClient.GetTime(currentExchange + "_usdt_fund_notify_time")
 		if err != nil { // mean the key is not existed, Only notify fund if it haven't been notified in 5 minutes
 			redisClient.Set(currentExchange+"_usdt_fund_notify_time", time.Now(), time.Duration(5)*time.Minute)
@@ -43,18 +37,11 @@ func validateFund() bool {
 	}
 	log.Printf("%s %s USDTFund: %.3f", currentExchange, coin, usdtFund)
 
-	buyRunnable := redisClient.GetBool(coin + "_buy_worker_runable")
-	if buyRunnable == false {
-		redisClient.Set(coin+"_buy_worker_runable", true, 0)
-		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, true)
+	runnable := redisClient.GetBool(currentExchange + coin + "_worker_runable")
+	if runnable == false {
+		redisClient.Set(currentExchange+coin+"_worker_runable", true, 0)
+		text := fmt.Sprintf("Reset %s_worker_runable to %v", coin, true)
 		teleClient.SendMessage(text, chatRunableID)
 	}
-	sellRunnable := redisClient.GetBool(coin + "_sell_worker_runable")
-	if sellRunnable == false {
-		redisClient.Set(coin+"_sell_worker_runable", true, 0)
-		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, false)
-		teleClient.SendMessage(text, chatRunableID)
-	}
-
 	return true
 }

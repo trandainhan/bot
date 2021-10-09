@@ -87,13 +87,6 @@ func main() {
 		}
 	}()
 
-	// go func() {
-	// 	for {
-	// 		time.Sleep(time.Duration(1) * time.Minute)
-	// 		checkPriceVolatility()
-	// 	}
-	// }()
-
 	for i := 0; i < numWorker; i++ {
 		<-results
 	}
