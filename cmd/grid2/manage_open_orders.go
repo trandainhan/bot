@@ -27,3 +27,9 @@ func decreaseOpenSellOrder() {
 	total = total - 1
 	redisClient.Set(key, total, 0)
 }
+
+func resetOpenBuySellOrders() {
+	redisClient.Set(coin+"_open_sell_order", 0, 0)
+
+	redisClient.Set(coin+"_open_buy_order", 0, 0)
+}

@@ -48,7 +48,12 @@ func main() {
 	go func() {
 		<-sigc
 		log.Println("Recieve OS signal, CancelAllOrder and stop bot")
-		exchangeClient.CancelAllOrder(coin)
+		_, err := exchangeClient.CancelAllOrder(coin)
+		if err != nil {
+			log.Printf("Err CancelAllOrder: %s", err.Error())
+		} else {
+			resetOpenBuySellOrders()
+		}
 		log.Println("==================")
 		log.Println("Finish trading bot")
 		os.Exit(0)
@@ -94,6 +99,7 @@ func main() {
 	if err != nil {
 		log.Printf("Err CancelAllOrder: %s", err.Error())
 	}
+	resetOpenBuySellOrders()
 	log.Println("==================")
 	log.Println("Finish trading bot")
 }
