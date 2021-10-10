@@ -21,10 +21,8 @@ func trade_worker(id string, coin string, results chan<- bool) {
 		totalOpenBuyOrders := redisClient.GetInt(coin + "_open_buy_order")
 		totalOpenSellOrders := redisClient.GetInt(coin + "_open_sell_order")
 
-		if totalOpenBuyOrders > numWorker || totalOpenSellOrders > numWorker {
-			text := fmt.Sprintf("%s Ignore trade worker 1 min, due to there are at least 3 couple of orders is running", coin)
-			log.Println(text)
-			go teleClient.SendMessage(text, chatID)
+		if totalOpenBuyOrders >= numWorker || totalOpenSellOrders >= numWorker {
+			log.Printf("%s Ignore trade worker 1 min, due to there are at least 3 couple of orders is running", coin)
 			time.Sleep(1 * time.Minute)
 			continue
 		}
