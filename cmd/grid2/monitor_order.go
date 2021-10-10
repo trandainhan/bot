@@ -25,6 +25,11 @@ func monitorOrder(order *exchanges.OrderResp, side string, orderChan chan<- *exc
 			break
 		} else if orderDetails.IsCanceled() {
 			log.Printf("%s %s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
+			if side == "buy" {
+				decreaseOpenBuyOrder()
+			} else if side == "sell" {
+				decreaseOpenSellOrder()
+			}
 			orderChan <- orderDetails
 			break
 		}
