@@ -74,8 +74,8 @@ func trade_worker(id string, coin string, results chan<- bool) {
 		time.Sleep(15 * time.Second)
 
 		orderChan := make(chan *exchanges.OrderResp)
-		go monitorOrder(buyOrder, "buy", orderChan)
-		go monitorOrder(sellOrder, "sell", orderChan)
+		go monitorOrder(buyOrder, orderChan)
+		go monitorOrder(sellOrder, orderChan)
 
 		// only wait for either buy or sell order is filled, then can start another loop
 		<-orderChan

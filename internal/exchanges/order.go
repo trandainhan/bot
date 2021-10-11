@@ -145,3 +145,24 @@ func (ex ExchangeClient) CancelAllOrder(coin string) ([]OrderResp, error) {
 	}
 	return result, nil
 }
+
+func (ex ExchangeClient) GetAllOpenOrder(coin string) ([]OrderResp, error) {
+	var result []OrderResp
+	orders, err := ex.Bn.GetAllOpenOrder(coin + "USDT")
+	if err != nil {
+		return nil, err
+	}
+	for _, order := range orders {
+		temp := OrderResp{
+			ID:          order.OrderID,
+			ClientID:    order.ClientOrderID,
+			OriginQty:   order.GetOriginQty(),
+			ExecutedQty: order.GetExecutedQty(),
+			Price:       order.GetPrice(),
+			Status:      order.Status,
+			Side:        order.Side,
+		}
+		result = append(result, temp)
+	}
+	return result, nil
+}

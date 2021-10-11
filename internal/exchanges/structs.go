@@ -1,6 +1,8 @@
 package exchanges
 
 import (
+	"strings"
+
 	"gitlab.com/fiahub/bot/internal/exchanges/binance"
 	"gitlab.com/fiahub/bot/internal/exchanges/ftx"
 )
@@ -11,13 +13,13 @@ type ExchangeClient struct {
 }
 
 type OrderResp struct {
-	ID          int64
-	ClientID    string
-	OriginQty   float64
-	ExecutedQty float64
-	Status      string
-	Side        string
-	Price       float64
+	ID          int64   `json:"ID"`
+	ClientID    string  `json:"ClientID"`
+	OriginQty   float64 `json:"OriginQty"`
+	ExecutedQty float64 `json:"ExecutedQty"`
+	Status      string  `json:"Status"`
+	Side        string  `json:"Side"`
+	Price       float64 `json:"Price"`
 }
 
 func (or OrderResp) IsCanceled() bool {
@@ -30,4 +32,8 @@ func (or OrderResp) IsFilled() bool {
 
 func (or OrderResp) IsPartiallyFilled() bool {
 	return or.Status == binance.ORDER_PARTIALLY_FILLED
+}
+
+func (or OrderResp) GetSide() string {
+	return strings.ToLower(or.Side)
 }

@@ -8,8 +8,9 @@ import (
 	"gitlab.com/fiahub/bot/internal/exchanges"
 )
 
-func monitorOrder(order *exchanges.OrderResp, side string, orderChan chan<- *exchanges.OrderResp) {
+func monitorOrder(order *exchanges.OrderResp, orderChan chan<- *exchanges.OrderResp) {
 	i := 0
+	side := order.GetSide()
 	for {
 		orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
 		if err != nil {
@@ -24,7 +25,7 @@ func monitorOrder(order *exchanges.OrderResp, side string, orderChan chan<- *exc
 			orderChan <- orderDetails
 			break
 		} else if orderDetails.IsCanceled() {
-			log.Printf("%s %s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
+			log.Printf("%s %s Order %d is canceled at price %f", coin, orderDetails.GetSide(), orderDetails.ID, orderDetails.Price)
 			if side == "buy" {
 				decreaseOpenBuyOrder()
 			} else if side == "sell" {

@@ -151,3 +151,21 @@ func (binance Binance) CancelAllOrder(marketParam string) ([]OrderDetailsResp, e
 	}
 	return orderDetails, nil
 }
+
+func (binance Binance) GetAllOpenOrder(marketParam string) ([]OrderDetailsResp, error) {
+	params := map[string]string{
+		"symbol": marketParam,
+	}
+	body, code, err := binance.makeRequest("GET", params, "/api/v3/openOrders")
+	if err != nil {
+		log.Printf("Err GetAllOpenOrder, StatusCode: %d, Err: %s", code, err.Error())
+		return nil, err
+	}
+	var orderDetails []OrderDetailsResp
+	err = json.Unmarshal([]byte(body), &orderDetails)
+	if err != nil {
+		log.Printf("Err Get All Open Orders, can not unmarshal, with body: %s", body)
+		return nil, err
+	}
+	return orderDetails, nil
+}
