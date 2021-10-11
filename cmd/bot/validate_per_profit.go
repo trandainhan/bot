@@ -12,7 +12,7 @@ import (
 )
 
 func validatePerProfit() bool {
-	redisValue := redisClient.Get(currentExchange + "_coingiatot_params")
+	redisValue, _ := redisClient.Get(currentExchange + "_coingiatot_params")
 	var params fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &params)
 

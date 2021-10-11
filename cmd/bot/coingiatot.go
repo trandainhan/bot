@@ -53,7 +53,7 @@ func validateCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 func renewCoinGiaTotParams(params *fiahub.CoinGiaTotParams) bool {
 	isChange := false
 	redisKey := currentExchange + "_coingiatot_params"
-	redisValue := redisClient.Get(redisKey)
+	redisValue, _ := redisClient.Get(redisKey)
 	var oldParams fiahub.CoinGiaTotParams
 	_ = json.Unmarshal([]byte(redisValue), &oldParams)
 

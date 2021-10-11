@@ -32,12 +32,12 @@ func (myRedis *MyRedis) Set(key string, value interface{}, expiration time.Durat
 	return true
 }
 
-func (myRedis *MyRedis) Get(key string) string {
+func (myRedis *MyRedis) Get(key string) (string, error) {
 	val, err := myRedis.Client.Get(myRedis.Ctx, key).Result()
 	if err == redis.Nil {
-		return ""
+		return "", err
 	}
-	return val
+	return val, nil
 }
 
 func (myRedis *MyRedis) GetBool(key string) bool {
