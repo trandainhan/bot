@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"os"
 	"os/signal"
@@ -48,14 +47,7 @@ func main() {
 		syscall.SIGQUIT)
 	go func() {
 		<-sigc
-		log.Println("Recieve OS signal, Marshalize alll open orders and stop bot")
-		orders, err := exchangeClient.GetAllOpenOrder(coin)
-		if err != nil {
-			log.Printf("Err GetAllOpenOrder: %s", err.Error())
-		} else {
-			marshalOrders, _ := json.Marshal(orders)
-			redisClient.Set(coin+"_open_orders", string(marshalOrders), 0)
-		}
+		log.Println("Recieve OS signal, stop bot")
 		log.Println("==================")
 		log.Println("Finish trading bot")
 		os.Exit(0)
@@ -69,7 +61,7 @@ func main() {
 
 	results := make(chan bool, numWorker)
 
-	go trade_worker("worker1", coin, results)
+	go trade_worker("worker", coin, results)
 
 	go func() {
 		for {
@@ -110,19 +102,18 @@ func main() {
 }
 
 func reviveMonitorOrder() {
-	redisValue, err := redisClient.Get(coin + "_open_orders")
+	orders, err := exchangeClient.GetAllOpenOrder(coin)
 	if err != nil {
+		log.Printf("Err GetAllOpenOrder: %s", err.Error())
 		return
 	}
-	var oldOpenOrders []exchanges.OrderResp
-	_ = json.Unmarshal([]byte(redisValue), &oldOpenOrders)
-
-	num := len(oldOpenOrders)
+	num := len(orders)
 	if num == 0 {
 		return
 	}
 	orderChan := make(chan *exchanges.OrderResp)
-	for _, order := range oldOpenOrders {
-		go monitorOrder(&order, orderChan)
+	for i, _ := range orders {
+		order := &orders[i] // Notice here
+		go monitorOrder(order, orderChan)
 	}
 }

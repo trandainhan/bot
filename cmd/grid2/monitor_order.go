@@ -9,6 +9,7 @@ import (
 )
 
 func monitorOrder(order *exchanges.OrderResp, orderChan chan<- *exchanges.OrderResp) {
+	log.Printf("Start monitor order: %d", order.ID)
 	i := 0
 	side := order.GetSide()
 	for {
@@ -25,7 +26,7 @@ func monitorOrder(order *exchanges.OrderResp, orderChan chan<- *exchanges.OrderR
 			orderChan <- orderDetails
 			break
 		} else if orderDetails.IsCanceled() {
-			log.Printf("%s %s Order %d is canceled at price %f", coin, orderDetails.GetSide(), orderDetails.ID, orderDetails.Price)
+			log.Printf("%s %s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
 			if side == "buy" {
 				decreaseOpenBuyOrder()
 			} else if side == "sell" {
