@@ -27,18 +27,24 @@ func monitorOrder(order *exchanges.OrderResp, orderChan chan<- *exchanges.OrderR
 			break
 		} else if orderDetails.IsCanceled() {
 			log.Printf("%s %s Order %d is canceled at price %f", coin, side, orderDetails.ID, orderDetails.Price)
-			if side == "buy" {
-				decreaseOpenBuyOrder()
-			} else if side == "sell" {
-				decreaseOpenSellOrder()
-			}
 			orderChan <- orderDetails
+			updateOrderCount(side)
 			break
 		}
 		i++
-		if i%60 == 0 {
-			log.Printf("%s %s Order %d at price %f is not filled after %d hours", coin, side, orderDetails.ID, orderDetails.Price, i)
+		if i == 60 {
+			log.Printf("%s %s Order %d at price %f is not filled after 1 hours, stop monitor", coin, side, orderDetails.ID, orderDetails.Price)
+			updateOrderCount(side)
+			break
 		}
 		time.Sleep(1 * time.Minute)
+	}
+}
+
+func updateOrderCount(side string) {
+	if side == "buy" {
+		decreaseOpenBuyOrder()
+	} else if side == "sell" {
+		decreaseOpenSellOrder()
 	}
 }

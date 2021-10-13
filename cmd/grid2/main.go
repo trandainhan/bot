@@ -110,7 +110,11 @@ func reviveMonitorOrder() {
 		return
 	}
 	var orders []exchanges.OrderResp
-	_ = json.Unmarshal([]byte(redisValue), &orders)
+	err = json.Unmarshal([]byte(redisValue), &orders)
+	if err != nil {
+		log.Printf("Err reviveMonitorOrder: %s", err.Error())
+		return
+	}
 	num := len(orders)
 	if num == 0 {
 		return
