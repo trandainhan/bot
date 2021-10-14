@@ -18,6 +18,11 @@ func trade_worker(id string, coin string, results chan<- bool) {
 			continue
 		}
 
+		_, err := redisClient.GetTime(coin + "_latest_place_order_time")
+		if err == nil { // mean the key is existed, Only start new worker after 5 minutes
+			return
+		}
+
 		totalOpenBuyOrders := redisClient.GetInt(coin + "_open_buy_order")
 		totalOpenSellOrders := redisClient.GetInt(coin + "_open_sell_order")
 
@@ -65,12 +70,15 @@ func trade_worker(id string, coin string, results chan<- bool) {
 			continue
 		}
 		sellOrder, err := placeOrder(id, orderQuantity, finalSellPrice, "sell")
+
 		if err != nil {
 			log.Printf("%s Err Can not place sell order, will cancel buy order %s", coin, err.Error())
 			exchangeClient.CancelOrder(coin, buyOrder.ID, buyOrder.ClientID)
 			time.Sleep(30 * time.Second)
 			continue
 		}
+
+		redisClient.Set(coin+"_latest_place_order_time", time.Now(), time.Duration(5)*time.Minute)
 		time.Sleep(15 * time.Second)
 
 		orderChan := make(chan *exchanges.OrderResp)
