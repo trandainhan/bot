@@ -32,8 +32,8 @@ func monitorOrder(order *exchanges.OrderResp, orderChan chan<- *exchanges.OrderR
 			break
 		}
 		i++
-		if i == 60 {
-			log.Printf("%s %s Order %d at price %f is not filled after 1 hours, stop monitor", coin, side, orderDetails.ID, orderDetails.Price)
+		if i == 120 {
+			log.Printf("%s %s Order %d at price %f is not filled after %d hours, stop monitor", coin, side, orderDetails.ID, orderDetails.Price, i/60)
 			updateOrderCount(side)
 			break
 		}
