@@ -46,13 +46,13 @@ func validateFund() bool {
 	buyRunnable := redisClient.GetBool(coin + "_buy_worker_runable")
 	if buyRunnable == false {
 		redisClient.Set(coin+"_buy_worker_runable", true, 0)
-		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, true)
+		text := fmt.Sprintf("Reset %s_buy_worker_runable to %v", coin, true)
 		teleClient.SendMessage(text, chatRunableID)
 	}
 	sellRunnable := redisClient.GetBool(coin + "_sell_worker_runable")
 	if sellRunnable == false {
 		redisClient.Set(coin+"_sell_worker_runable", true, 0)
-		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, false)
+		text := fmt.Sprintf("Reset %s_sell_worker_runable to %v", coin, true)
 		teleClient.SendMessage(text, chatRunableID)
 	}
 
