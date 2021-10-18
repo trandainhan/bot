@@ -48,8 +48,8 @@ func main() {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 	go func() {
-		<-sigc
-		log.Println("Recieve OS signal, CancelAllOrder and stop bot")
+		sig := <-sigc
+		log.Printf("Recieve OS signal %s, CancelAllOrder and stop bot", sig)
 		exchangeClient.CancelAllOrder(coin)
 		log.Println("==================")
 		log.Println("Finish trading bot")
