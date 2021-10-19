@@ -20,7 +20,7 @@ func trade_worker(id string, coin string, results chan<- bool) {
 
 		_, err := redisClient.GetTime(coin + "_latest_place_order_time")
 		if err == nil { // mean the key is existed, Only start new worker after 5 minutes
-			return
+			continue
 		}
 
 		totalOpenBuyOrders := redisClient.GetInt(coin + "_open_buy_order")
