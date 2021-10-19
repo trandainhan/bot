@@ -79,3 +79,11 @@ func (myRedis *MyRedis) GetTime(key string) (*time.Time, error) {
 	}
 	return &val, nil
 }
+
+func (myRedis *MyRedis) Del(key string) bool {
+	err := myRedis.Client.Del(myRedis.Ctx, key).Err()
+	if err != nil {
+		panic(err)
+	}
+	return true
+}
