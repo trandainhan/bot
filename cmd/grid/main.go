@@ -91,13 +91,6 @@ func main() {
 		}
 	}()
 
-	// go func() {
-	// 	for {
-	// 		time.Sleep(time.Duration(3) * time.Minute)
-	// 		makeAdditionalBuySell()
-	// 	}
-	// }()
-
 	go func() {
 		for {
 			time.Sleep(time.Duration(3) * time.Minute)
