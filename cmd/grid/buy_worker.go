@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/exchanges"
@@ -21,7 +22,8 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 
 		totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
 		totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
-		if totalBuySize-totalSellSize > buySellDiffSize {
+		diff := totalBuySize - totalSellSize
+		if diff > buySellDiffSize {
 			text := fmt.Sprintf("%s Ignore buy, due to buy too much, diff: %.3f", coin, totalBuySize-totalSellSize)
 			log.Println(text)
 			go teleClient.SendMessage(text, chatID)
@@ -32,6 +34,12 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
 
 		jumpPrice := exchangeBidPrice * jumpPricePercentage / 100
+
+		if diff > 0 {
+			diffInNumberOfOrderPlaced := diff / orderQuantity
+			tmp := math.Pow(diffInNumberOfOrderPlaced, 2) / 100
+			jumpPrice = exchangeBidPrice * (jumpPricePercentage + tmp) / 100
+		}
 
 		key := fmt.Sprintf("%s_up_trend_percentage", coin)
 		upTrendPercentage, _ := redisClient.GetFloat64(key)
