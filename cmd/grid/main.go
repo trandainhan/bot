@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -49,8 +50,14 @@ func main() {
 		syscall.SIGQUIT)
 	go func() {
 		sig := <-sigc
-		log.Printf("Recieve OS signal %s, CancelAllOrder and stop bot", sig)
-		exchangeClient.CancelAllOrder(coin)
+		log.Printf("Recieve OS signal %s, Marshalize all open orders and stop bot", sig)
+		orders, err := exchangeClient.GetAllOpenOrder(coin)
+		if err != nil {
+			log.Printf("Err GetAllOpenOrder: %s", err.Error())
+		} else {
+			marshalOrders, _ := json.Marshal(orders)
+			redisClient.Set(coin+"_open_orders", string(marshalOrders), 0)
+		}
 		log.Println("==================")
 		log.Println("Finish trading bot")
 		os.Exit(0)
@@ -58,6 +65,9 @@ func main() {
 
 	log.Println("=================")
 	log.Println("Start trading bot")
+
+	// revive monitor order
+	reviveMonitorOrder()
 
 	results := make(chan bool, numWorker)
 	var id string
