@@ -16,10 +16,16 @@ var (
 )
 
 func init() {
-	flag.StringVar(&coin, "coin", "ALICE", "Coin")
+	flag.StringVar(&coin, "coin", "", "Coin")
+	flag.Parse()
 }
 
 func main() {
+
+	if len(coin) == 0 {
+		log.Println("Please speficy coin")
+		return
+	}
 
 	ctx := context.Background()
 	redisURL := os.Getenv("REDIS_URL")
