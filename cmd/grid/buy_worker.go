@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"math"
 	"time"
 
 	"gitlab.com/fiahub/bot/internal/exchanges"
@@ -34,12 +33,6 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
 
 		jumpPrice := exchangeBidPrice * jumpPricePercentage / 100
-
-		if diff > 0 {
-			diffInNumberOfOrderPlaced := diff / orderQuantity
-			tmp := math.Pow(diffInNumberOfOrderPlaced, 2) / 100
-			jumpPrice = exchangeBidPrice * (jumpPricePercentage + tmp) / 100
-		}
 
 		key := fmt.Sprintf("%s_up_trend_percentage", coin)
 		upTrendPercentage, _ := redisClient.GetFloat64(key)
