@@ -42,11 +42,11 @@ func buy_worker(id string, coin string, step int, results chan<- bool) {
 		// When market is down trend, upTrendPercentage < 0 => upTrendPriceAdjust < 0, Buy order price should be distance from the current market price
 		finalPrice := utils.RoundTo(exchangeBidPrice-jumpPrice*float64(step)+upTrendPriceAdjust, decimalsToRound)
 
-		if totalSellSize-totalBuySize > buySellDiffSize { // over sell, place a buy order with price less then last_sell_price
-			lastSellPrice, _ := redisClient.GetFloat64(coin + "_last_sell_price")
-			jumpPrice = lastSellPrice * jumpPricePercentage / 100
-			finalPrice = utils.RoundTo(lastSellPrice-jumpPrice/2, decimalsToRound)
-		}
+		// if totalSellSize-totalBuySize > buySellDiffSize { // over sell, place a buy order with price less then last_sell_price
+		// 	lastSellPrice, _ := redisClient.GetFloat64(coin + "_last_sell_price")
+		// 	jumpPrice = lastSellPrice * jumpPricePercentage / 100
+		// 	finalPrice = utils.RoundTo(lastSellPrice-jumpPrice/2, decimalsToRound)
+		// }
 
 		// Contraint order maximum quanity
 		maxOrderQuantity := maximumOrderUsdt / currentBidPrice
