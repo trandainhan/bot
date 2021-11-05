@@ -38,7 +38,7 @@ func main() {
 		averageSellPrice := totalSellValue / totalSellSize
 
 		diffAvgPrice := averageSellPrice - averageBuyPrice
-		unrealizedProfit := diffAvgPrice * (totalBuyValue + totalSellValue) / 2
+		unrealizedProfit := diffAvgPrice * (totalBuySize + totalSellSize) / 2
 
 		fee := (totalBuyValue + totalSellValue) * 0.00075
 		lastFee, err := redisClient.GetFloat64(coin + "_total_fee")
