@@ -51,6 +51,6 @@ func calculateProfit(orderID int64, orderSize float64, price float64, side strin
 	text = fmt.Sprintf("%s\nSize: %.3f, Value: %.3f, avgPrice: %.4f", text, totalSellSize, totalSellValue, averageSellPrice)
 	text = fmt.Sprintf("%s\nDiff Avg Price: %.4f", text, averageSellPrice-averageBuyPrice)
 	text = fmt.Sprintf("%s\nTotal Fee: %.4f", text, fee)
-	text = fmt.Sprintf("%s\nUnrealizedProfit: %.4f", text, unrealizedProfit)
+	text = fmt.Sprintf("%s\nUnrealized Profit: %.4f", text, unrealizedProfit)
 	go teleClient.SendMessage(text, chatProfitID)
 }

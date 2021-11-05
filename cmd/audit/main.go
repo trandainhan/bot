@@ -27,16 +27,29 @@ func main() {
 
 	for _, coin := range coins {
 		log.Println(coin)
+
+		totalBuySize, _ := redisClient.GetFloat64(coin + "_total_buy_size")
 		totalBuyValue, _ := redisClient.GetFloat64(coin + "_total_buy_value")
+
+		totalSellSize, _ := redisClient.GetFloat64(coin + "_total_sell_size")
 		totalSellValue, _ := redisClient.GetFloat64(coin + "_total_sell_value")
+
+		averageBuyPrice := totalBuyValue / totalBuySize
+		averageSellPrice := totalSellValue / totalSellSize
+
+		diffAvgPrice := averageSellPrice - averageBuyPrice
+		unrealizedProfit := diffAvgPrice * (totalBuyValue + totalSellValue) / 2
+
 		fee := (totalBuyValue + totalSellValue) * 0.00075
 		lastFee, err := redisClient.GetFloat64(coin + "_total_fee")
 		if err != nil { // if total fee is not in redis yet
 			lastFee = fee
 		}
+
 		todayFee := fee - lastFee
-		text := fmt.Sprintf("%s\nToday Fee: %.4f", coin, todayFee)
-		text = fmt.Sprintf("%s\nTotal Fee: %.4f", text, fee)
+		text := fmt.Sprintf("%s\nToday fee: %.4f", coin, todayFee)
+		text = fmt.Sprintf("%s\nTotal fee: %.4f", text, fee)
+		text = fmt.Sprintf("%s\nUnrealized profit: %.4f", text, unrealizedProfit)
 		teleClient.SendMessage(text, chatProfitID)
 		redisClient.Set(coin+"_total_fee", fee, 0)
 	}
