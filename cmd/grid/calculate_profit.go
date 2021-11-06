@@ -42,7 +42,7 @@ func calculateProfit(orderID int64, orderSize float64, price float64, side strin
 		log.Println(text)
 	}
 
-	fee := (totalBuyValue + totalSellValue) * 0.0075
+	fee := (totalBuyValue + totalSellValue) * 0.00075
 	diffAvgPrice := averageSellPrice - averageBuyPrice
 	unrealizedProfit := diffAvgPrice * (totalBuySize + totalSellSize) / 2
 	text = text + "\nTotal Buy:"
