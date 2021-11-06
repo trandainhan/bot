@@ -26,6 +26,9 @@ func main() {
 	redisDBNum, _ := strconv.Atoi(os.Getenv("REDIS_DB_NUMBER"))
 	redisClient := rediswrapper.NewRedisClient(ctx, redisURL, redisDBNum)
 
+	today := time.Now()
+	text := fmt.Sprintf("AUDIT at %s", today)
+	teleClient.SendMessage(text, chatProfitID)
 	for _, coin := range coins {
 		log.Println(coin)
 
@@ -47,9 +50,7 @@ func main() {
 			lastFee = fee
 		}
 
-		today := time.Now()
 		todayFee := fee - lastFee
-		text := fmt.Sprintf("AUDIT %d-%d-%d", today.Day(), today.Month(), today.Year())
 		text = fmt.Sprintf("%s\nToday fee: %.4f", coin, todayFee)
 		text = fmt.Sprintf("%s\nTotal fee: %.4f", text, fee)
 		text = fmt.Sprintf("%s\nUnrealized profit: %.4f", text, unrealizedProfit)
