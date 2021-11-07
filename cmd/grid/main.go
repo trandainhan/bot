@@ -17,6 +17,7 @@ import (
 
 var (
 	coin                  string
+	fiat                  string
 	decimalsToRound       int
 	orderQuantityToRound  int
 	quantityToGetPrice    float64
@@ -51,7 +52,7 @@ func main() {
 	go func() {
 		sig := <-sigc
 		log.Printf("Recieve OS signal %s, Marshalize all open orders and stop bot", sig)
-		orders, err := exchangeClient.GetAllOpenOrder(coin)
+		orders, err := exchangeClient.GetAllOpenOrder(coin, fiat)
 		if err != nil {
 			log.Printf("Err GetAllOpenOrder: %s", err.Error())
 		} else {

@@ -60,7 +60,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 		time.Sleep(10 * time.Second)
 
 		for {
-			orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
+			orderDetails, err := exchangeClient.GetOrder(coin, fiat, order.ID, order.ClientID)
 			if err != nil {
 				text := fmt.Sprintf("%s %s Err getOrderDetails: %s", coin, id, err)
 				log.Println(text)
@@ -83,7 +83,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 				if orderDetails.IsPartiallyFilled() {
 					calculateProfit(orderDetails.ID, orderDetails.ExecutedQty, orderDetails.Price, "sell")
 				}
-				_, err := exchangeClient.CancelOrder(coin, orderDetails.ID, orderDetails.ClientID)
+				_, err := exchangeClient.CancelOrder(coin, fiat, orderDetails.ID, orderDetails.ClientID)
 				if err != nil {
 					text := fmt.Sprintf("%s %s Err CancelOrder: %s", coin, id, err)
 					go teleClient.SendMessage(text, chatErrorID)

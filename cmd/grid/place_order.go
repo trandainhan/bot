@@ -13,9 +13,9 @@ func placeOrder(botID string, quantity, exchancePrice float64, side string) (*ex
 	var orderDetails *exchanges.OrderResp
 	var err error
 	if side == "buy" {
-		orderDetails, err = exchangeClient.BuyLimit(coin, exchancePrice, quantity)
+		orderDetails, err = exchangeClient.BuyLimit(coin, fiat, exchancePrice, quantity)
 	} else if side == "sell" {
-		orderDetails, err = exchangeClient.SellLimit(coin, exchancePrice, quantity)
+		orderDetails, err = exchangeClient.SellLimit(coin, fiat, exchancePrice, quantity)
 	}
 	if err != nil {
 		totalUSDT := quantity * exchancePrice
