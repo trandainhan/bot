@@ -16,6 +16,7 @@ import (
 
 func init() {
 	flag.StringVar(&coin, "coin", "ALICE", "Coin")
+	flag.StringVar(&fiat, "fiat", "USDT", "Fiat")
 	flag.IntVar(&decimalsToRound, "decimalsToRound", 2, "Decimal to round")
 	flag.IntVar(&orderQuantityToRound, "orderQuantityToRound", 1, "Order quantity decimals to round")
 	flag.IntVar(&numWorker, "numWorker", 3, "Numer of worker with each worker control maximum two order")

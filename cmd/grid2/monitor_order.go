@@ -13,7 +13,7 @@ func monitorOrder(order *exchanges.OrderResp, orderChan chan<- *exchanges.OrderR
 	i := 0
 	side := order.GetSide()
 	for {
-		orderDetails, err := exchangeClient.GetOrder(coin, order.ID, order.ClientID)
+		orderDetails, err := exchangeClient.GetOrder(coin, fiat, order.ID, order.ClientID)
 		if err != nil {
 			text := fmt.Sprintf("%s Order %d Err getOrderDetails: %s", coin, order.ID, err)
 			log.Println(text)

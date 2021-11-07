@@ -73,7 +73,7 @@ func trade_worker(id string, coin string, results chan<- bool) {
 
 		if err != nil {
 			log.Printf("%s Err Can not place sell order, will cancel buy order %s", coin, err.Error())
-			exchangeClient.CancelOrder(coin, buyOrder.ID, buyOrder.ClientID)
+			exchangeClient.CancelOrder(coin, fiat, buyOrder.ID, buyOrder.ClientID)
 			time.Sleep(30 * time.Second)
 			continue
 		}
