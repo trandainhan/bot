@@ -23,11 +23,11 @@ type OrderResp struct {
 }
 
 func (or OrderResp) IsCanceled() bool {
-	return or.Status == binance.ORDER_CANCELED
+	return or.Status == binance.ORDER_CANCELED || or.Status == ftx.ORDER_CLOSED
 }
 
 func (or OrderResp) IsFilled() bool {
-	return or.Status == binance.ORDER_FILLED
+	return or.Status == binance.ORDER_FILLED || or.Status == ftx.ORDER_CLOSED
 }
 
 func (or OrderResp) IsPartiallyFilled() bool {

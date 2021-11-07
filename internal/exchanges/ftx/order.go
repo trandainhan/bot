@@ -86,3 +86,19 @@ func (ftx FtxClient) GetOrder(marketParam string, orderId int64) (*Order, error)
 	}
 	return &resp.Result, nil
 }
+
+func (ftx FtxClient) GetAllOpenOrder(marketParam string) ([]Order, error) {
+	path := fmt.Sprintf("/orders?market=%s", marketParam)
+	body, code, err := ftx.makeRequest("GET", path, "")
+	if err != nil {
+		log.Printf("Err GetOrder, StatusCode: %d, Err: %s", code, err.Error())
+		return nil, err
+	}
+	var resp OpenOrderResponse
+	err = json.Unmarshal([]byte(body), &resp)
+	if err != nil {
+		log.Printf("Err GetOrder, can not unmarshal, with body: %s", body)
+		return nil, err
+	}
+	return resp.Result, nil
+}

@@ -43,6 +43,11 @@ type NewOrderResponse struct {
 	Result  Order `json:"result"`
 }
 
+type OpenOrderResponse struct {
+	Success bool    `json:"success"`
+	Result  []Order `json:"result"`
+}
+
 type Balance struct {
 	Coin                   string  `json:"coin"`
 	Free                   float64 `json:"free"`
