@@ -1,3 +1,3 @@
 #!/bin/sh
 
-grid -coin=ADA -decimalsToRound=3 -quantityToGetPrice=50 -orderQuantity=40 -jumpPricePercentage=1 -buySellDiffSize=160 -maximumOrderUsdt=120
+grid -coin=ADA -decimalsToRound=3 -quantityToGetPrice=50 -orderQuantity=80 -jumpPricePercentage=0.9 -buySellDiffSize=560 -maximumOrderUsdt=200
