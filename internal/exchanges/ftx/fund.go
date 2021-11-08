@@ -16,7 +16,7 @@ func (ftx FtxClient) CheckFund(name string) (float64, error) {
 	var result float64
 	for _, balance := range balances {
 		if balance.Coin == name {
-			result = balance.Free
+			result = balance.Total
 		}
 	}
 	return result, nil
