@@ -2,6 +2,7 @@ package ftx
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -87,11 +88,31 @@ func (ftx FtxClient) GetOrder(marketParam string, orderId int64) (*Order, error)
 	return &resp.Result, nil
 }
 
-func (ftx FtxClient) GetAllOpenOrder(marketParam string) ([]Order, error) {
-	path := fmt.Sprintf("/orders?market=%s", marketParam)
-	body, code, err := ftx.makeRequest("GET", path, "")
+func (ftx FtxClient) CancelOrder(marketParam string, orderId int64) (string, error) {
+	path := fmt.Sprintf("/orders/%d", orderId)
+	body, code, err := ftx.makeRequest("DELETE", path, "")
 	if err != nil {
 		log.Printf("Err GetOrder, StatusCode: %d, Err: %s", code, err.Error())
+		return "", err
+	}
+	var resp CancelOrderResponse
+	err = json.Unmarshal([]byte(body), &resp)
+	if err != nil {
+		log.Printf("Err GetOrder, can not unmarshal, with body: %s", body)
+		return "", err
+	}
+	if resp.Success == false {
+		log.Printf("Err CancelOrder, with body: %s", body)
+		return "", errors.New(resp.Result)
+	}
+	return resp.Result, nil
+}
+
+func (ftx FtxClient) GetAllOpenOrder(marketParam string) ([]Order, error) {
+	path := fmt.Sprintf("orders?market=%s", marketParam)
+	body, err := get(path, []byte(""))
+	if err != nil {
+		log.Printf("Err GetOrder, Err: %s", err.Error())
 		return nil, err
 	}
 	var resp OpenOrderResponse

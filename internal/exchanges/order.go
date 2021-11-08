@@ -109,6 +109,14 @@ func (ex ExchangeClient) GetOrder(coin, fiat string, orderID int64, clientID str
 
 func (ex ExchangeClient) CancelOrder(coin, fiat string, orderID int64, clientID string) (*OrderResp, error) {
 	var order OrderResp
+	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
+	if exchangeClient == "FTX" {
+		_, err := ex.Ftx.CancelOrder(coin+"/"+fiat, orderID)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil // ftx doesn't return order details
+	}
 	binanceOrderDetails, err := ex.Bn.CancelOrder(coin+fiat, orderID, clientID)
 	if err != nil {
 		return nil, err

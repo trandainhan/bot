@@ -82,6 +82,9 @@ func (ftx FtxClient) makeRequest(method, path, requestBody string) (string, int,
 	if method == "POST" {
 		return utils.HttpPost(final_url, requestBody, &headers)
 	}
+	if method == "DELETE" {
+		return utils.HttpDelete(final_url, requestBody, &headers)
+	}
 	return utils.HttpGet(final_url, &headers)
 }
 
@@ -123,4 +126,39 @@ func post(path string, body []byte) (*Order, error) {
 		return nil, err
 	}
 	return &orderResp.Result, nil
+}
+
+func get(path string, body []byte) (string, error) {
+	BASE_URL := os.Getenv("FTX_URL")
+	ftxAPIKey := os.Getenv("FTX_API_KEY")
+	ftxAPISecret := os.Getenv("FTX_API_SECRET")
+
+	ts := strconv.FormatInt(time.Now().UTC().Unix()*1000, 10)
+	signaturePayload := ts + "GET" + "/api/" + path
+	signature := utils.GenerateHmac(signaturePayload, ftxAPISecret)
+
+	final_url := fmt.Sprintf("%s/api/%s", BASE_URL, path)
+
+	req, _ := http.NewRequest("GET", final_url, bytes.NewBuffer([]byte("")))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("FTX-KEY", ftxAPIKey)
+	req.Header.Set("FTX-SIGN", signature)
+	req.Header.Set("FTX-TS", ts)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+	if err != nil {
+		return "", err
+	}
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("Error processing response: %s", err.Error())
+		return "", err
+	}
+	if resp.StatusCode != 200 {
+		text := fmt.Sprintf("Fail to make post request to ftx: %d %s", resp.StatusCode, body)
+		return "", errors.New(text)
+	}
+	return string(body), nil
 }

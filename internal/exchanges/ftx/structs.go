@@ -43,6 +43,11 @@ type NewOrderResponse struct {
 	Result  Order `json:"result"`
 }
 
+type CancelOrderResponse struct {
+	Success bool   `json:"success"`
+	Result  string `json:"result"`
+}
+
 type OpenOrderResponse struct {
 	Success bool    `json:"success"`
 	Result  []Order `json:"result"`
