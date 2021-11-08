@@ -11,7 +11,7 @@ import (
 func validateFund() bool {
 	teleHanlder := os.Getenv("TELEGRAM_HANDLER")
 
-	usdtFund, err := exchangeClient.CheckFund("USDT")
+	usdtFund, err := exchangeClient.CheckFund(fiat)
 	if err != nil {
 		text := fmt.Sprintf("%s %s", teleHanlder, err)
 		go teleClient.SendMessage(text, chatErrorID)
@@ -19,8 +19,8 @@ func validateFund() bool {
 	}
 
 	var text string
-	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_USDT_FUND"), 64)
-	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_USDT_FUND"), 64)
+	minUSDTFund, _ := strconv.ParseFloat(os.Getenv("MIN_"+fiat+"_FUND"), 64)
+	maxUSDTFund, _ := strconv.ParseFloat(os.Getenv("MAX_"+fiat+"_FUND"), 64)
 	if usdtFund < minUSDTFund {
 		redisClient.Set(coin+"_buy_worker_runable", false, 0)
 		text := fmt.Sprintf("Update %s_buy_worker_runable to %v due to usdtFund is too low", coin, false)

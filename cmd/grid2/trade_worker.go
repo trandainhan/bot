@@ -32,12 +32,12 @@ func trade_worker(id string, coin string, results chan<- bool) {
 			continue
 		}
 
-		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
+		exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, fiat, quantityToGetPrice)
 		if err != nil {
 			time.Sleep(15 * time.Second)
 			continue
 		}
-		exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, quantityToGetPrice)
+		exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, fiat, quantityToGetPrice)
 		if err != nil {
 			time.Sleep(15 * time.Second)
 			continue

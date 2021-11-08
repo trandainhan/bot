@@ -30,7 +30,7 @@ func sell_worker(id string, coin string, step int, results chan<- bool) {
 			continue
 		}
 
-		exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, quantityToGetPrice)
+		exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, fiat, quantityToGetPrice)
 		jumpPrice := exchangeAskPrice * jumpPricePercentage / 100
 
 		key := fmt.Sprintf("%s_up_trend_percentage", coin)

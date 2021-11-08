@@ -9,7 +9,7 @@ import (
 )
 
 func updateCurrentAskPrice() {
-	exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, quantityToGetPrice)
+	exchangeAskPrice, err := exchanges.GetAskPriceByQuantity(coin, fiat, quantityToGetPrice)
 	if err != nil {
 		text := fmt.Sprintf("%s Err GetPriceByQuantity: %s", coin, err.Error())
 		go teleClient.SendMessage(text, chatErrorID)
@@ -20,7 +20,7 @@ func updateCurrentAskPrice() {
 }
 
 func updateCurrentBidPrice() {
-	exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, quantityToGetPrice)
+	exchangeBidPrice, err := exchanges.GetBidPriceByQuantity(coin, fiat, quantityToGetPrice)
 	if err != nil {
 		text := fmt.Sprintf("%s Err GetPriceByQuantity: %s", coin, err.Error())
 		go teleClient.SendMessage(text, chatErrorID)
