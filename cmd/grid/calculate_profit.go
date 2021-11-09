@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"strconv"
 )
 
 func calculateProfit(orderID int64, orderSize float64, price float64, side string) {
@@ -42,7 +44,13 @@ func calculateProfit(orderID int64, orderSize float64, price float64, side strin
 		log.Println(text)
 	}
 
-	fee := (totalBuyValue + totalSellValue) * 0.00075
+	exchangeClient := os.Getenv("EXCHANGE_CLIENT")
+	feePercent, err := strconv.ParseFloat(os.Getenv("EXCHANGE_"+exchangeClient+"_FEE"), 64)
+	if err != nil {
+		teleClient.SendMessage("Missing environment fee variable "+os.Getenv("TELEGRAM_HANDLER"), chatErrorID)
+		feePercent = 0
+	}
+	fee := (totalBuyValue + totalSellValue) * feePercent / 100
 	diffAvgPrice := averageSellPrice - averageBuyPrice
 	unrealizedProfit := diffAvgPrice * (totalBuySize + totalSellSize) / 2
 	text = text + "\nTotal Buy:"
