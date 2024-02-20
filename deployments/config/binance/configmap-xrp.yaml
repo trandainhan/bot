@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: configmap.xrp
-  namespace: bot
-data:
-  FIAHUB_EMAIL: xrp_binance@fiahub.com

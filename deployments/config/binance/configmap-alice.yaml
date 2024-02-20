@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: configmap.alice
-  namespace: bot
-data:
-  FIAHUB_EMAIL: alice_binance@fiahub.com
